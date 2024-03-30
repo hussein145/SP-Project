@@ -58,7 +58,7 @@ struct Menu
 	}
 };
 struct sprite {
-	Sprite player;
+	Sprite player1;
 	RectangleShape player2;
 	Texture texture;
 	float velocity_x;
@@ -68,10 +68,10 @@ struct sprite {
 	int last_button_pressed = 1;
 	void inti(Texture& texture)
 	{
-		player.setTexture(texture);
-		player.setPosition(500, 500);
-		player.setTextureRect(IntRect(0, 0, 128, 128));
-		player.setOrigin(player.getTextureRect().width / 2, player.getTextureRect().height / 2);
+		player1.setTexture(texture);
+		player1.setPosition(500, 500);
+		player1.setTextureRect(IntRect(0, 0, 128, 128));
+		player1.setOrigin(player1.getTextureRect().width / 2, player1.getTextureRect().height / 2);
 		//player2
 		player2.setSize(Vector2f(100, 100));
 		player2.setPosition(450, 500);
@@ -83,36 +83,33 @@ struct sprite {
 	}
 	void update(float time)
 	{
-		player.move(velocity_x * time, velocity_y * time);
+		player1.move(velocity_x * time, velocity_y * time);
 		if (velocity_x > 0)
 		{
 			//player.move(velocity_x * time, 0);
 
-			player.setScale(1, 1);
+			player1.setScale(1, 1);
 			x += 0.01f;
-			player.setTextureRect(IntRect(128 * int(x), 0, 128, 128));
+			player1.setTextureRect(IntRect(128 * int(x), 0, 128, 128));
 		}
 		if (velocity_x < 0)
 		{
 			//player.move(velocity_x * time, 0);
-			player.setScale(-1, 1);
+			player1.setScale(-1, 1);
 			x += 0.01f;
-			player.setTextureRect(IntRect(128 * int(x), 0, 128, 128));
-			//check_on_ground = true;
+			player1.setTextureRect(IntRect(128 * int(x), 0, 128, 128));
+			
 		}
 		if (velocity_y < 0)
 		{
 			check_on_ground = false;
 		}
-		/*if (velocity_y > 0)
-		{
-			check_on_ground = false;
-		}*/
+		
 		if (x >= 7)
 			x = 0;
 
 	}
-}player;
+}players;
 struct MAP
 {
 	RectangleShape bg[bgNums];
@@ -120,6 +117,7 @@ struct MAP
 	RectangleShape stairs[stairsNum];
 	RectangleShape floor[floorsnum];
 
+	//velocities
 	float Walls_velocity, Backgrond_Velocity, Stairs_velocity, view_velocity;
 
 	//positions
@@ -278,7 +276,7 @@ struct MAP
 	bool move = 0;
 	void Map_Motion(float dt)
 	{
-		if (player.player.getPosition().y < 100 || player.player2.getPosition().y < 100)
+		if (players.player1.getPosition().y < 100 || players.player2.getPosition().y < 100)
 			move = 1;
 		if (move)
 		{
@@ -319,13 +317,13 @@ struct CameraView
 	}
 	void SetView()
 	{
-		if (player.player.getPosition().y < player1_View.getCenter().y - 340)
+		if (players.player1.getPosition().y < player1_View.getCenter().y - 340)
 		{
-			player1_View.setCenter(Vector2f(960, player.player.getPosition().y + 340));
+			player1_View.setCenter(Vector2f(960, players.player1.getPosition().y + 340));
 		}
-		if (Number_Of_Players == 2 && player.player2.getPosition().y < player2_View.getCenter().y - 340)
+		if (Number_Of_Players == 2 && players.player2.getPosition().y < player2_View.getCenter().y - 340)
 		{
-			player2_View.setCenter(Vector2f(960, player.player2.getPosition().y + 340));
+			player2_View.setCenter(Vector2f(960, players.player2.getPosition().y + 340));
 		}
 	}
 };
@@ -335,7 +333,7 @@ void Gameplay()
 	//player
 	Texture tex;
 	tex.loadFromFile("Assets/Textures/Run.png");
-	player.inti(tex);
+	players.inti(tex);
 
 	//Map
 	MAP Map;
@@ -400,34 +398,35 @@ void Gameplay()
 		Map.view_velocity = 100;
 
 		//motion of players
-		player.velocity_x = 0;
-		player.velocity_y = 0;
+		players.velocity_x = 0;
+		players.velocity_y = 0;
 
-		if (player.player.getPosition().y > player1_View.getCenter().y + 550
-			||(Number_Of_Players == 2 && player.player2.getPosition().y > player2_View.getCenter().y + 540))
+		//freeze game
+		if (players.player1.getPosition().y > player1_View.getCenter().y + 550
+			||(Number_Of_Players == 2 && players.player2.getPosition().y > player2_View.getCenter().y + 540))
 		{
-			player.velocity_x = Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = 0;
+			Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = 0;
 			END = 0;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::D)&& END)
 		{
-			player.velocity_x = 50;
-			player.last_button_pressed = 1;
+			players.velocity_x = 50;
+			players.last_button_pressed = 1;
 
 		}
 		if (Keyboard::isKeyPressed(Keyboard::A) && END)
 		{
-			player.velocity_x = -50;
-			player.last_button_pressed = 2;
+			players.velocity_x = -50;
+			players.last_button_pressed = 2;
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::W) && END)
 		{
-			player.velocity_y = -700;
+			players.velocity_y = -700;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::S) && END)
 		{
-			player.velocity_y = 400;
+			players.velocity_y = 400;
 
 		}
 		//player2 --------------------------------------------------
@@ -435,25 +434,25 @@ void Gameplay()
 		{
 			if (Keyboard::isKeyPressed(Keyboard::Up) && END)
 			{
-				player.player2.move(0, -700 * dt);
+				players.player2.move(0, -700 * dt);
 			}
 			if (Keyboard::isKeyPressed(Keyboard::Down) && END)
 			{
-				player.player2.move(0, 700 * dt);
+				players.player2.move(0, 700 * dt);
 			}
 		}
 		//------------------------------------------------------------------
 
-		if (player.last_button_pressed == 1)
+		if (players.last_button_pressed == 1)
 		{
-			player.player.setTextureRect(IntRect(0, 0, 128, 128));
+			players.player1.setTextureRect(IntRect(0, 0, 128, 128));
 		}
-		if (player.last_button_pressed == 2)
+		if (players.last_button_pressed == 2)
 		{
-			player.player.setScale(-1, 1);
-			player.player.setTextureRect(IntRect(0, 0, 128, 128));
+			players.player1.setScale(-1, 1);
+			players.player1.setTextureRect(IntRect(0, 0, 128, 128));
 		}
-		player.update(dt);
+		players.update(dt);
 
 		window.clear();
 		window.setView(player1_View);
@@ -475,8 +474,8 @@ void Gameplay()
 			window.draw(Map.stairs[i]);
 		}
 		if (Number_Of_Players == 2)
-			window.draw(player.player2);
-		window.draw(player.player);
+			window.draw(players.player2);
+		window.draw(players.player1);
 		//------------------------------------------------------
 		if (Number_Of_Players == 2)
 		{
@@ -495,8 +494,8 @@ void Gameplay()
 				window.draw(Map.wallsLeft[i]);
 				window.draw(Map.wallsRight[i]);
 			}
-			window.draw(player.player);
-			window.draw(player.player2);
+			window.draw(players.player1);
+			window.draw(players.player2);
 			for (int i = 0; i < stairsNum; i++)
 			{
 				window.draw(Map.stairs[i]);

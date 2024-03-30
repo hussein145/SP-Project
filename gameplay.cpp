@@ -120,7 +120,7 @@ struct MAP
 	RectangleShape stairs[stairsNum];
 	RectangleShape floor[floorsnum];
 
-	float Walls_velocity, Backgrond_Velocity, Stairs_velocity;
+	float Walls_velocity, Backgrond_Velocity, Stairs_velocity, view_velocity;
 
 	//positions
 	Vector2f StairPosition;
@@ -296,8 +296,8 @@ struct MAP
 			{
 				floor[i].move(0, Stairs_velocity * dt);
 			}
-			player2_View.move(0, -100 * dt);
-			player1_View.move(0, -100 * dt);
+			player2_View.move(0, -view_velocity * dt);
+			player1_View.move(0, -view_velocity * dt);
 		}
 	}
 };
@@ -363,15 +363,15 @@ void Gameplay()
 
 	Clock clock;
 	float dt;
-
+	bool END = 1;
 
 	while (window.isOpen())
 	{
-			if (Mouse::isButtonPressed(Mouse::Left))
-			{
-				Vector2f pos = Vector2f(Mouse::getPosition(window));
-				cout << pos.x << " " << pos.y << endl;
-			}
+		/*if (Mouse::isButtonPressed(Mouse::Left))
+		{
+			Vector2f pos = Vector2f(Mouse::getPosition(window));
+			cout << pos.x << " " << pos.y << endl;
+		}*/
 		dt = clock.restart().asSeconds();
 		Event event;
 		while (window.pollEvent(event))
@@ -397,29 +397,35 @@ void Gameplay()
 		Map.Backgrond_Velocity = 30.f;
 		Map.Walls_velocity = 150.f;
 		Map.Stairs_velocity = 70.f;
+		Map.view_velocity = 100;
 
 		//motion of players
 		player.velocity_x = 0;
 		player.velocity_y = 0;
-		if (Keyboard::isKeyPressed(Keyboard::D))
+
+		if (player.player.getPosition().y > player1_View.getCenter().y + 550
+			||(Number_Of_Players == 2 && player.player2.getPosition().y > player2_View.getCenter().y + 540))
+		{
+			player.velocity_x = Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = 0;
+			END = 0;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::D)&& END)
 		{
 			player.velocity_x = 50;
 			player.last_button_pressed = 1;
 
 		}
-		if (Keyboard::isKeyPressed(Keyboard::A))
+		if (Keyboard::isKeyPressed(Keyboard::A) && END)
 		{
 			player.velocity_x = -50;
 			player.last_button_pressed = 2;
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::W))
+		if (Keyboard::isKeyPressed(Keyboard::W) && END)
 		{
 			player.velocity_y = -700;
-
-
 		}
-		if (Keyboard::isKeyPressed(Keyboard::S))
+		if (Keyboard::isKeyPressed(Keyboard::S) && END)
 		{
 			player.velocity_y = 400;
 
@@ -427,16 +433,13 @@ void Gameplay()
 		//player2 --------------------------------------------------
 		if (Number_Of_Players == 2)
 		{
-			if (Keyboard::isKeyPressed(Keyboard::Up))
+			if (Keyboard::isKeyPressed(Keyboard::Up) && END)
 			{
 				player.player2.move(0, -700 * dt);
-
-
 			}
-			if (Keyboard::isKeyPressed(Keyboard::Down))
+			if (Keyboard::isKeyPressed(Keyboard::Down) && END)
 			{
 				player.player2.move(0, 700 * dt);
-
 			}
 		}
 		//------------------------------------------------------------------

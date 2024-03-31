@@ -9,7 +9,7 @@ using namespace std;
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Fullscreen);
 Clock clockk;
 float dt;
-int Number_Of_Players;
+int GameMode;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 const int stairsNum = 400, floorsnum = 9, bgNums = 200;
@@ -194,7 +194,7 @@ struct MAP
 	void intiliztion(Texture& backGround, Texture& stairTexture, Texture& floorTexture, Texture& wallTexture)
 	{
 		//background
-		if (Number_Of_Players == 2)
+		if (GameMode == 2)
 		{
 			LeftWall_Pos_x = 0, RightWalls_Pos_x = 1920;
 			bg_width = 1920, floor_width = 1920;
@@ -256,7 +256,7 @@ struct MAP
 	{
 		RightLimit = (RightWalls_Pos_x- Walls_Width) - stairs[currstair].getSize().x - (1920 - (RightWalls_Pos_x- Walls_Width));
 		bool player2_Notexist = 1;
-		if (Number_Of_Players == 2)
+		if (GameMode == 2)
 		{
 			if (stairs[currstair].getPosition().y > player2_View.getCenter().y + 540)
 				player2_Notexist = 1;
@@ -285,7 +285,7 @@ struct MAP
 	void updateBackground_And_Walls()
 	{
 		bool player2_Out_of_Background = 1;
-		if (Number_Of_Players == 2) // 2player
+		if (GameMode == 2) // 2player
 		{
 			if (bg[Background_Index].getPosition().y >= player2_View.getCenter().y + 880)
 				player2_Out_of_Background = 1;
@@ -303,7 +303,7 @@ struct MAP
 			}
 		}
 		bool player2_Out_of_Walls = 1;
-		if (Number_Of_Players == 2) // 2player
+		if (GameMode == 2) // 2player
 		{
 			if (wallsLeft[Wall_Index].getPosition().y >= player2_View.getCenter().y + 880)
 				player2_Out_of_Walls = 1;
@@ -354,7 +354,7 @@ struct CameraView
 	void view_insilization()
 	{
 		player1_View.setCenter(Vector2f(960, 540));
-		if (Number_Of_Players == 2)
+		if (GameMode == 2)
 		{
 			player2_View.setCenter(Vector2f(960, 540));
 			player1_View.setViewport(FloatRect(0.f, 0.f, 0.49f, 1.f));
@@ -371,7 +371,7 @@ struct CameraView
 		{
 			player1_View.setCenter(Vector2f(960, players.player1.getPosition().y + 340));
 		}
-		if (Number_Of_Players == 2 && players.player2.getPosition().y < player2_View.getCenter().y - 340)
+		if (GameMode == 2 && players.player2.getPosition().y < player2_View.getCenter().y - 340)
 		{
 			player2_View.setCenter(Vector2f(960, players.player2.getPosition().y + 340));
 		}
@@ -453,7 +453,7 @@ void Gameplay()
 
 		//freeze game
 		if (players.player1.getPosition().y > player1_View.getCenter().y + 550
-			||(Number_Of_Players == 2 && players.player2.getPosition().y > player2_View.getCenter().y + 540))
+			||(GameMode == 2 && players.player2.getPosition().y > player2_View.getCenter().y + 540))
 		{
 			Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = 0;
 			END = 0;
@@ -480,7 +480,7 @@ void Gameplay()
 
 		}
 		//player2 --------------------------------------------------
-		if (Number_Of_Players == 2)
+		if (GameMode == 2)
 		{
 			if (Keyboard::isKeyPressed(Keyboard::Up) && END)
 			{
@@ -523,11 +523,11 @@ void Gameplay()
 		{
 			window.draw(Map.stairs[i]);
 		}
-		if (Number_Of_Players == 2)
+		if (GameMode == 2)
 			window.draw(players.player2);
 		window.draw(players.player1);
 		//------------------------------------------------------
-		if (Number_Of_Players == 2)
+		if (GameMode == 2)
 		{
 			window.setView(player2_View);
 
@@ -706,6 +706,7 @@ void Play_menu(RectangleShape bg, RectangleShape hand)
 	while (window.isOpen())
 	{
 		Event event;
+		
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
 			pageNumber = 1000;
@@ -724,9 +725,9 @@ void Play_menu(RectangleShape bg, RectangleShape hand)
 
 				if (event.key.code == Keyboard::Enter)
 				{
-					if (menu2.selected == 0)   Number_Of_Players = 1;
-					if (menu2.selected == 1)   Number_Of_Players = 2;
-					if (menu2.selected == 2)   Number_Of_Players = 1;
+					if (menu2.selected == 0)   GameMode = 1;
+					if (menu2.selected == 1)   GameMode = 2;
+					if (menu2.selected == 2)   GameMode = 3;
 					Gameplay();
 				}
 			}

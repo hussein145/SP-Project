@@ -15,7 +15,7 @@ View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 const int stairsNum = 400, floorsnum = 9, bgNums = 200;
 int pageNumber = 1000;
 
-struct Face
+struct menu_Bg_and_Face
 {
 	Sprite face;
 	Texture fa;
@@ -24,8 +24,18 @@ struct Face
 	bool porm = true;
 	float updown = 0;
 	bool morp = true;
+	Texture texture;
+	RectangleShape bg;
+
+	void back_ground()
+	{
+		texture.loadFromFile("Assets/Textures/main menu.png");
+		bg.setTexture(&texture);
+		bg.setSize(Vector2f(window.getSize()));
+	}
 	void FaceMotion()
 	{
+
 		fa.loadFromFile("Assets/Textures/heads.png");
 
 		face.setTexture(fa);
@@ -63,7 +73,7 @@ struct Face
 		face.setRotation(rotation);
 
 	}
-}facee;
+}menu_UI;
 struct Menu
 {
 	Text mainmenu[10];
@@ -75,6 +85,15 @@ struct Menu
 	int positionOfHand = 70;
 	Texture handTex;
 	RectangleShape hand;
+	/*Texture texture;
+	RectangleShape bg;
+
+	void back_ground()
+	{
+		texture.loadFromFile("Assets/Textures/main menu.png");
+		bg.setTexture(&texture);
+		bg.setSize(Vector2f(window.getSize()));
+	}*/
 
 	void Hand_intilization()
 	{
@@ -607,7 +626,7 @@ void menu1(Menu& men1)
 	men1.mainmenu[5].setCharacterSize(50);
 	men1.mainmenu[5].setPosition(Vector2f(1250, men1.height / 2 + 410));
 }
-void Play_menu(RectangleShape bg)
+void Play_menu()
 {
 	Menu menu2;
 	menu2.Hand_intilization();
@@ -662,10 +681,10 @@ void Play_menu(RectangleShape bg)
 				}
 			}
 		}
-		facee.FaceMotion();
+		menu_UI.FaceMotion();
 		window.clear();
-		window.draw(bg);
-		window.draw(facee.face);
+		window.draw(menu_UI.bg);
+		window.draw(menu_UI.face);
 		for (int i = 0; i < menu2.choises; i++)
 		{
 			window.draw(menu2.mainmenu[i]);
@@ -674,7 +693,7 @@ void Play_menu(RectangleShape bg)
 		window.display();
 	}
 }
-void options_menu(RectangleShape bg)
+void options_menu()
 {
 	Menu menu3;
 	menu3.Hand_intilization();
@@ -729,19 +748,19 @@ void options_menu(RectangleShape bg)
 			pageNumber = 1000;
 			break;
 		}
-		facee.FaceMotion();
+		menu_UI.FaceMotion();
 		window.clear();
-		window.draw(bg);
+		window.draw(menu_UI.bg);
 		for (int i = 0; i < menu3.choises; i++)
 		{
 			window.draw(menu3.mainmenu[i]);
 		}
-		window.draw(facee.face);
+		window.draw(menu_UI.face);
 		window.draw(menu3.hand);
 		window.display();
 	}
 }
-void options_menu1(RectangleShape bg)
+void options_menu1()
 {
 	Menu menu3;
 	menu3.Hand_intilization();
@@ -804,7 +823,7 @@ void options_menu1(RectangleShape bg)
 			}
 
 		}
-		facee.FaceMotion();
+		menu_UI.FaceMotion();
 		if (charcter == 0)
 		{
 			player.setTexture(pl1);
@@ -824,8 +843,8 @@ void options_menu1(RectangleShape bg)
 			player.setPosition(1250, 440);
 		}
 		window.clear();
-		window.draw(bg);
-		window.draw(facee.face);
+		window.draw(menu_UI.bg);
+		window.draw(menu_UI.face);
 		window.draw(t1);
 		window.draw(Block);
 		window.draw(player);
@@ -860,24 +879,14 @@ void instructions()
 }
 int main()
 {
-	Texture texture;
-	texture.loadFromFile("Assets/Textures/main menu.png");
-	RectangleShape bg;
-	bg.setTexture(&texture);
-	bg.setSize(Vector2f(window.getSize()));
-
-	//hand
-	/*Texture handTex;
-	RectangleShape hand;
-	handTex.loadFromFile("Assets/Textures/hand.png");
-	hand.setTexture(&handTex);
-	hand.setSize(Vector2f(100, 70));
-	hand.setPosition(1140, 600);*/
 
 	//MainMenu;
 	Menu men;
 	//hand
 	men.Hand_intilization();
+
+	//background
+	menu_UI.back_ground();
 
 	menu1(men);
 	men.choises = 6;
@@ -905,9 +914,9 @@ int main()
 						if (men.selected == 5)
 							pageNumber = -1;
 						if (men.selected == 0)
-							Play_menu(bg);
+							Play_menu();
 						if (men.selected == 4)
-							options_menu(bg);
+							options_menu();
 						if (men.selected == 1)
 							instructions();
 					}
@@ -915,7 +924,7 @@ int main()
 
 			}
 		}
-		facee.FaceMotion();
+		menu_UI.FaceMotion();
 		if (pageNumber == -1)
 		{
 			window.close();
@@ -924,8 +933,8 @@ int main()
 
 
 		window.clear();
-		window.draw(bg);
-		window.draw(facee.face);
+		window.draw(menu_UI.bg);
+		window.draw(menu_UI.face);
 		if (pageNumber == 1000 || pageNumber == 500)
 		{
 			for (int i = 0; i < men.choises; i++)

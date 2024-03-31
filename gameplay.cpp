@@ -15,7 +15,7 @@ View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 const int stairsNum = 400, floorsnum = 9, bgNums = 200;
 int pageNumber = 1000;
 
-struct Face 
+struct Face
 {
 	Sprite face;
 	Texture fa;
@@ -73,6 +73,16 @@ struct Menu
 	int choises;
 	int pageNumber;
 	int positionOfHand = 70;
+	Texture handTex;
+	RectangleShape hand;
+
+	void Hand_intilization()
+	{
+		handTex.loadFromFile("Assets/Textures/hand.png");
+		hand.setTexture(&handTex);
+		hand.setSize(Vector2f(100, 70));
+		hand.setPosition(1140, 600);
+	}
 
 	void MoveDown(int& selected, int choises, RectangleShape& hand)
 	{
@@ -148,13 +158,13 @@ struct sprite {
 			player1.setScale(-1, 1);
 			x += 0.01f;
 			player1.setTextureRect(IntRect(128 * int(x), 0, 128, 128));
-			
+
 		}
 		if (velocity_y < 0)
 		{
 			check_on_ground = false;
 		}
-		
+
 		if (x >= 7)
 			x = 0;
 
@@ -244,17 +254,17 @@ struct MAP
 			RightLimit = (RightWalls_Pos_x - Walls_Width) - stairs[i].getSize().x - (1920 - (RightWalls_Pos_x - Walls_Width));
 
 			//SET POSITION
-			StairPosition = Vector2f((rand()%RightLimit) + (LeftWall_Pos_x + Walls_Width), 955 - heightBetweenStair);
+			StairPosition = Vector2f((rand() % RightLimit) + (LeftWall_Pos_x + Walls_Width), 955 - heightBetweenStair);
 			stairs[i].setPosition(StairPosition);
-			
+
 			heightBetweenStair += 205;
 		}
 
 	}
-	
+
 	void updateStairs(Texture floorr)
 	{
-		RightLimit = (RightWalls_Pos_x- Walls_Width) - stairs[currstair].getSize().x - (1920 - (RightWalls_Pos_x- Walls_Width));
+		RightLimit = (RightWalls_Pos_x - Walls_Width) - stairs[currstair].getSize().x - (1920 - (RightWalls_Pos_x - Walls_Width));
 		bool player2_Notexist = 1;
 		if (GameMode == 2)
 		{
@@ -263,7 +273,7 @@ struct MAP
 			else
 				player2_Notexist = 0;
 		}
-	
+
 		if (stairs[currstair].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
 		{
 			if (count_stairs % Stairs_OF_EachFloor == 0)
@@ -278,7 +288,7 @@ struct MAP
 			count_stairs++;
 			heightBetweenStair += 205;
 		}
-	
+
 		currstair %= (stairsNum - 1);
 		currFloor %= (floorsnum - 1);
 	}
@@ -453,12 +463,12 @@ void Gameplay()
 
 		//freeze game
 		if (players.player1.getPosition().y > player1_View.getCenter().y + 550
-			||(GameMode == 2 && players.player2.getPosition().y > player2_View.getCenter().y + 540))
+			|| (GameMode == 2 && players.player2.getPosition().y > player2_View.getCenter().y + 540))
 		{
 			Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = 0;
 			END = 0;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::D)&& END)
+		if (Keyboard::isKeyPressed(Keyboard::D) && END)
 		{
 			players.velocity_x = 50;
 			players.last_button_pressed = 1;
@@ -556,88 +566,7 @@ void Gameplay()
 
 	}
 }
-void menu1(Menu& men1);
-void Play_menu(RectangleShape bg, RectangleShape hand);
-void options_menu(RectangleShape bg);
-void instructions();
-int main()
-{
-	Texture texture;
-	texture.loadFromFile("Assets/Textures/main menu.png");
-	RectangleShape bg;
-	bg.setTexture(&texture);
-	bg.setSize(Vector2f(window.getSize()));
 
-	//hand
-	Texture handTex;
-	RectangleShape hand;
-	handTex.loadFromFile("Assets/Textures/hand.png");
-	hand.setTexture(&handTex);
-	hand.setSize(Vector2f(100, 70));
-	hand.setPosition(1140, 600);
-
-	//MainMenu;
-	Menu men;
-	menu1(men);
-	men.choises = 6;
-
-	while (window.isOpen())
-	{
-		if (pageNumber == 1000)
-		{
-			Event event;
-			while (window.pollEvent(event))
-			{
-				if (event.type == Event::Closed)
-					window.close();
-				/*if (event.KeyPressed && event.key.code == Keyboard::Escape)
-					window.close();*/
-				if (event.type == Event::KeyPressed)
-				{
-					if (event.key.code == Keyboard::Down)
-						men.MoveDown(men.selected, men.choises, hand);
-					if (event.key.code == Keyboard::Up)
-						men.MoveUp(men.selected, men.choises, hand);
-					if (event.key.code == Keyboard::Enter)
-					{
-						
-						if (men.selected == 5)
-							pageNumber = -1;
-						if (men.selected == 0)
-							Play_menu(bg, hand);
-						if (men.selected == 4)
-							options_menu(bg);
-						if (men.selected == 1)
-							instructions();
-					}
-				}
-
-			}
-		}
-		facee.FaceMotion();
-		if (pageNumber == -1)
-		{
-			window.close();
-			break;
-		}
-
-
-		window.clear();
-		window.draw(bg);
-		window.draw(facee.face);
-		if (pageNumber == 1000 || pageNumber == 500)
-		{
-			for (int i = 0; i < men.choises; i++)
-			{
-				window.draw(men.mainmenu[i]);
-			}
-		}
-
-		window.draw(hand);
-		window.display();
-	}
-
-}
 void menu1(Menu& men1)
 {
 	men1.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
@@ -706,7 +635,7 @@ void Play_menu(RectangleShape bg, RectangleShape hand)
 	while (window.isOpen())
 	{
 		Event event;
-		
+
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
 			pageNumber = 1000;
@@ -740,6 +669,72 @@ void Play_menu(RectangleShape bg, RectangleShape hand)
 		{
 			window.draw(menu2.mainmenu[i]);
 		}
+		window.draw(hand);
+		window.display();
+	}
+}
+void options_menu(RectangleShape bg, RectangleShape hand)
+{
+	Menu menu3;
+	menu3.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
+	menu3.choises = 3;
+
+	menu3.mainmenu[0].setFont(menu3.font);
+	menu3.mainmenu[0].setFillColor(Color{ 255,204,0 });
+	menu3.mainmenu[0].setString("GFX Options");
+	menu3.mainmenu[0].setCharacterSize(50);
+	menu3.mainmenu[0].setPosition(Vector2f(1250, menu3.height / 2 + 60));
+
+	menu3.mainmenu[1].setFont(menu3.font);
+	menu3.mainmenu[1].setFillColor(Color::Black);
+	menu3.mainmenu[1].setString("Sound options");
+	menu3.mainmenu[1].setCharacterSize(50);
+	menu3.mainmenu[1].setPosition(Vector2f(1250, menu3.height / 2 + 130));
+
+	menu3.mainmenu[2].setFont(menu3.font);
+	menu3.mainmenu[2].setFillColor(Color::Black);
+	menu3.mainmenu[2].setString("Back");
+	menu3.mainmenu[2].setCharacterSize(50);
+	menu3.mainmenu[2].setPosition(Vector2f(1250, menu3.height / 2 + 200));
+	hand.setPosition(1155, 600);
+	while (window.isOpen())
+	{
+		Event event;
+
+		while (window.pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+				window.close();
+			if (event.type == Event::KeyPressed)
+			{
+				if (event.key.code == Keyboard::Down)
+					menu3.MoveDown(menu3.selected, menu3.choises, hand);
+				if (event.key.code == Keyboard::Up)
+					menu3.MoveUp(menu3.selected, menu3.choises, hand);
+
+				if (event.key.code == Keyboard::Enter)
+				{
+					//if (menu3.selected == 0)   options_menu(bg);
+					if (menu3.selected == 2) {
+						pageNumber = 1000;
+						break;
+					}
+				}
+			}
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			pageNumber = 1000;
+			break;
+		}
+		facee.FaceMotion();
+		window.clear();
+		window.draw(bg);
+		for (int i = 0; i < menu3.choises; i++)
+		{
+			window.draw(menu3.mainmenu[i]);
+		}
+		window.draw(facee.face);
 		window.draw(hand);
 		window.display();
 	}
@@ -780,7 +775,7 @@ void options_menu(RectangleShape bg)
 	Sprite player;
 	while (window.isOpen())
 	{
-	Event event;
+		Event event;
 		while (window.pollEvent(event))
 		{
 			if (event.type == event.Closed)
@@ -859,4 +854,85 @@ void instructions()
 		window.draw(instructions);
 		window.display();
 	}
+}
+int main()
+{
+	Texture texture;
+	texture.loadFromFile("Assets/Textures/main menu.png");
+	RectangleShape bg;
+	bg.setTexture(&texture);
+	bg.setSize(Vector2f(window.getSize()));
+
+	//hand
+	/*Texture handTex;
+	RectangleShape hand;
+	handTex.loadFromFile("Assets/Textures/hand.png");
+	hand.setTexture(&handTex);
+	hand.setSize(Vector2f(100, 70));
+	hand.setPosition(1140, 600);*/
+
+	//MainMenu;
+	Menu men;
+	//hand
+	men.Hand_intilization();
+
+	menu1(men);
+	men.choises = 6;
+
+	while (window.isOpen())
+	{
+		if (pageNumber == 1000)
+		{
+			Event event;
+			while (window.pollEvent(event))
+			{
+				if (event.type == Event::Closed)
+					window.close();
+				/*if (event.KeyPressed && event.key.code == Keyboard::Escape)
+					window.close();*/
+				if (event.type == Event::KeyPressed)
+				{
+					if (event.key.code == Keyboard::Down)
+						men.MoveDown(men.selected, men.choises, men.hand);
+					if (event.key.code == Keyboard::Up)
+						men.MoveUp(men.selected, men.choises, men.hand);
+					if (event.key.code == Keyboard::Enter)
+					{
+
+						if (men.selected == 5)
+							pageNumber = -1;
+						if (men.selected == 0)
+							Play_menu(bg, men.hand);
+						if (men.selected == 4)
+							options_menu(bg, men.hand);
+						if (men.selected == 1)
+							instructions();
+					}
+				}
+
+			}
+		}
+		facee.FaceMotion();
+		if (pageNumber == -1)
+		{
+			window.close();
+			break;
+		}
+
+
+		window.clear();
+		window.draw(bg);
+		window.draw(facee.face);
+		if (pageNumber == 1000 || pageNumber == 500)
+		{
+			for (int i = 0; i < men.choises; i++)
+			{
+				window.draw(men.mainmenu[i]);
+			}
+		}
+
+		window.draw(men.hand);
+		window.display();
+	}
+
 }

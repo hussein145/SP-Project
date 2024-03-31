@@ -7,14 +7,68 @@ using namespace sf;
 using namespace std;
 
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Fullscreen);
+Clock clockk;
+float dt;
 int Number_Of_Players;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 const int stairsNum = 400, floorsnum = 9, bgNums = 200;
 int pageNumber = 1000;
 
+struct Face 
+{
+	Sprite face;
+	Texture fa;
+	float current_face = 0;
+	float rotation = 0;
+	bool porm = true;
+	float updown = 0;
+	bool morp = true;
+	void FaceMotion()
+	{
+		fa.loadFromFile("Assets/Textures/heads.png");
+
+		face.setTexture(fa);
+
+		face.setScale(2.25, 2.25);
+		face.setOrigin(120, 200);
+		current_face += 0.008;
+		if (current_face >= 2.999999)
+			current_face = 0;
+		face.setTextureRect(IntRect(209 * int(current_face), 0, 209, 258));
+
+		if (rotation >= 8)
+		{
+			porm = true;
+		}
+		else if (rotation <= -8)
+			porm = false;
+
+		if (porm)
+			rotation -= 0.5;
+		else
+			rotation += 0.5;
+
+		if (updown >= 10)
+			morp = true;
+		else if (updown <= -10)
+			morp = false;
+
+		if (morp)
+			updown -= 0.5;
+		else
+			updown += 0.5;
+
+		face.setPosition(1450 - rotation, 460 + updown);
+		face.setRotation(rotation);
+
+	}
+}facee;
 struct Menu
 {
+	
+
+
 	Text mainmenu[10];
 	int selected = 0;
 	Font font;
@@ -81,9 +135,9 @@ struct sprite {
 		x = 0;
 		check_on_ground = 0;
 	}
-	void update(float time)
+	void update()
 	{
-		player1.move(velocity_x * time, velocity_y * time);
+		player1.move(velocity_x * dt, velocity_y * dt);
 		if (velocity_x > 0)
 		{
 			//player.move(velocity_x * time, 0);
@@ -359,8 +413,8 @@ void Gameplay()
 	int Background_Index = 0, Wall_Index = 0;
 	int previous_Background = bgNums - 1, previous_wall = bgNums - 1;
 
-	Clock clock;
-	float dt;
+	/*Clock clock;
+	float dt;*/
 	bool END = 1;
 
 	while (window.isOpen())
@@ -370,7 +424,7 @@ void Gameplay()
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
 			cout << pos.x << " " << pos.y << endl;
 		}*/
-		dt = clock.restart().asSeconds();
+		dt = clockk.restart().asSeconds();
 		Event event;
 		while (window.pollEvent(event))
 		{
@@ -452,7 +506,7 @@ void Gameplay()
 			players.player1.setScale(-1, 1);
 			players.player1.setTextureRect(IntRect(0, 0, 128, 128));
 		}
-		players.update(dt);
+		players.update();
 
 		window.clear();
 		window.setView(player1_View);
@@ -512,7 +566,6 @@ void options_menu(RectangleShape bg);
 void instructions();
 int main()
 {
-
 	Texture texture;
 	texture.loadFromFile("Assets/Textures/main menu.png");
 	RectangleShape bg;
@@ -551,6 +604,7 @@ int main()
 						men.MoveUp(men.selected, men.choises, hand);
 					if (event.key.code == Keyboard::Enter)
 					{
+						
 						if (men.selected == 5)
 							pageNumber = -1;
 						if (men.selected == 0)
@@ -564,6 +618,7 @@ int main()
 
 			}
 		}
+		facee.FaceMotion();
 		if (pageNumber == -1)
 		{
 			window.close();
@@ -573,6 +628,7 @@ int main()
 
 		window.clear();
 		window.draw(bg);
+		window.draw(facee.face);
 		if (pageNumber == 1000 || pageNumber == 500)
 		{
 			for (int i = 0; i < men.choises; i++)
@@ -580,6 +636,7 @@ int main()
 				window.draw(men.mainmenu[i]);
 			}
 		}
+
 		window.draw(hand);
 		window.display();
 	}
@@ -629,7 +686,7 @@ void Play_menu(RectangleShape bg, RectangleShape hand)
 {
 	Menu menu2;
 	menu2.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
-	menu2.choises = 2;
+	menu2.choises = 3;
 
 	menu2.mainmenu[0].setFont(menu2.font);
 	menu2.mainmenu[0].setString("Single");
@@ -643,7 +700,12 @@ void Play_menu(RectangleShape bg, RectangleShape hand)
 	menu2.mainmenu[1].setFillColor(Color::Black);
 	menu2.mainmenu[1].setPosition(Vector2f(1250, menu2.height / 2 + 130));
 
-	menu2.choises = 2;
+	menu2.mainmenu[2].setFont(menu2.font);
+	menu2.mainmenu[2].setString("PowerUps");
+	menu2.mainmenu[2].setCharacterSize(50);
+	menu2.mainmenu[2].setFillColor(Color::Black);
+	menu2.mainmenu[2].setPosition(Vector2f(1250, menu2.height / 2 + 200));
+
 	pageNumber = 500;
 	while (window.isOpen())
 	{
@@ -668,12 +730,15 @@ void Play_menu(RectangleShape bg, RectangleShape hand)
 				{
 					if (menu2.selected == 0)   Number_Of_Players = 1;
 					if (menu2.selected == 1)   Number_Of_Players = 2;
+					if (menu2.selected == 2)   Number_Of_Players = 1;
 					Gameplay();
 				}
 			}
 		}
+		facee.FaceMotion();
 		window.clear();
 		window.draw(bg);
+		window.draw(facee.face);
 		for (int i = 0; i < menu2.choises; i++)
 		{
 			window.draw(menu2.mainmenu[i]);
@@ -684,6 +749,7 @@ void Play_menu(RectangleShape bg, RectangleShape hand)
 }
 void options_menu(RectangleShape bg)
 {
+	Menu menu3;
 	int charcter = 0;
 	Font font;
 	font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
@@ -717,7 +783,7 @@ void options_menu(RectangleShape bg)
 	Sprite player;
 	while (window.isOpen())
 	{
-		Event event;
+	Event event;
 		while (window.pollEvent(event))
 		{
 			if (event.type == event.Closed)
@@ -743,6 +809,7 @@ void options_menu(RectangleShape bg)
 			}
 
 		}
+		facee.FaceMotion();
 		if (charcter == 0)
 		{
 			player.setTexture(pl1);
@@ -763,6 +830,7 @@ void options_menu(RectangleShape bg)
 		}
 		window.clear();
 		window.draw(bg);
+		window.draw(facee.face);
 		window.draw(t1);
 		window.draw(Block);
 		window.draw(player);

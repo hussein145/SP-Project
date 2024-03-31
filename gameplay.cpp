@@ -66,9 +66,6 @@ struct Face
 }facee;
 struct Menu
 {
-	
-
-
 	Text mainmenu[10];
 	int selected = 0;
 	Font font;
@@ -82,15 +79,14 @@ struct Menu
 		if (selected < choises)
 		{
 			mainmenu[selected].setFillColor(Color::Black);
-			hand.setPosition(1155, hand.getPosition().y + positionOfHand);
+			hand.setPosition(1140, hand.getPosition().y + positionOfHand);
 			selected++;
 			if (selected == choises)
 			{
 				selected = 0;
-				hand.setPosition(1155, 600);
+				hand.setPosition(1140, 600);
 			}
 			mainmenu[selected].setFillColor(Color{ 255,204,0 });
-			//positionOfHand += 70;
 		}
 	}
 	void MoveUp(int& selected, int choises, RectangleShape& hand)
@@ -99,12 +95,12 @@ struct Menu
 		{
 
 			mainmenu[selected].setFillColor(Color::Black);
-			hand.setPosition(1155, hand.getPosition().y - positionOfHand);
+			hand.setPosition(1140, hand.getPosition().y - positionOfHand);
 			selected--;
 			if (selected == -1)
 			{
 				selected = choises - 1;
-				hand.setPosition(1155, hand.getPosition().y + (positionOfHand * choises));
+				hand.setPosition(1140, hand.getPosition().y + (positionOfHand * choises));
 			}
 			mainmenu[selected].setFillColor(Color{ 255,204,0 });
 
@@ -577,8 +573,8 @@ int main()
 	RectangleShape hand;
 	handTex.loadFromFile("Assets/Textures/hand.png");
 	hand.setTexture(&handTex);
-	hand.setSize(Vector2f(80, 80));
-	hand.setPosition(1155, 600);
+	hand.setSize(Vector2f(100, 70));
+	hand.setPosition(1140, 600);
 
 	//MainMenu;
 	Menu men;

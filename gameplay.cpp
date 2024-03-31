@@ -84,7 +84,7 @@ struct Menu
 		hand.setPosition(1140, 600);
 	}
 
-	void MoveDown(int& selected, int choises, RectangleShape& hand)
+	void MoveDown(int& selected, int choises)
 	{
 		if (selected < choises)
 		{
@@ -99,7 +99,7 @@ struct Menu
 			mainmenu[selected].setFillColor(Color{ 255,204,0 });
 		}
 	}
-	void MoveUp(int& selected, int choises, RectangleShape& hand)
+	void MoveUp(int& selected, int choises)
 	{
 		if (selected > -1)
 		{
@@ -607,9 +607,10 @@ void menu1(Menu& men1)
 	men1.mainmenu[5].setCharacterSize(50);
 	men1.mainmenu[5].setPosition(Vector2f(1250, men1.height / 2 + 410));
 }
-void Play_menu(RectangleShape bg, RectangleShape hand)
+void Play_menu(RectangleShape bg)
 {
 	Menu menu2;
+	menu2.Hand_intilization();
 	menu2.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
 	menu2.choises = 3;
 
@@ -648,9 +649,9 @@ void Play_menu(RectangleShape bg, RectangleShape hand)
 			if (event.type == Event::KeyPressed)
 			{
 				if (event.key.code == Keyboard::Down)
-					menu2.MoveDown(menu2.selected, menu2.choises, hand);
+					menu2.MoveDown(menu2.selected, menu2.choises);
 				if (event.key.code == Keyboard::Up)
-					menu2.MoveUp(menu2.selected, menu2.choises, hand);
+					menu2.MoveUp(menu2.selected, menu2.choises);
 
 				if (event.key.code == Keyboard::Enter)
 				{
@@ -669,13 +670,14 @@ void Play_menu(RectangleShape bg, RectangleShape hand)
 		{
 			window.draw(menu2.mainmenu[i]);
 		}
-		window.draw(hand);
+		window.draw(menu2.hand);
 		window.display();
 	}
 }
-void options_menu(RectangleShape bg, RectangleShape hand)
+void options_menu(RectangleShape bg)
 {
 	Menu menu3;
+	menu3.Hand_intilization();
 	menu3.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
 	menu3.choises = 3;
 
@@ -696,7 +698,7 @@ void options_menu(RectangleShape bg, RectangleShape hand)
 	menu3.mainmenu[2].setString("Back");
 	menu3.mainmenu[2].setCharacterSize(50);
 	menu3.mainmenu[2].setPosition(Vector2f(1250, menu3.height / 2 + 200));
-	hand.setPosition(1155, 600);
+	//hand.setPosition(1155, 600);
 	while (window.isOpen())
 	{
 		Event event;
@@ -708,9 +710,9 @@ void options_menu(RectangleShape bg, RectangleShape hand)
 			if (event.type == Event::KeyPressed)
 			{
 				if (event.key.code == Keyboard::Down)
-					menu3.MoveDown(menu3.selected, menu3.choises, hand);
+					menu3.MoveDown(menu3.selected, menu3.choises);
 				if (event.key.code == Keyboard::Up)
-					menu3.MoveUp(menu3.selected, menu3.choises, hand);
+					menu3.MoveUp(menu3.selected, menu3.choises);
 
 				if (event.key.code == Keyboard::Enter)
 				{
@@ -735,13 +737,14 @@ void options_menu(RectangleShape bg, RectangleShape hand)
 			window.draw(menu3.mainmenu[i]);
 		}
 		window.draw(facee.face);
-		window.draw(hand);
+		window.draw(menu3.hand);
 		window.display();
 	}
 }
-void options_menu(RectangleShape bg)
+void options_menu1(RectangleShape bg)
 {
 	Menu menu3;
+	menu3.Hand_intilization();
 	int charcter = 0;
 	Font font;
 	font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
@@ -893,18 +896,18 @@ int main()
 				if (event.type == Event::KeyPressed)
 				{
 					if (event.key.code == Keyboard::Down)
-						men.MoveDown(men.selected, men.choises, men.hand);
+						men.MoveDown(men.selected, men.choises);
 					if (event.key.code == Keyboard::Up)
-						men.MoveUp(men.selected, men.choises, men.hand);
+						men.MoveUp(men.selected, men.choises);
 					if (event.key.code == Keyboard::Enter)
 					{
 
 						if (men.selected == 5)
 							pageNumber = -1;
 						if (men.selected == 0)
-							Play_menu(bg, men.hand);
+							Play_menu(bg);
 						if (men.selected == 4)
-							options_menu(bg, men.hand);
+							options_menu(bg);
 						if (men.selected == 1)
 							instructions();
 					}

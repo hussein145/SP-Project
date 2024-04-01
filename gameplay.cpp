@@ -6,13 +6,13 @@
 using namespace sf;
 using namespace std;
 
-RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Fullscreen);
+RenderWindow window(VideoMode(1920, 1080), "IcyTower", Style::Fullscreen);
 Clock clockk;
 float dt;
 int GameMode;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
-const int stairsNum = 50, floorsnum = stairsNum/50+1, bgNums = 200;
+const int stairsNum = 50, floorsnum = stairsNum / 50 + 1, bgNums = 200;
 int pageNumber = 1000;
 struct PowerUps
 {
@@ -209,7 +209,7 @@ void setDrops()
 	for (size_t i = 0; i < 4; i++)
 	{
 		Drops[i].setTexture(DropsTex[i]);
-		Drops[i].setOrigin(Drops[i].getScale().x/2, Drops[i].getScale().y / 2);
+		Drops[i].setOrigin(Drops[i].getScale().x / 2, Drops[i].getScale().y / 2);
 	}
 	Drops[0].setScale(0.15, 0.15);
 	Drops[1].setScale(0.15, 0.15);
@@ -218,12 +218,12 @@ void setDrops()
 }
 void generateDrop(Vector2f stair_position, int Stair_width)
 {
-	if (addtimer.getElapsedTime().asSeconds() >= rand()%5+1)
+	if (addtimer.getElapsedTime().asSeconds() >= rand() % 5 + 1)
 	{
 		int indexDrop = rand() % 4;
 		PowerUps Powerup;
 		Powerup.dropShape = Drops[indexDrop];
-		Powerup.dropShape.setPosition(stair_position.x+(Stair_width/2), stair_position.y);
+		Powerup.dropShape.setPosition(stair_position.x + (Stair_width / 2), stair_position.y);
 		Powerup.type = indexDrop;
 		dropBag.push_back(Powerup);
 		addtimer.restart();
@@ -475,7 +475,7 @@ struct CameraView
 void Gameplay()
 {
 	// powerups
-	setDrops(); 
+	setDrops();
 
 	//player
 	Texture tex;
@@ -721,7 +721,7 @@ void Play_menu()
 	menu2.mainmenu[0].setPosition(Vector2f(1250, menu2.height / 2 + 60));
 
 	menu2.mainmenu[1].setFont(menu2.font);
-	menu2.mainmenu[1].setString("Multi");
+	menu2.mainmenu[1].setString("Multiplayer");
 	menu2.mainmenu[1].setCharacterSize(50);
 	menu2.mainmenu[1].setFillColor(Color::Black);
 	menu2.mainmenu[1].setPosition(Vector2f(1250, menu2.height / 2 + 130));

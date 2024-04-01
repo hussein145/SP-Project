@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <iostream>
+#include<SFML/Audio.hpp>
+#include<iostream>
 #include <vector>
 #include <math.h>
 using namespace sf;
@@ -12,12 +12,19 @@ float dt;
 int GameMode;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
-const int stairsNum = 400, floorsnum = 9, bgNums = 200;
+const int stairsNum = 50, floorsnum = stairsNum/50+1, bgNums = 200;
 int pageNumber = 1000;
-Sprite Drops[4];
+struct PowerUps
+{
+	Sprite dropShape;		   // random powerup
+	RectangleShape blockShape; // random block
+	int type;				   // drop type
+	int PowerUP_veolcity;
+}Power;
 Texture DropsTex[4];
-
-struct Face
+vector<PowerUps> dropBag;
+Sprite Drops[4];
+struct menu_Bg_and_Face
 {
 	Sprite face;
 	Texture fa;
@@ -26,8 +33,18 @@ struct Face
 	bool porm = true;
 	float updown = 0;
 	bool morp = true;
+	Texture texture;
+	RectangleShape bg;
+
+	void back_ground()
+	{
+		texture.loadFromFile("Assets/Textures/main menu.png");
+		bg.setTexture(&texture);
+		bg.setSize(Vector2f(window.getSize()));
+	}
 	void FaceMotion()
 	{
+
 		fa.loadFromFile("Assets/Textures/heads.png");
 
 		face.setTexture(fa);
@@ -63,8 +80,9 @@ struct Face
 
 		face.setPosition(1450 - rotation, 460 + updown);
 		face.setRotation(rotation);
+
 	}
-} facee;
+}menu_UI;
 struct Menu
 {
 	Text mainmenu[10];
@@ -74,8 +92,27 @@ struct Menu
 	int choises;
 	int pageNumber;
 	int positionOfHand = 70;
+	Texture handTex;
+	RectangleShape hand;
+	/*Texture texture;
+	RectangleShape bg;
 
-	void MoveDown(int &selected, int choises, RectangleShape &hand)
+	void back_ground()
+	{
+		texture.loadFromFile("Assets/Textures/main menu.png");
+		bg.setTexture(&texture);
+		bg.setSize(Vector2f(window.getSize()));
+	}*/
+
+	void Hand_intilization()
+	{
+		handTex.loadFromFile("Assets/Textures/hand.png");
+		hand.setTexture(&handTex);
+		hand.setSize(Vector2f(100, 70));
+		hand.setPosition(1140, 600);
+	}
+
+	void MoveDown(int& selected, int choises)
 	{
 		if (selected < choises)
 		{
@@ -87,10 +124,10 @@ struct Menu
 				selected = 0;
 				hand.setPosition(1140, 600);
 			}
-			mainmenu[selected].setFillColor(Color{255, 204, 0});
+			mainmenu[selected].setFillColor(Color{ 255,204,0 });
 		}
 	}
-	void MoveUp(int &selected, int choises, RectangleShape &hand)
+	void MoveUp(int& selected, int choises)
 	{
 		if (selected > -1)
 		{
@@ -103,12 +140,12 @@ struct Menu
 				selected = choises - 1;
 				hand.setPosition(1140, hand.getPosition().y + (positionOfHand * choises));
 			}
-			mainmenu[selected].setFillColor(Color{255, 204, 0});
+			mainmenu[selected].setFillColor(Color{ 255,204,0 });
+
 		}
 	}
 };
-struct sprite
-{
+struct sprite {
 	Sprite player1;
 	RectangleShape player2;
 	Texture texture;
@@ -117,13 +154,13 @@ struct sprite
 	float x;
 	bool check_on_ground;
 	int last_button_pressed = 1;
-	void inti(Texture &texture)
+	void inti(Texture& texture)
 	{
 		player1.setTexture(texture);
 		player1.setPosition(500, 500);
 		player1.setTextureRect(IntRect(0, 0, 128, 128));
 		player1.setOrigin(player1.getTextureRect().width / 2, player1.getTextureRect().height / 2);
-		// player2
+		//player2
 		player2.setSize(Vector2f(100, 100));
 		player2.setPosition(450, 500);
 
@@ -137,7 +174,7 @@ struct sprite
 		player1.move(velocity_x * dt, velocity_y * dt);
 		if (velocity_x > 0)
 		{
-			// player.move(velocity_x * time, 0);
+			//player.move(velocity_x * time, 0);
 
 			player1.setScale(1, 1);
 			x += 0.01f;
@@ -145,10 +182,11 @@ struct sprite
 		}
 		if (velocity_x < 0)
 		{
-			// player.move(velocity_x * time, 0);
+			//player.move(velocity_x * time, 0);
 			player1.setScale(-1, 1);
 			x += 0.01f;
 			player1.setTextureRect(IntRect(128 * int(x), 0, 128, 128));
+
 		}
 		if (velocity_y < 0)
 		{
@@ -157,8 +195,47 @@ struct sprite
 
 		if (x >= 7)
 			x = 0;
+
 	}
-} players;
+}players;
+/// <summary>
+Clock addtimer, deletetimer;
+void setDrops()
+{
+	DropsTex[0].loadFromFile("Assets//Textures//heart.png");
+	DropsTex[1].loadFromFile("Assets//Textures//speed.png");
+	DropsTex[2].loadFromFile("Assets//Textures//superjump.png");
+	DropsTex[3].loadFromFile("Assets//Textures//danger.png");
+	for (size_t i = 0; i < 4; i++)
+		Drops[i].setTexture(DropsTex[i]);
+	Drops[0].setScale(0.25, 0.25);
+	Drops[1].setScale(0.25, 0.25);
+	Drops[2].setScale(0.25, 0.25);
+	Drops[3].setScale(0.25, 0.25);
+}
+void generateDrop(Vector2f stair_position, int Stair_width)
+{
+	if (addtimer.getElapsedTime().asSeconds() >= 0)
+	{
+		int indexDrop = rand() % 4;
+		PowerUps Powerup;
+		Powerup.dropShape = Drops[indexDrop];
+		Powerup.dropShape.setPosition(stair_position.x+(Stair_width/2), stair_position.y);
+		Powerup.type = indexDrop;
+		dropBag.push_back(Powerup);
+		addtimer.restart();
+
+	}
+	/*if (deletetimer.getElapsedTime().asSeconds() >= 10)
+	{
+		if (!dropBag.empty())
+		{
+			dropBag.erase(dropBag.begin());
+			deletetimer.restart();
+		}
+	}*/
+}
+/// </summary>
 struct MAP
 {
 	RectangleShape bg[bgNums];
@@ -166,23 +243,23 @@ struct MAP
 	RectangleShape stairs[stairsNum];
 	RectangleShape floor[floorsnum];
 
-	// velocities
+	//velocities
 	float Walls_velocity, Backgrond_Velocity, Stairs_velocity, view_velocity;
 
-	// positions
+	//positions
 	Vector2f StairPosition;
 	Vector2f floorPosition;
 	int LeftWall_Pos_x, RightWalls_Pos_x, bg_width, floor_width;
 
-	// sizes
+	//sizes
 	Vector2f size_Of_Stair;
 	int Walls_Width = 160;
 
-	// limits
+	//limits
 	int RightLimit;
 	float limit_of_finalStair_position;
 
-	// counters
+	//counters
 	int heightBetweenStair;
 	int currstair = 0, currFloor = 0;
 	int count_stairs = 0;
@@ -190,9 +267,9 @@ struct MAP
 	int previous_Background = bgNums - 1, previous_wall = bgNums - 1;
 	int Stairs_OF_EachFloor = 50;
 
-	void intiliztion(Texture &backGround, Texture &stairTexture, Texture &floorTexture, Texture &wallTexture)
+	void intiliztion(Texture& backGround, Texture& stairTexture, Texture& floorTexture, Texture& wallTexture)
 	{
-		// background
+		//background
 		if (GameMode == 2)
 		{
 			LeftWall_Pos_x = 0, RightWalls_Pos_x = 1920;
@@ -220,7 +297,7 @@ struct MAP
 			bg[i].setPosition(LeftWall_Pos_x, -i * 1080);
 		}
 
-		// stairs & floors
+		//stairs & floors
 		limit_of_finalStair_position = 1670;
 		heightBetweenStair = 0;
 		srand(static_cast<unsigned>(time(NULL)));
@@ -237,17 +314,23 @@ struct MAP
 			}
 			count_stairs++;
 			stairs[i].setTexture(&stairTexture);
-			// SET SIZE
+			//SET SIZE
 			size_Of_Stair = Vector2f((rand() % 300 + 250), 150);
 			stairs[i].setSize(size_Of_Stair);
 			RightLimit = (RightWalls_Pos_x - Walls_Width) - stairs[i].getSize().x - (1920 - (RightWalls_Pos_x - Walls_Width));
 
-			// SET POSITION
+			//SET POSITION
 			StairPosition = Vector2f((rand() % RightLimit) + (LeftWall_Pos_x + Walls_Width), 955 - heightBetweenStair);
 			stairs[i].setPosition(StairPosition);
 
 			heightBetweenStair += 205;
+
+			if (GameMode == 3)
+			{
+				generateDrop(stairs[i].getPosition(), stairs[i].getSize().x);
+			}
 		}
+
 	}
 
 	void updateStairs(Texture floorr)
@@ -275,6 +358,10 @@ struct MAP
 			currstair++;
 			count_stairs++;
 			heightBetweenStair += 205;
+			if (GameMode == 3)
+			{
+				generateDrop(stairs[currstair].getPosition(), stairs[currstair].getSize().x);
+			}
 		}
 
 		currstair %= (stairsNum - 1);
@@ -319,6 +406,7 @@ struct MAP
 				Wall_Index = 0;
 			}
 		}
+
 	}
 	bool move = 0;
 	void Map_Motion(float dt)
@@ -327,6 +415,9 @@ struct MAP
 			move = 1;
 		if (move)
 		{
+			for (int i = 0; i < dropBag.size(); i++)
+				dropBag[i].dropShape.move(0, Power.PowerUP_veolcity * dt);
+
 			for (int i = 0; i < bgNums; i++)
 			{
 				bg[i].move(0, Backgrond_Velocity * dt);
@@ -374,55 +465,44 @@ struct CameraView
 		}
 	}
 };
-struct PowerUps
-{
-	Sprite dropShape;		   // random powerup
-	RectangleShape blockShape; // random block
-	int type;				   // drop type
-};
-vector<PowerUps> dropBag;
-
-void setDrops();
-void generateDrop(MAP Map, Clock &addtimer, Clock &deletetimer);
 
 void Gameplay()
 {
-	// player
+	// powerups
+	setDrops(); 
+
+	//player
 	Texture tex;
 	tex.loadFromFile("Assets/Textures/Run.png");
 	players.inti(tex);
 
-	// Map
+	//Map
 	MAP Map;
 	CameraView view;
 
-	// background
+	//background
 	Texture background, wall;
 	background.loadFromFile("Assets/Textures/BackGround game1.png");
 	wall.loadFromFile("Assets/Textures/wall1.png");
 
-	// stairs
+	//stairs
 	Texture stairs, floor;
 	stairs.loadFromFile("Assets/Textures/Stair.png");
 	floor.loadFromFile("Assets/Textures/floor.png");
 
-	// map insilization
+	//map insilization
 	Map.intiliztion(background, stairs, floor, wall);
 
-	// view insilization
+	//view insilization
 	view.view_insilization();
 
-	// int animation_cnt = 0;
+	//int animation_cnt = 0;
 	int Background_Index = 0, Wall_Index = 0;
 	int previous_Background = bgNums - 1, previous_wall = bgNums - 1;
 
 	/*Clock clock;
 	float dt;*/
 	bool END = 1;
-
-	// powerups
-	Clock addtimer, deletetimer;
-	setDrops();
 
 	while (window.isOpen())
 	{
@@ -431,7 +511,6 @@ void Gameplay()
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
 			cout << pos.x << " " << pos.y << endl;
 		}*/
-
 		dt = clockk.restart().asSeconds();
 		Event event;
 		while (window.pollEvent(event))
@@ -445,34 +524,36 @@ void Gameplay()
 				return;
 			}
 		}
-		// camera view
+		//camera view
 		view.SetView();
 
-		// map update
+		//map update
 		Map.updateStairs(floor);
 		Map.updateBackground_And_Walls();
 
-		// map Motion
+		//map Motion
 		Map.Map_Motion(dt);
 		Map.Backgrond_Velocity = 30.f;
 		Map.Walls_velocity = 150.f;
-		Map.Stairs_velocity = 70.f;
+		Map.Stairs_velocity = Power.PowerUP_veolcity = 70.f;
 		Map.view_velocity = 100;
 
-		// motion of players
+		//motion of players
 		players.velocity_x = 0;
 		players.velocity_y = 0;
 
-		// freeze game
-		if (players.player1.getPosition().y > player1_View.getCenter().y + 550 || (GameMode == 2 && players.player2.getPosition().y > player2_View.getCenter().y + 540))
+		//freeze game
+		if (players.player1.getPosition().y > player1_View.getCenter().y + 550
+			|| (GameMode == 2 && players.player2.getPosition().y > player2_View.getCenter().y + 540))
 		{
-			Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = 0;
+			Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = Power.PowerUP_veolcity = 0;
 			END = 0;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::D) && END)
 		{
 			players.velocity_x = 50;
 			players.last_button_pressed = 1;
+
 		}
 		if (Keyboard::isKeyPressed(Keyboard::A) && END)
 		{
@@ -487,8 +568,9 @@ void Gameplay()
 		if (Keyboard::isKeyPressed(Keyboard::S) && END)
 		{
 			players.velocity_y = 400;
+
 		}
-		// player2 --------------------------------------------------
+		//player2 --------------------------------------------------
 		if (GameMode == 2)
 		{
 			if (Keyboard::isKeyPressed(Keyboard::Up) && END)
@@ -500,12 +582,8 @@ void Gameplay()
 				players.player2.move(0, 700 * dt);
 			}
 		}
-		////powerups----------------------------------------------------------
-		if (GameMode == 3)
-		{
-			generateDrop(Map, addtimer, deletetimer);
-		}
 		//------------------------------------------------------------------
+
 		if (players.last_button_pressed == 1)
 		{
 			players.player1.setTextureRect(IntRect(0, 0, 128, 128));
@@ -536,14 +614,14 @@ void Gameplay()
 		{
 			window.draw(Map.stairs[i]);
 		}
+		if (GameMode == 2)
+			window.draw(players.player2);
+		window.draw(players.player1);
 		if (GameMode == 3)
 		{
 			for (int i = 0; i < dropBag.size(); i++)
 				window.draw(dropBag[i].dropShape);
 		}
-		if (GameMode == 2)
-			window.draw(players.player2);
-		window.draw(players.player1);
 		//------------------------------------------------------
 		if (GameMode == 2)
 		{
@@ -571,93 +649,16 @@ void Gameplay()
 		}
 		//--------------------------------------------------------------
 		window.display();
+
 	}
 }
-void menu1(Menu &men1);
-void Play_menu(RectangleShape bg, RectangleShape hand);
-void options_menu(RectangleShape bg);
-void instructions();
-int main()
-{
-	Texture texture;
-	texture.loadFromFile("Assets/Textures/main menu.png");
-	RectangleShape bg;
-	bg.setTexture(&texture);
-	bg.setSize(Vector2f(window.getSize()));
 
-	// hand
-	Texture handTex;
-	RectangleShape hand;
-	handTex.loadFromFile("Assets/Textures/hand.png");
-	hand.setTexture(&handTex);
-	hand.setSize(Vector2f(100, 70));
-	hand.setPosition(1140, 600);
-
-	// MainMenu;
-	Menu men;
-	menu1(men);
-	men.choises = 6;
-
-	while (window.isOpen())
-	{
-		if (pageNumber == 1000)
-		{
-			Event event;
-			while (window.pollEvent(event))
-			{
-				if (event.type == Event::Closed)
-					window.close();
-				/*if (event.KeyPressed && event.key.code == Keyboard::Escape)
-					window.close();*/
-				if (event.type == Event::KeyPressed)
-				{
-					if (event.key.code == Keyboard::Down)
-						men.MoveDown(men.selected, men.choises, hand);
-					if (event.key.code == Keyboard::Up)
-						men.MoveUp(men.selected, men.choises, hand);
-					if (event.key.code == Keyboard::Enter)
-					{
-
-						if (men.selected == 5)
-							pageNumber = -1;
-						if (men.selected == 0)
-							Play_menu(bg, hand);
-						if (men.selected == 4)
-							options_menu(bg);
-						if (men.selected == 1)
-							instructions();
-					}
-				}
-			}
-		}
-		facee.FaceMotion();
-		if (pageNumber == -1)
-		{
-			window.close();
-			break;
-		}
-
-		window.clear();
-		window.draw(bg);
-		window.draw(facee.face);
-		if (pageNumber == 1000 || pageNumber == 500)
-		{
-			for (int i = 0; i < men.choises; i++)
-			{
-				window.draw(men.mainmenu[i]);
-			}
-		}
-
-		window.draw(hand);
-		window.display();
-	}
-}
-void menu1(Menu &men1)
+void menu1(Menu& men1)
 {
 	men1.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
 	men1.choises = 6;
 	men1.mainmenu[0].setFont(men1.font);
-	men1.mainmenu[0].setFillColor(Color{255, 204, 0});
+	men1.mainmenu[0].setFillColor(Color{ 255,204,0 });
 	men1.mainmenu[0].setString("Play Game");
 	men1.mainmenu[0].setCharacterSize(50);
 	men1.mainmenu[0].setPosition(Vector2f(1250, men1.height / 2 + 60));
@@ -692,16 +693,17 @@ void menu1(Menu &men1)
 	men1.mainmenu[5].setCharacterSize(50);
 	men1.mainmenu[5].setPosition(Vector2f(1250, men1.height / 2 + 410));
 }
-void Play_menu(RectangleShape bg, RectangleShape hand)
+void Play_menu()
 {
 	Menu menu2;
+	menu2.Hand_intilization();
 	menu2.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
 	menu2.choises = 3;
 
 	menu2.mainmenu[0].setFont(menu2.font);
 	menu2.mainmenu[0].setString("Single");
 	menu2.mainmenu[0].setCharacterSize(50);
-	menu2.mainmenu[0].setFillColor(Color{255, 204, 0});
+	menu2.mainmenu[0].setFillColor(Color{ 255,204,0 });
 	menu2.mainmenu[0].setPosition(Vector2f(1250, menu2.height / 2 + 60));
 
 	menu2.mainmenu[1].setFont(menu2.font);
@@ -733,37 +735,35 @@ void Play_menu(RectangleShape bg, RectangleShape hand)
 			if (event.type == Event::KeyPressed)
 			{
 				if (event.key.code == Keyboard::Down)
-					menu2.MoveDown(menu2.selected, menu2.choises, hand);
+					menu2.MoveDown(menu2.selected, menu2.choises);
 				if (event.key.code == Keyboard::Up)
-					menu2.MoveUp(menu2.selected, menu2.choises, hand);
+					menu2.MoveUp(menu2.selected, menu2.choises);
 
 				if (event.key.code == Keyboard::Enter)
 				{
-					if (menu2.selected == 0)
-						GameMode = 1;
-					if (menu2.selected == 1)
-						GameMode = 2;
-					if (menu2.selected == 2)
-						GameMode = 3;
+					if (menu2.selected == 0)   GameMode = 1;
+					if (menu2.selected == 1)   GameMode = 2;
+					if (menu2.selected == 2)   GameMode = 3;
 					Gameplay();
 				}
 			}
 		}
-		facee.FaceMotion();
+		menu_UI.FaceMotion();
 		window.clear();
-		window.draw(bg);
-		window.draw(facee.face);
+		window.draw(menu_UI.bg);
+		window.draw(menu_UI.face);
 		for (int i = 0; i < menu2.choises; i++)
 		{
 			window.draw(menu2.mainmenu[i]);
 		}
-		window.draw(hand);
+		window.draw(menu2.hand);
 		window.display();
 	}
 }
-void options_menu(RectangleShape bg)
+void options_menu1()
 {
-	Menu menu3;
+	Menu menu4;
+	menu4.Hand_intilization();
 	int charcter = 0;
 	Font font;
 	font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
@@ -773,8 +773,9 @@ void options_menu(RectangleShape bg)
 	t1.setString("change charcter <> ");
 	t1.setCharacterSize(70);
 	t1.setPosition(10, 10);
-	t1.setFillColor(Color{255, 204, 0});
+	t1.setFillColor(Color{ 255,204,0 });
 	t1.setPosition(650, 460);
+
 
 	Texture Bl;
 	Bl.loadFromFile("Assets/Textures/Stair.png");
@@ -820,8 +821,9 @@ void options_menu(RectangleShape bg)
 				pageNumber = 1000;
 				return;
 			}
+
 		}
-		facee.FaceMotion();
+		menu_UI.FaceMotion();
 		if (charcter == 0)
 		{
 			player.setTexture(pl1);
@@ -841,11 +843,78 @@ void options_menu(RectangleShape bg)
 			player.setPosition(1250, 440);
 		}
 		window.clear();
-		window.draw(bg);
-		window.draw(facee.face);
+		window.draw(menu_UI.bg);
+		window.draw(menu_UI.face);
 		window.draw(t1);
 		window.draw(Block);
 		window.draw(player);
+		window.display();
+	}
+}
+void options_menu()
+{
+	Menu menu3;
+	menu3.Hand_intilization();
+	menu3.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
+	menu3.choises = 3;
+
+	menu3.mainmenu[0].setFont(menu3.font);
+	menu3.mainmenu[0].setFillColor(Color{ 255,204,0 });
+	menu3.mainmenu[0].setString("GFX Options");
+	menu3.mainmenu[0].setCharacterSize(50);
+	menu3.mainmenu[0].setPosition(Vector2f(1250, menu3.height / 2 + 60));
+
+	menu3.mainmenu[1].setFont(menu3.font);
+	menu3.mainmenu[1].setFillColor(Color::Black);
+	menu3.mainmenu[1].setString("Sound options");
+	menu3.mainmenu[1].setCharacterSize(50);
+	menu3.mainmenu[1].setPosition(Vector2f(1250, menu3.height / 2 + 130));
+
+	menu3.mainmenu[2].setFont(menu3.font);
+	menu3.mainmenu[2].setFillColor(Color::Black);
+	menu3.mainmenu[2].setString("Back");
+	menu3.mainmenu[2].setCharacterSize(50);
+	menu3.mainmenu[2].setPosition(Vector2f(1250, menu3.height / 2 + 200));
+	//hand.setPosition(1155, 600);
+	while (window.isOpen())
+	{
+		Event event;
+
+		while (window.pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+				window.close();
+			if (event.type == Event::KeyPressed)
+			{
+				if (event.key.code == Keyboard::Down)
+					menu3.MoveDown(menu3.selected, menu3.choises);
+				if (event.key.code == Keyboard::Up)
+					menu3.MoveUp(menu3.selected, menu3.choises);
+
+				if (event.key.code == Keyboard::Enter)
+				{
+					if (menu3.selected == 0)   options_menu1();
+					if (menu3.selected == 2) {
+						pageNumber = 1000;
+						break;
+					}
+				}
+			}
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			pageNumber = 1000;
+			break;
+		}
+		menu_UI.FaceMotion();
+		window.clear();
+		window.draw(menu_UI.bg);
+		for (int i = 0; i < menu3.choises; i++)
+		{
+			window.draw(menu3.mainmenu[i]);
+		}
+		window.draw(menu_UI.face);
+		window.draw(menu3.hand);
 		window.display();
 	}
 }
@@ -875,38 +944,74 @@ void instructions()
 		window.display();
 	}
 }
-void setDrops()
+int main()
 {
-	DropsTex[0].loadFromFile("Assets\\Textures\\heart.png");
-	DropsTex[1].loadFromFile("Assets\\Textures\\speed.png");
-	DropsTex[2].loadFromFile("Assets\\Textures\\superjump.png");
-	DropsTex[3].loadFromFile("Assets\\Textures\\danger.png");
-	for (size_t i = 0; i < 4; i++)
-		Drops[i].setTexture(DropsTex[i]);
-	Drops[0].setScale(0.25, 0.25);
-	Drops[1].setScale(0.25, 0.25);
-	Drops[2].setScale(0.25, 0.25);
-	Drops[3].setScale(0.25, 0.25);
-}
-void generateDrop(MAP Map, Clock &addtimer, Clock &deletetimer)
-{
-	if (addtimer.getElapsedTime().asSeconds() >= 0.5)
+
+	//MainMenu;
+	Menu men;
+	//hand
+	men.Hand_intilization();
+
+	//background
+	menu_UI.back_ground();
+
+	menu1(men);
+	men.choises = 6;
+
+	while (window.isOpen())
 	{
-		int indexDrop = rand() % 4, indexBlock = rand() % 400;
-		PowerUps Powerup;
-		Powerup.dropShape = Drops[indexDrop];
-		Powerup.blockShape = Map.stairs[indexBlock];
-		Powerup.dropShape.setPosition(Powerup.blockShape.getPosition().x, Powerup.blockShape.getPosition().y);
-		Powerup.type = indexDrop;
-		dropBag.push_back(Powerup);
-		addtimer.restart();
-	}
-	if (deletetimer.getElapsedTime().asSeconds() >= 10)
-	{
-		if (!dropBag.empty())
+		if (pageNumber == 1000)
 		{
-			dropBag.erase(dropBag.begin());
-			deletetimer.restart();
+			Event event;
+			while (window.pollEvent(event))
+			{
+				if (event.type == Event::Closed)
+					window.close();
+				/*if (event.KeyPressed && event.key.code == Keyboard::Escape)
+					window.close();*/
+				if (event.type == Event::KeyPressed)
+				{
+					if (event.key.code == Keyboard::Down)
+						men.MoveDown(men.selected, men.choises);
+					if (event.key.code == Keyboard::Up)
+						men.MoveUp(men.selected, men.choises);
+					if (event.key.code == Keyboard::Enter)
+					{
+
+						if (men.selected == 5)
+							pageNumber = -1;
+						if (men.selected == 0)
+							Play_menu();
+						if (men.selected == 4)
+							options_menu();
+						if (men.selected == 1)
+							instructions();
+					}
+				}
+
+			}
 		}
+		menu_UI.FaceMotion();
+		if (pageNumber == -1)
+		{
+			window.close();
+			break;
+		}
+
+
+		window.clear();
+		window.draw(menu_UI.bg);
+		window.draw(menu_UI.face);
+		if (pageNumber == 1000 || pageNumber == 500)
+		{
+			for (int i = 0; i < men.choises; i++)
+			{
+				window.draw(men.mainmenu[i]);
+			}
+		}
+
+		window.draw(men.hand);
+		window.display();
 	}
+
 }

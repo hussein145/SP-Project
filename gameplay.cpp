@@ -6,13 +6,13 @@
 using namespace sf;
 using namespace std;
 
-RenderWindow window(VideoMode(1920, 1080), "IcyTower", Style::Fullscreen);
+RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Fullscreen);
 Clock clockk;
 float dt;
 int GameMode;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
-const int stairsNum = 50, floorsnum = stairsNum / 50 + 1, bgNums = 200;
+const int stairsNum = 50, floorsnum = stairsNum/50+1, bgNums = 200;
 int pageNumber = 1000;
 struct PowerUps
 {
@@ -51,7 +51,7 @@ struct menu_Bg_and_Face
 
 		face.setScale(2.25, 2.25);
 		face.setOrigin(120, 200);
-		current_face += 0.008;
+		current_face += 0.008f;
 		if (current_face >= 2.999999)
 			current_face = 0;
 		face.setTextureRect(IntRect(209 * int(current_face), 0, 209, 258));
@@ -145,6 +145,7 @@ struct Menu
 		}
 	}
 };
+bool END = 1;
 struct sprite {
 	Sprite player1;
 	RectangleShape player2;
@@ -172,33 +173,77 @@ struct sprite {
 	void update()
 	{
 		player1.move(velocity_x * dt, velocity_y * dt);
+		player2.move(velocity_x * dt, velocity_y * dt);
 		if (velocity_x > 0)
 		{
-			//player.move(velocity_x * time, 0);
-
 			player1.setScale(1, 1);
 			x += 0.01f;
 			player1.setTextureRect(IntRect(128 * int(x), 0, 128, 128));
 		}
 		if (velocity_x < 0)
 		{
-			//player.move(velocity_x * time, 0);
 			player1.setScale(-1, 1);
 			x += 0.01f;
 			player1.setTextureRect(IntRect(128 * int(x), 0, 128, 128));
 
 		}
-		if (velocity_y < 0)
+		/*if (velocity_y < 0)
 		{
 			check_on_ground = false;
-		}
+		}*/
 
 		if (x >= 7)
 			x = 0;
 
 	}
+	void Players_Motion()
+	{
+		if (Keyboard::isKeyPressed(Keyboard::D) && END)
+		{
+			velocity_x = 200;
+			last_button_pressed = 1;
+
+		}
+		if (Keyboard::isKeyPressed(Keyboard::A) && END)
+		{
+			velocity_x = -200;
+			last_button_pressed = 2;
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::W) && END)
+		{
+			velocity_y = -700;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::S) && END)
+		{
+			velocity_y = 400;
+
+		}
+		//player2 --------------------------------------------------
+		if (GameMode == 2)
+		{
+			if (Keyboard::isKeyPressed(Keyboard::Up) && END)
+			{
+				player2.move(0, -700 * dt);
+			}
+			if (Keyboard::isKeyPressed(Keyboard::Down) && END)
+			{
+				player2.move(0, 700 * dt);
+			}
+		}
+		//------------------------------------------------------------------
+
+		if (players.last_button_pressed == 1)
+		{
+			player1.setTextureRect(IntRect(0, 0, 128, 128));
+		}
+		if (players.last_button_pressed == 2)
+		{
+			player1.setScale(-1, 1);
+			player1.setTextureRect(IntRect(0, 0, 128, 128));
+		}
+	}
 }players;
-/// <summary>
 Clock addtimer, deletetimer;
 void setDrops()
 {
@@ -209,7 +254,7 @@ void setDrops()
 	for (size_t i = 0; i < 4; i++)
 	{
 		Drops[i].setTexture(DropsTex[i]);
-		Drops[i].setOrigin(Drops[i].getScale().x / 2, Drops[i].getScale().y / 2);
+		Drops[i].setOrigin(Drops[i].getScale().x/2, Drops[i].getScale().y / 2);
 	}
 	Drops[0].setScale(0.15, 0.15);
 	Drops[1].setScale(0.15, 0.15);
@@ -218,12 +263,12 @@ void setDrops()
 }
 void generateDrop(Vector2f stair_position, int Stair_width)
 {
-	if (addtimer.getElapsedTime().asSeconds() >= rand() % 5 + 1)
+	if (addtimer.getElapsedTime().asSeconds() >= rand()%5+1)
 	{
 		int indexDrop = rand() % 4;
 		PowerUps Powerup;
 		Powerup.dropShape = Drops[indexDrop];
-		Powerup.dropShape.setPosition(stair_position.x + (Stair_width / 2), stair_position.y);
+		Powerup.dropShape.setPosition(stair_position.x+(Stair_width/2), stair_position.y);
 		Powerup.type = indexDrop;
 		dropBag.push_back(Powerup);
 		addtimer.restart();
@@ -238,40 +283,22 @@ void generateDrop(Vector2f stair_position, int Stair_width)
 		}
 	}
 }
-/// </summary>
-struct MAP
-{
+struct BackGround {
+	Texture backGround, wallTexture;
+
 	RectangleShape bg[bgNums];
 	RectangleShape wallsLeft[bgNums], wallsRight[bgNums];
-	RectangleShape stairs[stairsNum];
-	RectangleShape floor[floorsnum];
 
-	//velocities
-	float Walls_velocity, Backgrond_Velocity, Stairs_velocity, view_velocity;
-
-	//positions
-	Vector2f StairPosition;
-	Vector2f floorPosition;
-	int LeftWall_Pos_x, RightWalls_Pos_x, bg_width, floor_width;
-
-	//sizes
-	Vector2f size_Of_Stair;
-	int Walls_Width = 160;
-
-	//limits
-	int RightLimit;
-	float limit_of_finalStair_position;
-
-	//counters
-	int heightBetweenStair;
-	int currstair = 0, currFloor = 0;
-	int count_stairs = 0;
 	int Background_Index = 0, Wall_Index = 0;
 	int previous_Background = bgNums - 1, previous_wall = bgNums - 1;
-	int Stairs_OF_EachFloor = 50;
 
-	void intiliztion(Texture& backGround, Texture& stairTexture, Texture& floorTexture, Texture& wallTexture)
+	int LeftWall_Pos_x, RightWalls_Pos_x, bg_width, floor_width;
+	int Walls_Width = 160;
+
+	void intiliztion()
 	{
+		backGround.loadFromFile("Assets/Textures/BackGround game1.png");
+		wallTexture.loadFromFile("Assets/Textures/wall1.png");
 		//background
 		if (GameMode == 2)
 		{
@@ -299,79 +326,6 @@ struct MAP
 			bg[i].setSize(Vector2f(bg_width, 1080));
 			bg[i].setPosition(LeftWall_Pos_x, -i * 1080);
 		}
-
-		//stairs & floors
-		limit_of_finalStair_position = 1670;
-		heightBetweenStair = 0;
-		srand(static_cast<unsigned>(time(NULL)));
-		for (int i = 0; i < stairsNum; i++)
-		{
-			if (count_stairs % Stairs_OF_EachFloor == 0)
-			{
-				floor[currFloor].setTexture(&floorTexture);
-				floor[currFloor].setPosition(floorPosition);
-				floor[currFloor].setSize(Vector2f(floor_width, 150));
-				floor[currFloor].setPosition(Vector2f(LeftWall_Pos_x, 955 - heightBetweenStair));
-				currFloor++;
-				heightBetweenStair += 205;
-			}
-			count_stairs++;
-			stairs[i].setTexture(&stairTexture);
-			//SET SIZE
-			size_Of_Stair = Vector2f((rand() % 300 + 250), 150);
-			stairs[i].setSize(size_Of_Stair);
-			RightLimit = (RightWalls_Pos_x - Walls_Width) - stairs[i].getSize().x - (1920 - (RightWalls_Pos_x - Walls_Width));
-
-			//SET POSITION
-			StairPosition = Vector2f((rand() % RightLimit) + (LeftWall_Pos_x + Walls_Width), 955 - heightBetweenStair);
-			stairs[i].setPosition(StairPosition);
-
-			heightBetweenStair += 205;
-
-			if (GameMode == 3)
-			{
-				generateDrop(stairs[i].getPosition(), stairs[i].getSize().x);
-			}
-		}
-
-	}
-
-	void updateStairs(Texture floorr)
-	{
-		RightLimit = (RightWalls_Pos_x - Walls_Width) - stairs[currstair].getSize().x - (1920 - (RightWalls_Pos_x - Walls_Width));
-		bool player2_Notexist = 1;
-		if (GameMode == 2)
-		{
-			if (stairs[currstair].getPosition().y > player2_View.getCenter().y + 540)
-				player2_Notexist = 1;
-			else
-				player2_Notexist = 0;
-		}
-
-		if (stairs[currstair].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
-		{
-			if (count_stairs % Stairs_OF_EachFloor == 0)
-			{
-				floor[currFloor].setPosition(Vector2f(LeftWall_Pos_x, 955 - heightBetweenStair));
-				currFloor++;
-				heightBetweenStair += 205;
-			}
-			StairPosition = Vector2f(rand() % RightLimit + (LeftWall_Pos_x + Walls_Width), 955 - heightBetweenStair);
-			stairs[currstair].setPosition(StairPosition);
-
-			//powerups
-			if (GameMode == 3)
-			{
-				generateDrop(StairPosition, stairs[currstair].getSize().x);
-			}
-
-			currstair++;
-			count_stairs++;
-			heightBetweenStair += 205;
-		}
-
-		currstair %= (stairsNum - 1);
-		currFloor %= (floorsnum - 1);
 	}
 	void updateBackground_And_Walls()
 	{
@@ -414,8 +368,129 @@ struct MAP
 		}
 
 	}
+}background;
+struct STAIRS {
+	RectangleShape stairs[stairsNum];
+	RectangleShape floor[floorsnum];
+	Texture stairTexture, floorTexture;
+
+	//positions
+	Vector2f StairPosition;
+	Vector2f floorPosition;
+	//sizes
+	Vector2f size_Of_Stair;
+	int floor_width;
+
+	//limit of stairs positions
+	int RightLimit;
+
+	//counters
+	int heightBetweenStair;
+	int currstair = 0, currFloor = 0;
+	int count_stairs = 0;
+	int Stairs_OF_EachFloor = 50;
+
+	//stairs intiliztion
+	void intiliztion()
+	{
+		if (GameMode == 2)
+		{
+			background.LeftWall_Pos_x = 0, background.RightWalls_Pos_x = 1920;
+			background.bg_width = 1920, floor_width = 1920;
+		}
+		else
+		{
+			background.LeftWall_Pos_x = 240, background.RightWalls_Pos_x = 1680;
+			background.bg_width = 1420, floor_width = 1420;
+		}
+		stairTexture.loadFromFile("Assets/Textures/Stair.png");
+		floorTexture.loadFromFile("Assets/Textures/floor.png");
+		//stairs & floors
+		heightBetweenStair = 0;
+		srand(static_cast<unsigned>(time(NULL)));
+		for (int i = 0; i < stairsNum; i++)
+		{
+			if (count_stairs % Stairs_OF_EachFloor == 0)
+			{
+				floor[currFloor].setTexture(&floorTexture);
+				floor[currFloor].setSize(Vector2f(floor_width, 150));
+				floor[currFloor].setPosition(Vector2f(background.LeftWall_Pos_x, 955 - heightBetweenStair));
+				currFloor++;
+				heightBetweenStair += 205;
+			}
+			count_stairs++;
+			stairs[i].setTexture(&stairTexture);
+			//SET SIZE
+			size_Of_Stair = Vector2f((rand() % 300 + 250), 150);
+			stairs[i].setSize(size_Of_Stair);
+			RightLimit = (background.RightWalls_Pos_x - background.Walls_Width) - stairs[i].getSize().x - (1920 - (background.RightWalls_Pos_x - background.Walls_Width));
+
+			//SET POSITION
+			StairPosition = Vector2f((rand() % RightLimit) + (background.LeftWall_Pos_x + background.Walls_Width), 955 - heightBetweenStair);
+			stairs[i].setPosition(StairPosition);
+
+			heightBetweenStair += 205;
+
+			/*if (GameMode == 3)
+			{
+				generateDrop(stairs[i].getPosition(), stairs[i].getSize().x);
+			}*/
+		}
+
+	}
+	void updateStairs()
+	{
+		RightLimit = (background.RightWalls_Pos_x - background.Walls_Width) - stairs[currstair].getSize().x - (1920 - (background.RightWalls_Pos_x - background.Walls_Width));
+		bool player2_Notexist = 1;
+		if (GameMode == 2)
+		{
+			if (stairs[currstair].getPosition().y > player2_View.getCenter().y + 540)
+				player2_Notexist = 1;
+			else
+				player2_Notexist = 0;
+		}
+
+		if (stairs[currstair].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
+		{
+			if (count_stairs % Stairs_OF_EachFloor == 0)
+			{
+				floor[currFloor].setPosition(Vector2f(background.LeftWall_Pos_x, 955 - heightBetweenStair));
+				currFloor++;
+				heightBetweenStair += 205;
+			}
+			StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width), 955 - heightBetweenStair);
+			stairs[currstair].setPosition(StairPosition);
+
+			//powerups
+			if (GameMode == 3)
+			{
+				generateDrop(StairPosition, stairs[currstair].getSize().x);
+			}
+
+			currstair++;
+			count_stairs++;
+			heightBetweenStair += 205;
+		}
+
+		currstair %= (stairsNum - 1);
+		currFloor %= (floorsnum - 1);
+	}
+}Stairs;
+struct MAP
+{
+	float Walls_velocity, Backgrond_Velocity, Stairs_velocity, view_velocity;
 	bool move = 0;
-	void Map_Motion(float dt)
+	void intilization()
+	{
+		background.intiliztion();
+		Stairs.intiliztion();
+	}
+	void update()
+	{
+		Stairs.updateStairs();
+		background.updateBackground_And_Walls();
+	}
+	void Map_Motion()
 	{
 		if (players.player1.getPosition().y < 100 || players.player2.getPosition().y < 100)
 			move = 1;
@@ -426,23 +501,24 @@ struct MAP
 
 			for (int i = 0; i < bgNums; i++)
 			{
-				bg[i].move(0, Backgrond_Velocity * dt);
-				wallsRight[i].move(0, Walls_velocity * dt);
-				wallsLeft[i].move(0, Walls_velocity * dt);
+				background.bg[i].move(0, Backgrond_Velocity * dt);
+				background.wallsRight[i].move(0, Walls_velocity * dt);
+				background.wallsLeft[i].move(0, Walls_velocity * dt);
 			}
 			for (int i = 0; i < stairsNum; i++)
 			{
-				stairs[i].move(0, Stairs_velocity * dt);
+				Stairs.stairs[i].move(0, Stairs_velocity * dt);
 			}
 			for (int i = 0; i < floorsnum; i++)
 			{
-				floor[i].move(0, Stairs_velocity * dt);
+				Stairs.floor[i].move(0, Stairs_velocity * dt);
 			}
 			player2_View.move(0, -view_velocity * dt);
 			player1_View.move(0, -view_velocity * dt);
 		}
 	}
 };
+
 struct CameraView
 {
 	void view_insilization()
@@ -471,11 +547,16 @@ struct CameraView
 		}
 	}
 };
-
+void reset()
+{
+	Stairs.StairPosition = Stairs.floorPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
+	Stairs.count_stairs = Stairs.currFloor = Stairs.currstair = Stairs.heightBetweenStair = Stairs.RightLimit = 0;
+	dropBag.clear();
+}
 void Gameplay()
 {
 	// powerups
-	setDrops();
+	setDrops(); 
 
 	//player
 	Texture tex;
@@ -486,29 +567,11 @@ void Gameplay()
 	MAP Map;
 	CameraView view;
 
-	//background
-	Texture background, wall;
-	background.loadFromFile("Assets/Textures/BackGround game1.png");
-	wall.loadFromFile("Assets/Textures/wall1.png");
-
-	//stairs
-	Texture stairs, floor;
-	stairs.loadFromFile("Assets/Textures/Stair.png");
-	floor.loadFromFile("Assets/Textures/floor.png");
-
 	//map insilization
-	Map.intiliztion(background, stairs, floor, wall);
+	Map.intilization();
 
 	//view insilization
 	view.view_insilization();
-
-	//int animation_cnt = 0;
-	int Background_Index = 0, Wall_Index = 0;
-	int previous_Background = bgNums - 1, previous_wall = bgNums - 1;
-
-	/*Clock clock;
-	float dt;*/
-	bool END = 1;
 
 	while (window.isOpen())
 	{
@@ -534,22 +597,18 @@ void Gameplay()
 			{
 				pageNumber = 1000;
 				window.setView(window.getDefaultView());
-				dropBag.clear();
+				reset();
 				return;
 			}
 		}
-		//camera view
+		Map.update();
 		view.SetView();
 
-		//map update
-		Map.updateStairs(floor);
-		Map.updateBackground_And_Walls();
-
 		//map Motion
-		Map.Map_Motion(dt);
+		Map.Map_Motion();
 		Map.Backgrond_Velocity = 30.f;
 		Map.Walls_velocity = 150.f;
-		Map.Stairs_velocity = Power.PowerUP_veolcity = 70.f;
+		Map.Stairs_velocity = Power.PowerUP_veolcity = 70.0f;
 		Map.view_velocity = 100;
 
 		//motion of players
@@ -563,70 +622,27 @@ void Gameplay()
 			Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = Power.PowerUP_veolcity = 0;
 			END = 0;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::D) && END)
-		{
-			players.velocity_x = 200;
-			players.last_button_pressed = 1;
-
-		}
-		if (Keyboard::isKeyPressed(Keyboard::A) && END)
-		{
-			players.velocity_x = -200;
-			players.last_button_pressed = 2;
-		}
-
-		if (Keyboard::isKeyPressed(Keyboard::W) && END)
-		{
-			players.velocity_y = -700;
-		}
-		if (Keyboard::isKeyPressed(Keyboard::S) && END)
-		{
-			players.velocity_y = 400;
-
-		}
-		//player2 --------------------------------------------------
-		if (GameMode == 2)
-		{
-			if (Keyboard::isKeyPressed(Keyboard::Up) && END)
-			{
-				players.player2.move(0, -700 * dt);
-			}
-			if (Keyboard::isKeyPressed(Keyboard::Down) && END)
-			{
-				players.player2.move(0, 700 * dt);
-			}
-		}
-		//------------------------------------------------------------------
-
-		if (players.last_button_pressed == 1)
-		{
-			players.player1.setTextureRect(IntRect(0, 0, 128, 128));
-		}
-		if (players.last_button_pressed == 2)
-		{
-			players.player1.setScale(-1, 1);
-			players.player1.setTextureRect(IntRect(0, 0, 128, 128));
-		}
+		players.Players_Motion();
 		players.update();
 
 		window.clear();
 		window.setView(player1_View);
 		for (int i = 0; i < bgNums; i++)
 		{
-			window.draw(Map.bg[i]);
+			window.draw(background.bg[i]);
 		}
 		for (int i = 0; i < floorsnum; i++)
 		{
-			window.draw(Map.floor[i]);
+			window.draw(Stairs.floor[i]);
 		}
 		for (int i = 0; i < bgNums; i++)
 		{
-			window.draw(Map.wallsLeft[i]);
-			window.draw(Map.wallsRight[i]);
+			window.draw(background.wallsLeft[i]);
+			window.draw(background.wallsRight[i]);
 		}
 		for (int i = 0; i < stairsNum; i++)
 		{
-			window.draw(Map.stairs[i]);
+			window.draw(Stairs.stairs[i]);
 		}
 		if (GameMode == 2)
 			window.draw(players.player2);
@@ -643,27 +659,26 @@ void Gameplay()
 
 			for (int i = 0; i < bgNums; i++)
 			{
-				window.draw(Map.bg[i]);
+				window.draw(background.bg[i]);
 			}
 			for (int i = 0; i < floorsnum; i++)
 			{
-				window.draw(Map.floor[i]);
+				window.draw(Stairs.floor[i]);
 			}
 			for (int i = 0; i < bgNums; i++)
 			{
-				window.draw(Map.wallsLeft[i]);
-				window.draw(Map.wallsRight[i]);
+				window.draw(background.wallsLeft[i]);
+				window.draw(background.wallsRight[i]);
 			}
 			window.draw(players.player1);
 			window.draw(players.player2);
 			for (int i = 0; i < stairsNum; i++)
 			{
-				window.draw(Map.stairs[i]);
+				window.draw(Stairs.stairs[i]);
 			}
 		}
 		//--------------------------------------------------------------
 		window.display();
-
 	}
 }
 
@@ -721,7 +736,7 @@ void Play_menu()
 	menu2.mainmenu[0].setPosition(Vector2f(1250, menu2.height / 2 + 60));
 
 	menu2.mainmenu[1].setFont(menu2.font);
-	menu2.mainmenu[1].setString("Multiplayer");
+	menu2.mainmenu[1].setString("Multi");
 	menu2.mainmenu[1].setCharacterSize(50);
 	menu2.mainmenu[1].setFillColor(Color::Black);
 	menu2.mainmenu[1].setPosition(Vector2f(1250, menu2.height / 2 + 130));

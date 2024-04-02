@@ -10,9 +10,10 @@ RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Fullscreen);
 Clock clockk;
 float dt;
 int GameMode;
+bool pressed = false;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
-const int stairsNum = 50, floorsnum = stairsNum/50+1, bgNums = 200;
+const int stairsNum = 50, floorsnum = stairsNum / 50 + 1, bgNums = 200;
 int pageNumber = 1000;
 struct PowerUps
 {
@@ -254,7 +255,7 @@ void setDrops()
 	for (size_t i = 0; i < 4; i++)
 	{
 		Drops[i].setTexture(DropsTex[i]);
-		Drops[i].setOrigin(Drops[i].getScale().x/2, Drops[i].getScale().y / 2);
+		Drops[i].setOrigin(Drops[i].getScale().x / 2, Drops[i].getScale().y / 2);
 	}
 	Drops[0].setScale(0.15, 0.15);
 	Drops[1].setScale(0.15, 0.15);
@@ -263,12 +264,12 @@ void setDrops()
 }
 void generateDrop(Vector2f stair_position, int Stair_width)
 {
-	if (addtimer.getElapsedTime().asSeconds() >= rand()%5+1)
+	if (addtimer.getElapsedTime().asSeconds() >= rand() % 5 + 1)
 	{
 		int indexDrop = rand() % 4;
 		PowerUps Powerup;
 		Powerup.dropShape = Drops[indexDrop];
-		Powerup.dropShape.setPosition(stair_position.x+(Stair_width/2), stair_position.y);
+		Powerup.dropShape.setPosition(stair_position.x + (Stair_width / 2), stair_position.y);
 		Powerup.type = indexDrop;
 		dropBag.push_back(Powerup);
 		addtimer.restart();
@@ -556,7 +557,7 @@ void reset()
 void Gameplay()
 {
 	// powerups
-	setDrops(); 
+	setDrops();
 
 	//player
 	Texture tex;
@@ -593,12 +594,18 @@ void Gameplay()
 		{
 			if (event.type == Event::Closed)
 				window.close();
-			if (event.KeyPressed && event.key.code == Keyboard::Escape)
+			if (Keyboard::isKeyPressed(Keyboard::Escape) && !pressed)
 			{
-				pageNumber = 1000;
+				pageNumber = 500;
+				pressed = true;
+				pageNumber = 500;
 				window.setView(window.getDefaultView());
 				reset();
 				return;
+			}
+			if (!Keyboard::isKeyPressed(Keyboard::Escape))
+			{
+				pressed = false;
 			}
 		}
 		Map.update();
@@ -752,10 +759,15 @@ void Play_menu()
 	{
 		Event event;
 
-		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		if (Keyboard::isKeyPressed(Keyboard::Escape) && !pressed)
 		{
 			pageNumber = 1000;
+			pressed = true;
 			break;
+		}
+		if (!Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			pressed = false;
 		}
 		while (window.pollEvent(event))
 		{
@@ -882,28 +894,28 @@ void options_menu1()
 }
 void options_menu()
 {
-	Menu menu3;
-	menu3.Hand_intilization();
-	menu3.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
-	menu3.choises = 3;
+	Menu menu4;
+	menu4.Hand_intilization();
+	menu4.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
+	menu4.choises = 3;
 
-	menu3.mainmenu[0].setFont(menu3.font);
-	menu3.mainmenu[0].setFillColor(Color{ 255,204,0 });
-	menu3.mainmenu[0].setString("GFX Options");
-	menu3.mainmenu[0].setCharacterSize(50);
-	menu3.mainmenu[0].setPosition(Vector2f(1250, menu3.height / 2 + 60));
+	menu4.mainmenu[0].setFont(menu4.font);
+	menu4.mainmenu[0].setFillColor(Color{ 255,204,0 });
+	menu4.mainmenu[0].setString("GFX Options");
+	menu4.mainmenu[0].setCharacterSize(50);
+	menu4.mainmenu[0].setPosition(Vector2f(1250, menu4.height / 2 + 60));
 
-	menu3.mainmenu[1].setFont(menu3.font);
-	menu3.mainmenu[1].setFillColor(Color::Black);
-	menu3.mainmenu[1].setString("Sound options");
-	menu3.mainmenu[1].setCharacterSize(50);
-	menu3.mainmenu[1].setPosition(Vector2f(1250, menu3.height / 2 + 130));
+	menu4.mainmenu[1].setFont(menu4.font);
+	menu4.mainmenu[1].setFillColor(Color::Black);
+	menu4.mainmenu[1].setString("Sound options");
+	menu4.mainmenu[1].setCharacterSize(50);
+	menu4.mainmenu[1].setPosition(Vector2f(1250, menu4.height / 2 + 130));
 
-	menu3.mainmenu[2].setFont(menu3.font);
-	menu3.mainmenu[2].setFillColor(Color::Black);
-	menu3.mainmenu[2].setString("Back");
-	menu3.mainmenu[2].setCharacterSize(50);
-	menu3.mainmenu[2].setPosition(Vector2f(1250, menu3.height / 2 + 200));
+	menu4.mainmenu[2].setFont(menu4.font);
+	menu4.mainmenu[2].setFillColor(Color::Black);
+	menu4.mainmenu[2].setString("Back");
+	menu4.mainmenu[2].setCharacterSize(50);
+	menu4.mainmenu[2].setPosition(Vector2f(1250, menu4.height / 2 + 200));
 	//hand.setPosition(1155, 600);
 	while (window.isOpen())
 	{
@@ -916,34 +928,40 @@ void options_menu()
 			if (event.type == Event::KeyPressed)
 			{
 				if (event.key.code == Keyboard::Down)
-					menu3.MoveDown(menu3.selected, menu3.choises);
+					menu4.MoveDown(menu4.selected, menu4.choises);
 				if (event.key.code == Keyboard::Up)
-					menu3.MoveUp(menu3.selected, menu3.choises);
-
+					menu4.MoveUp(menu4.selected, menu4.choises);
+				if (event.key.code == Keyboard::Escape && !pressed && menu4.selected != 2)
+				{
+					menu4.mainmenu[menu4.selected].setFillColor(Color::Black);
+					menu4.selected = 2;
+					menu4.mainmenu[2].setFillColor(Color{ 255,204,0 });
+					menu4.hand.setPosition(1140, 740);
+					pressed = true;
+				}
+				if (!Keyboard::isKeyPressed(Keyboard::Escape))
+				{
+					pressed = false;
+				}
 				if (event.key.code == Keyboard::Enter)
 				{
-					if (menu3.selected == 0)   options_menu1();
-					if (menu3.selected == 2) {
+					if (menu4.selected == 0)  options_menu1();
+					if (menu4.selected == 2) {
 						pageNumber = 1000;
-						break;
+						return;
 					}
 				}
 			}
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Escape))
-		{
-			pageNumber = 1000;
-			break;
-		}
 		menu_UI.FaceMotion();
 		window.clear();
 		window.draw(menu_UI.bg);
-		for (int i = 0; i < menu3.choises; i++)
+		for (int i = 0; i < menu4.choises; i++)
 		{
-			window.draw(menu3.mainmenu[i]);
+			window.draw(menu4.mainmenu[i]);
 		}
 		window.draw(menu_UI.face);
-		window.draw(menu3.hand);
+		window.draw(menu4.hand);
 		window.display();
 	}
 }
@@ -996,8 +1014,23 @@ int main()
 			{
 				if (event.type == Event::Closed)
 					window.close();
-				/*if (event.KeyPressed && event.key.code == Keyboard::Escape)
-					window.close();*/
+				if (event.key.code == Keyboard::Escape && !pressed && men.selected != 5)
+				{
+					men.mainmenu[men.selected].setFillColor(Color::Black);
+					men.selected = 5;
+					men.mainmenu[5].setFillColor(Color{ 255,204,0 });
+					men.hand.setPosition(1140, 950);
+					pressed = true;
+				}
+
+				if (event.key.code == Keyboard::Escape && !pressed && men.selected == 5)
+				{
+					window.close();
+				}
+				if (!Keyboard::isKeyPressed(Keyboard::Escape))
+				{
+					pressed = false;
+				}
 				if (event.type == Event::KeyPressed)
 				{
 					if (event.key.code == Keyboard::Down)
@@ -1031,16 +1064,11 @@ int main()
 		window.clear();
 		window.draw(menu_UI.bg);
 		window.draw(menu_UI.face);
-		if (pageNumber == 1000 || pageNumber == 500)
+		for (int i = 0; i < men.choises; i++)
 		{
-			for (int i = 0; i < men.choises; i++)
-			{
-				window.draw(men.mainmenu[i]);
-			}
+			window.draw(men.mainmenu[i]);
 		}
-
 		window.draw(men.hand);
 		window.display();
 	}
-
 }

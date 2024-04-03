@@ -424,8 +424,6 @@ struct STAIRS {
 				floor[currFloor].setPosition(Vector2f(background.LeftWall_Pos_x, 955 - heightBetweenStair));
 				currFloor++;
 				heightBetweenStair += 205;
-				cout << "hussein" << endl;
-				cout << "floor_width: " << floor_width << " " << background.LeftWall_Pos_x << " " << 955 - heightBetweenStair << endl;
 			}
 
 			stairs[currstair].setTexture(&stairTexture);
@@ -562,6 +560,7 @@ void reset()
 	Stairs.Floor_Update_index = Stairs.Stair_Update_index = Stairs.currFloor = Stairs.currstair = Stairs.heightBetweenStair = Stairs.RightLimit = 0;
 
 	background.Curr_Background = background.update_Background = background.Difference_Between_bg = 0;
+	END = 1;
 	dropBag.clear();
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//

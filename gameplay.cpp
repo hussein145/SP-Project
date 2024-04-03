@@ -3,6 +3,7 @@
 #include<iostream>
 #include <vector>
 #include <math.h>
+#define N 500
 using namespace sf;
 using namespace std;
 
@@ -13,8 +14,22 @@ int GameMode;
 bool pressed = false;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
-const int stairsNum = 50, floorsnum = stairsNum / 50 + 1, bgNums = 200;
 int pageNumber = 1000;
+int stairsNum, floorsnum;
+int bgNums = 200;
+void Intilize_Numbers()
+{
+	if (GameMode == 2)
+	{
+		stairsNum = 200, floorsnum = 50;
+		bgNums = 200;
+	}
+	else
+	{ 
+		stairsNum = 8; floorsnum = 1;
+		bgNums = 200;
+	}
+}
 struct PowerUps
 {
 	Sprite dropShape;		   // random powerup
@@ -95,15 +110,6 @@ struct Menu
 	int positionOfHand = 70;
 	Texture handTex;
 	RectangleShape hand;
-	/*Texture texture;
-	RectangleShape bg;
-
-	void back_ground()
-	{
-		texture.loadFromFile("Assets/Textures/main menu.png");
-		bg.setTexture(&texture);
-		bg.setSize(Vector2f(window.getSize()));
-	}*/
 
 	void Hand_intilization()
 	{
@@ -174,7 +180,6 @@ struct sprite {
 	void update()
 	{
 		player1.move(velocity_x * dt, velocity_y * dt);
-		player2.move(velocity_x * dt, velocity_y * dt);
 		if (velocity_x > 0)
 		{
 			player1.setScale(1, 1);
@@ -287,8 +292,8 @@ void generateDrop(Vector2f stair_position, int Stair_width)
 struct BackGround {
 	Texture backGround, wallTexture;
 
-	RectangleShape bg[bgNums];
-	RectangleShape wallsLeft[bgNums], wallsRight[bgNums];
+	RectangleShape bg[N];
+	RectangleShape wallsLeft[N], wallsRight[N];
 
 	int Background_Index = 0, Wall_Index = 0;
 	int previous_Background = bgNums - 1, previous_wall = bgNums - 1;
@@ -371,8 +376,8 @@ struct BackGround {
 	}
 }background;
 struct STAIRS {
-	RectangleShape stairs[stairsNum];
-	RectangleShape floor[floorsnum];
+	RectangleShape stairs[N];
+	RectangleShape floor[N];
 	Texture stairTexture, floorTexture;
 
 	//positions
@@ -388,12 +393,13 @@ struct STAIRS {
 	//counters
 	int heightBetweenStair;
 	int currstair = 0, currFloor = 0;
-	int count_stairs = 0;
+	int Stair_Update_index = 0, Floor_Update_index = 0;
 	int Stairs_OF_EachFloor = 50;
 
 	//stairs intiliztion
 	void intiliztion()
 	{
+		Intilize_Numbers();
 		if (GameMode == 2)
 		{
 			background.LeftWall_Pos_x = 0, background.RightWalls_Pos_x = 1920;
@@ -409,26 +415,28 @@ struct STAIRS {
 		//stairs & floors
 		heightBetweenStair = 0;
 		srand(static_cast<unsigned>(time(NULL)));
-		for (int i = 0; i < stairsNum; i++)
+		for (currstair = 0; currstair < stairsNum; currstair++)
 		{
-			if (count_stairs % Stairs_OF_EachFloor == 0)
+			if (currstair % Stairs_OF_EachFloor == 0)
 			{
 				floor[currFloor].setTexture(&floorTexture);
 				floor[currFloor].setSize(Vector2f(floor_width, 150));
 				floor[currFloor].setPosition(Vector2f(background.LeftWall_Pos_x, 955 - heightBetweenStair));
 				currFloor++;
 				heightBetweenStair += 205;
+				cout << "hussein" << endl;
+				cout << "floor_width: " << floor_width << " " << background.LeftWall_Pos_x << " " << 955 - heightBetweenStair << endl;
 			}
-			count_stairs++;
-			stairs[i].setTexture(&stairTexture);
+
+			stairs[currstair].setTexture(&stairTexture);
 			//SET SIZE
 			size_Of_Stair = Vector2f((rand() % 300 + 250), 150);
-			stairs[i].setSize(size_Of_Stair);
-			RightLimit = (background.RightWalls_Pos_x - background.Walls_Width) - stairs[i].getSize().x - (1920 - (background.RightWalls_Pos_x - background.Walls_Width));
+			stairs[currstair].setSize(size_Of_Stair);
+			RightLimit = (background.RightWalls_Pos_x - background.Walls_Width) - stairs[currstair].getSize().x - (1920 - (background.RightWalls_Pos_x - background.Walls_Width));
 
 			//SET POSITION
 			StairPosition = Vector2f((rand() % RightLimit) + (background.LeftWall_Pos_x + background.Walls_Width), 955 - heightBetweenStair);
-			stairs[i].setPosition(StairPosition);
+			stairs[currstair].setPosition(StairPosition);
 
 			heightBetweenStair += 205;
 
@@ -441,40 +449,41 @@ struct STAIRS {
 	}
 	void updateStairs()
 	{
-		RightLimit = (background.RightWalls_Pos_x - background.Walls_Width) - stairs[currstair].getSize().x - (1920 - (background.RightWalls_Pos_x - background.Walls_Width));
+		RightLimit = (background.RightWalls_Pos_x - background.Walls_Width) - stairs[Stair_Update_index].getSize().x - (1920 - (background.RightWalls_Pos_x - background.Walls_Width));
 		bool player2_Notexist = 1;
 		if (GameMode == 2)
 		{
-			if (stairs[currstair].getPosition().y > player2_View.getCenter().y + 540)
+			if (stairs[Stair_Update_index].getPosition().y > player2_View.getCenter().y + 540)
 				player2_Notexist = 1;
 			else
 				player2_Notexist = 0;
 		}
 
-		if (stairs[currstair].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
+		if (stairs[Stair_Update_index].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
 		{
-			if (count_stairs % Stairs_OF_EachFloor == 0)
+			if (currstair % Stairs_OF_EachFloor == 0)
 			{
-				floor[currFloor].setPosition(Vector2f(background.LeftWall_Pos_x, 955 - heightBetweenStair));
-				currFloor++;
+				floor[Floor_Update_index].setPosition(Vector2f(background.LeftWall_Pos_x, 955 - heightBetweenStair));
+				Floor_Update_index++;
 				heightBetweenStair += 205;
 			}
 			StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width), 955 - heightBetweenStair);
-			stairs[currstair].setPosition(StairPosition);
+			stairs[Stair_Update_index].setPosition(StairPosition);
 
 			//powerups
 			if (GameMode == 3)
 			{
-				generateDrop(StairPosition, stairs[currstair].getSize().x);
+				generateDrop(StairPosition, stairs[Stair_Update_index].getSize().x);
 			}
-
 			currstair++;
-			count_stairs++;
+			Stair_Update_index++;
 			heightBetweenStair += 205;
 		}
 
-		currstair %= (stairsNum - 1);
-		currFloor %= (floorsnum - 1);
+		if (!(currstair % Stairs_OF_EachFloor))
+			Floor_Update_index = 0;
+
+		Stair_Update_index %= (stairsNum-1);
 	}
 }Stairs;
 struct MAP
@@ -551,7 +560,7 @@ struct CameraView
 void reset()
 {
 	Stairs.StairPosition = Stairs.floorPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
-	Stairs.count_stairs = Stairs.currFloor = Stairs.currstair = Stairs.heightBetweenStair = Stairs.RightLimit = 0;
+	Stairs.Floor_Update_index = Stairs.Stair_Update_index = Stairs.currFloor = Stairs.currstair = Stairs.heightBetweenStair = Stairs.RightLimit = 0;
 	dropBag.clear();
 }
 void Gameplay()

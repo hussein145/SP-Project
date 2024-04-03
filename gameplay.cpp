@@ -6,6 +6,7 @@
 #define N 500
 using namespace sf;
 using namespace std;
+
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Fullscreen);
 Clock clockk;
 float dt;
@@ -15,7 +16,6 @@ View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 int pageNumber = 1000;
 int stairsNum, floorsnum, bgNums;
-//---------------------------------------------<<Powerups>>--------------------------------------//
 void Intilize_Numbers()
 {
 	if (GameMode == 2)
@@ -24,11 +24,12 @@ void Intilize_Numbers()
 		bgNums = 200;
 	}
 	else
-	{ 
+	{
 		stairsNum = 8; floorsnum = 1;
 		bgNums = 3;
 	}
 }
+//---------------------------------------------<<Powerups>>--------------------------------------//
 struct PowerUps
 {
 	Sprite dropShape;		   // random powerup
@@ -39,6 +40,7 @@ struct PowerUps
 Texture DropsTex[4];
 vector<PowerUps> dropBag;
 Sprite Drops[4];
+Clock addtimer, deletetimer;
 void setDrops()
 {
 	DropsTex[0].loadFromFile("Assets//Textures//heart.png");
@@ -190,8 +192,8 @@ struct Menu
 		}
 	}
 };
-//---------------------------------------------<<Players>>---------------------------------------------------//
 bool END = 1;
+//---------------------------------------------<<Players>>---------------------------------------------------//
 struct sprite {
 	Sprite player1;
 	RectangleShape player2;
@@ -289,8 +291,6 @@ struct sprite {
 		}
 	}
 }players;
-Clock addtimer, deletetimer;
-
 //---------------------------------------------<<GameBackground & Stairs>>------------------------------------//
 struct BackGround {
 	Texture backGround, wallTexture;
@@ -364,7 +364,7 @@ struct BackGround {
 		}
 		if (wallsLeft[update_wall_index].getPosition().y > player1_View.getCenter().y + 540 && player2_Out_of_Walls)
 		{
-			wallsLeft[update_wall_index].setPosition(Vector2f(LeftWall_Pos_x, wallsLeft[Curr_walls].getPosition().y -1080));
+			wallsLeft[update_wall_index].setPosition(Vector2f(LeftWall_Pos_x, wallsLeft[Curr_walls].getPosition().y - 1080));
 			wallsRight[update_wall_index].setPosition(Vector2f(RightWalls_Pos_x, wallsLeft[Curr_walls].getPosition().y - 1080));
 			Curr_walls = update_wall_index;
 			update_wall_index++;
@@ -482,7 +482,7 @@ struct STAIRS {
 		if (!(currstair % Stairs_OF_EachFloor))
 			Floor_Update_index = 0;
 
-		Stair_Update_index %= (stairsNum-1);
+		Stair_Update_index %= (stairsNum - 1);
 	}
 }Stairs;
 struct MAP
@@ -560,11 +560,10 @@ void reset()
 {
 	Stairs.StairPosition = Stairs.floorPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
 	Stairs.Floor_Update_index = Stairs.Stair_Update_index = Stairs.currFloor = Stairs.currstair = Stairs.heightBetweenStair = Stairs.RightLimit = 0;
-	background.Curr_Background = background.update_Background = background.Difference_Between_bg  = 0 ;
+
+	background.Curr_Background = background.update_Background = background.Difference_Between_bg = 0;
 	dropBag.clear();
 }
-
-
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
 void Gameplay()
 {
@@ -700,7 +699,6 @@ void Gameplay()
 		window.display();
 	}
 }
-
 //-------------------------------------------------<<Menues>>---------------------------------------------------//
 void menu1(Menu& men1)
 {

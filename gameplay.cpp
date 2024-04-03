@@ -6,7 +6,6 @@
 #define N 500
 using namespace sf;
 using namespace std;
-
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Fullscreen);
 Clock clockk;
 float dt;
@@ -16,6 +15,7 @@ View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 int pageNumber = 1000;
 int stairsNum, floorsnum, bgNums;
+//---------------------------------------------<<Powerups>>--------------------------------------//
 void Intilize_Numbers()
 {
 	if (GameMode == 2)
@@ -39,6 +39,45 @@ struct PowerUps
 Texture DropsTex[4];
 vector<PowerUps> dropBag;
 Sprite Drops[4];
+void setDrops()
+{
+	DropsTex[0].loadFromFile("Assets//Textures//heart.png");
+	DropsTex[1].loadFromFile("Assets//Textures//speed.png");
+	DropsTex[2].loadFromFile("Assets//Textures//superjump.png");
+	DropsTex[3].loadFromFile("Assets//Textures//danger.png");
+	for (size_t i = 0; i < 4; i++)
+	{
+		Drops[i].setTexture(DropsTex[i]);
+		Drops[i].setOrigin(Drops[i].getScale().x / 2, Drops[i].getScale().y / 2);
+	}
+	Drops[0].setScale(0.15, 0.15);
+	Drops[1].setScale(0.15, 0.15);
+	Drops[2].setScale(0.15, 0.15);
+	Drops[3].setScale(0.15, 0.15);
+}
+void generateDrop(Vector2f stair_position, int Stair_width)
+{
+	if (addtimer.getElapsedTime().asSeconds() >= rand() % 5 + 1)
+	{
+		int indexDrop = rand() % 4;
+		PowerUps Powerup;
+		Powerup.dropShape = Drops[indexDrop];
+		Powerup.dropShape.setPosition(stair_position.x + (Stair_width / 2), stair_position.y);
+		Powerup.type = indexDrop;
+		dropBag.push_back(Powerup);
+		addtimer.restart();
+
+	}
+	if (deletetimer.getElapsedTime().asSeconds() >= 20)
+	{
+		if (!dropBag.empty())
+		{
+			dropBag.erase(dropBag.begin());
+			deletetimer.restart();
+		}
+	}
+}
+//-------------------------------------------<<Main menu>>---------------------------------------------//
 struct menu_Bg_and_Face
 {
 	Sprite face;
@@ -151,6 +190,7 @@ struct Menu
 		}
 	}
 };
+//---------------------------------------------<<Players>>---------------------------------------------------//
 bool END = 1;
 struct sprite {
 	Sprite player1;
@@ -250,44 +290,8 @@ struct sprite {
 	}
 }players;
 Clock addtimer, deletetimer;
-void setDrops()
-{
-	DropsTex[0].loadFromFile("Assets//Textures//heart.png");
-	DropsTex[1].loadFromFile("Assets//Textures//speed.png");
-	DropsTex[2].loadFromFile("Assets//Textures//superjump.png");
-	DropsTex[3].loadFromFile("Assets//Textures//danger.png");
-	for (size_t i = 0; i < 4; i++)
-	{
-		Drops[i].setTexture(DropsTex[i]);
-		Drops[i].setOrigin(Drops[i].getScale().x / 2, Drops[i].getScale().y / 2);
-	}
-	Drops[0].setScale(0.15, 0.15);
-	Drops[1].setScale(0.15, 0.15);
-	Drops[2].setScale(0.15, 0.15);
-	Drops[3].setScale(0.15, 0.15);
-}
-void generateDrop(Vector2f stair_position, int Stair_width)
-{
-	if (addtimer.getElapsedTime().asSeconds() >= rand() % 5 + 1)
-	{
-		int indexDrop = rand() % 4;
-		PowerUps Powerup;
-		Powerup.dropShape = Drops[indexDrop];
-		Powerup.dropShape.setPosition(stair_position.x + (Stair_width / 2), stair_position.y);
-		Powerup.type = indexDrop;
-		dropBag.push_back(Powerup);
-		addtimer.restart();
 
-	}
-	if (deletetimer.getElapsedTime().asSeconds() >= 20)
-	{
-		if (!dropBag.empty())
-		{
-			dropBag.erase(dropBag.begin());
-			deletetimer.restart();
-		}
-	}
-}
+//---------------------------------------------<<GameBackground & Stairs>>------------------------------------//
 struct BackGround {
 	Texture backGround, wallTexture;
 
@@ -556,10 +560,12 @@ void reset()
 {
 	Stairs.StairPosition = Stairs.floorPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
 	Stairs.Floor_Update_index = Stairs.Stair_Update_index = Stairs.currFloor = Stairs.currstair = Stairs.heightBetweenStair = Stairs.RightLimit = 0;
-
 	background.Curr_Background = background.update_Background = background.Difference_Between_bg  = 0 ;
 	dropBag.clear();
 }
+
+
+//---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
 void Gameplay()
 {
 	// powerups
@@ -695,6 +701,7 @@ void Gameplay()
 	}
 }
 
+//-------------------------------------------------<<Menues>>---------------------------------------------------//
 void menu1(Menu& men1)
 {
 	men1.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");

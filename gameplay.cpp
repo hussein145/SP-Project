@@ -15,8 +15,7 @@ bool pressed = false;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 int pageNumber = 1000;
-int stairsNum, floorsnum;
-int bgNums = 200;
+int stairsNum, floorsnum, bgNums;
 void Intilize_Numbers()
 {
 	if (GameMode == 2)
@@ -27,7 +26,7 @@ void Intilize_Numbers()
 	else
 	{ 
 		stairsNum = 8; floorsnum = 1;
-		bgNums = 200;
+		bgNums = 3;
 	}
 }
 struct PowerUps
@@ -295,14 +294,15 @@ struct BackGround {
 	RectangleShape bg[N];
 	RectangleShape wallsLeft[N], wallsRight[N];
 
-	int Background_Index = 0, Wall_Index = 0;
-	int previous_Background = bgNums - 1, previous_wall = bgNums - 1;
+	int Curr_Background = 0, Curr_walls = 0;
+	int update_Background = 0, update_wall_index = 0, Difference_Between_bg = 0;
 
 	int LeftWall_Pos_x, RightWalls_Pos_x, bg_width, floor_width;
 	int Walls_Width = 160;
 
 	void intiliztion()
 	{
+		Intilize_Numbers();
 		backGround.loadFromFile("Assets/Textures/BackGround game1.png");
 		wallTexture.loadFromFile("Assets/Textures/wall1.png");
 		//background
@@ -316,21 +316,21 @@ struct BackGround {
 			LeftWall_Pos_x = 240, RightWalls_Pos_x = 1680;
 			bg_width = 1420, floor_width = 1420;
 		}
-
-		for (int i = 0; i < bgNums; i++)
+		for (Curr_Background = 0; Curr_Background < bgNums; Curr_Background++)
 		{
-			wallsLeft[i].setTexture(&wallTexture);
-			wallsLeft[i].setSize(Vector2f(Walls_Width, 1080));
-			wallsLeft[i].setPosition(LeftWall_Pos_x, -i * 1080);
+			wallsLeft[Curr_Background].setTexture(&wallTexture);
+			wallsLeft[Curr_Background].setSize(Vector2f(Walls_Width, 1080));
+			wallsLeft[Curr_Background].setPosition(LeftWall_Pos_x, -Difference_Between_bg);
 
-			wallsRight[i].setTexture(&wallTexture);
-			wallsRight[i].setSize(Vector2f(Walls_Width, 1080));
-			wallsRight[i].setScale(-1, 1);
-			wallsRight[i].setPosition(RightWalls_Pos_x, -i * 1080);
+			wallsRight[Curr_Background].setTexture(&wallTexture);
+			wallsRight[Curr_Background].setSize(Vector2f(Walls_Width, 1080));
+			wallsRight[Curr_Background].setScale(-1, 1);
+			wallsRight[Curr_Background].setPosition(RightWalls_Pos_x, -Difference_Between_bg);
 
-			bg[i].setTexture(&backGround);
-			bg[i].setSize(Vector2f(bg_width, 1080));
-			bg[i].setPosition(LeftWall_Pos_x, -i * 1080);
+			bg[Curr_Background].setTexture(&backGround);
+			bg[Curr_Background].setSize(Vector2f(bg_width, 1080));
+			bg[Curr_Background].setPosition(LeftWall_Pos_x, -Difference_Between_bg);
+			Difference_Between_bg += 1080;
 		}
 	}
 	void updateBackground_And_Walls()
@@ -338,40 +338,36 @@ struct BackGround {
 		bool player2_Out_of_Background = 1;
 		if (GameMode == 2) // 2player
 		{
-			if (bg[Background_Index].getPosition().y >= player2_View.getCenter().y + 880)
+			if (bg[update_Background].getPosition().y >= player2_View.getCenter().y + 540)
 				player2_Out_of_Background = 1;
 			else
 				player2_Out_of_Background = 0;
 		}
-		if (bg[Background_Index].getPosition().y >= player1_View.getCenter().y + 880 && player2_Out_of_Background)
+		if (bg[update_Background].getPosition().y >= player1_View.getCenter().y + 540 && player2_Out_of_Background)
 		{
-			bg[Background_Index].setPosition(Vector2f(240, bg[previous_Background].getPosition().y - 1080));
-			previous_Background = Background_Index;
-			Background_Index++;
-			if (Background_Index >= bgNums)
-			{
-				Background_Index = 0;
-			}
+			bg[update_Background].setPosition(Vector2f(LeftWall_Pos_x, bg[Curr_Background].getPosition().y - 1080));
+			Curr_Background = update_Background;
+			update_Background++;
+
 		}
 		bool player2_Out_of_Walls = 1;
 		if (GameMode == 2) // 2player
 		{
-			if (wallsLeft[Wall_Index].getPosition().y >= player2_View.getCenter().y + 880)
+			if (wallsLeft[update_wall_index].getPosition().y > player2_View.getCenter().y + 540)
 				player2_Out_of_Walls = 1;
 			else
 				player2_Out_of_Walls = 0;
 		}
-		if (wallsLeft[Wall_Index].getPosition().y >= player1_View.getCenter().y + 880 && player2_Out_of_Walls)
+		if (wallsLeft[update_wall_index].getPosition().y > player1_View.getCenter().y + 540 && player2_Out_of_Walls)
 		{
-			wallsLeft[Wall_Index].setPosition(Vector2f(0, wallsLeft[previous_wall].getPosition().y - 1080));
-			wallsRight[Wall_Index].setPosition(Vector2f(1920, wallsRight[previous_wall].getPosition().y - 1080));
-			previous_wall = Wall_Index;
-			Wall_Index++;
-			if (Wall_Index >= bgNums)
-			{
-				Wall_Index = 0;
-			}
+			wallsLeft[update_wall_index].setPosition(Vector2f(LeftWall_Pos_x, wallsLeft[Curr_walls].getPosition().y -1080));
+			wallsRight[update_wall_index].setPosition(Vector2f(RightWalls_Pos_x, wallsLeft[Curr_walls].getPosition().y - 1080));
+			Curr_walls = update_wall_index;
+			update_wall_index++;
 		}
+		//Difference_Between_bg += 1080;
+		update_Background %= (bgNums - 1);
+		update_wall_index %= (bgNums - 1);
 
 	}
 }background;
@@ -458,7 +454,6 @@ struct STAIRS {
 			else
 				player2_Notexist = 0;
 		}
-
 		if (stairs[Stair_Update_index].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
 		{
 			if (currstair % Stairs_OF_EachFloor == 0)
@@ -561,6 +556,8 @@ void reset()
 {
 	Stairs.StairPosition = Stairs.floorPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
 	Stairs.Floor_Update_index = Stairs.Stair_Update_index = Stairs.currFloor = Stairs.currstair = Stairs.heightBetweenStair = Stairs.RightLimit = 0;
+
+	background.Curr_Background = background.update_Background = background.Difference_Between_bg  = 0 ;
 	dropBag.clear();
 }
 void Gameplay()
@@ -592,11 +589,11 @@ void Gameplay()
 				dropBag[i].dropShape.setScale(0, 0);
 			}
 		}
-		/*if (Mouse::isButtonPressed(Mouse::Left))
+		if (Mouse::isButtonPressed(Mouse::Left))
 		{
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
 			cout << pos.x << " " << pos.y << endl;
-		}*/
+		}
 		dt = clockk.restart().asSeconds();
 		Event event;
 		while (window.pollEvent(event))

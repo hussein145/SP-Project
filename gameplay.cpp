@@ -26,7 +26,7 @@ void Intilize_Numbers()
 	else
 	{
 		stairsNum = 8; floorsnum = 1;
-		bgNums = 3;
+		bgNums = 5;
 	}
 }
 //---------------------------------------------<<Powerups>>--------------------------------------//
@@ -304,6 +304,9 @@ struct BackGround {
 	int LeftWall_Pos_x, RightWalls_Pos_x, bg_width, floor_width;
 	int Walls_Width = 160;
 
+	bool player2_Out_of_Walls = 1;
+	bool player2_Out_of_Background = 1;
+
 	void intiliztion()
 	{
 		Intilize_Numbers();
@@ -322,24 +325,25 @@ struct BackGround {
 		}
 		for (Curr_Background = 0; Curr_Background < bgNums; Curr_Background++)
 		{
-			wallsLeft[Curr_Background].setTexture(&wallTexture);
-			wallsLeft[Curr_Background].setSize(Vector2f(Walls_Width, 1080));
-			wallsLeft[Curr_Background].setPosition(LeftWall_Pos_x, -Difference_Between_bg);
+			Curr_walls = Curr_Background;
+			wallsLeft[Curr_walls].setTexture(&wallTexture);
+			wallsLeft[Curr_walls].setSize(Vector2f(Walls_Width, 1080));
+			wallsLeft[Curr_walls].setPosition(LeftWall_Pos_x, -Difference_Between_bg);
 
-			wallsRight[Curr_Background].setTexture(&wallTexture);
-			wallsRight[Curr_Background].setSize(Vector2f(Walls_Width, 1080));
-			wallsRight[Curr_Background].setScale(-1, 1);
-			wallsRight[Curr_Background].setPosition(RightWalls_Pos_x, -Difference_Between_bg);
+			wallsRight[Curr_walls].setTexture(&wallTexture);
+			wallsRight[Curr_walls].setSize(Vector2f(Walls_Width, 1080));
+			wallsRight[Curr_walls].setScale(-1, 1);
+			wallsRight[Curr_walls].setPosition(RightWalls_Pos_x, -Difference_Between_bg);
 
 			bg[Curr_Background].setTexture(&backGround);
 			bg[Curr_Background].setSize(Vector2f(bg_width, 1080));
 			bg[Curr_Background].setPosition(LeftWall_Pos_x, -Difference_Between_bg);
 			Difference_Between_bg += 1080;
 		}
+		Curr_Background--;
 	}
 	void updateBackground_And_Walls()
 	{
-		bool player2_Out_of_Background = 1;
 		if (GameMode == 2) // 2player
 		{
 			if (bg[update_Background].getPosition().y >= player2_View.getCenter().y + 540)
@@ -354,22 +358,20 @@ struct BackGround {
 			update_Background++;
 
 		}
-		bool player2_Out_of_Walls = 1;
 		if (GameMode == 2) // 2player
 		{
-			if (wallsLeft[update_wall_index].getPosition().y > player2_View.getCenter().y + 540)
+			if (wallsLeft[update_wall_index].getPosition().y >= player2_View.getCenter().y + 540)
 				player2_Out_of_Walls = 1;
 			else
 				player2_Out_of_Walls = 0;
 		}
-		if (wallsLeft[update_wall_index].getPosition().y > player1_View.getCenter().y + 540 && player2_Out_of_Walls)
+		if (wallsLeft[update_wall_index].getPosition().y >= player1_View.getCenter().y + 540 && player2_Out_of_Walls)
 		{
 			wallsLeft[update_wall_index].setPosition(Vector2f(LeftWall_Pos_x, wallsLeft[Curr_walls].getPosition().y - 1080));
 			wallsRight[update_wall_index].setPosition(Vector2f(RightWalls_Pos_x, wallsLeft[Curr_walls].getPosition().y - 1080));
 			Curr_walls = update_wall_index;
 			update_wall_index++;
 		}
-		//Difference_Between_bg += 1080;
 		update_Background %= (bgNums - 1);
 		update_wall_index %= (bgNums - 1);
 
@@ -559,8 +561,8 @@ void reset()
 	Stairs.StairPosition = Stairs.floorPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
 	Stairs.Floor_Update_index = Stairs.Stair_Update_index = Stairs.currFloor = Stairs.currstair = Stairs.heightBetweenStair = Stairs.RightLimit = 0;
 
-	background.Curr_Background = background.update_Background = background.Difference_Between_bg = 0;
-	END = 1;
+	background.Curr_Background  = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
+	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
 	dropBag.clear();
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
@@ -593,11 +595,11 @@ void Gameplay()
 				dropBag[i].dropShape.setScale(0, 0);
 			}
 		}
-		if (Mouse::isButtonPressed(Mouse::Left))
+		/*if (Mouse::isButtonPressed(Mouse::Left))
 		{
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
 			cout << pos.x << " " << pos.y << endl;
-		}
+		}*/
 		dt = clockk.restart().asSeconds();
 		Event event;
 		while (window.pollEvent(event))
@@ -633,12 +635,12 @@ void Gameplay()
 		players.velocity_y = 0;
 
 		//freeze game
-		if (players.player1.getPosition().y > player1_View.getCenter().y + 550
+		/*if (players.player1.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && players.player2.getPosition().y > player2_View.getCenter().y + 540))
 		{
 			Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = Power.PowerUP_veolcity = 0;
 			END = 0;
-		}
+		}*/
 		players.Players_Motion();
 		players.update();
 

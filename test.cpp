@@ -85,7 +85,7 @@ void strnum(Vector2f stair_position, int Stair_width, int currstair) {
 	if ((currstair + 1) % 10 == 0) {
 		RectangleShape numberedStr;
 		Vector2f size(30, 30);
-		numberedStr.setPosition(stair_position.x + (Stair_width / 2), stair_position.y);
+		numberedStr.setPosition(stair_position.x + (Stair_width / 2), stair_position.y + 55);
 		numberedStr.setSize(size);
 		numberedStr.setFillColor(Color::Red);
 		Strs10.push_back(numberedStr);

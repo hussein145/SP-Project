@@ -25,7 +25,7 @@ void Intilize_Numbers()
 	}
 	else
 	{
-		stairsNum = 8; floorsnum = 1;
+		stairsNum = 11; floorsnum = 1;
 		bgNums = 5;
 	}
 }
@@ -462,15 +462,16 @@ struct STAIRS {
 		}
 		if (stairs[Stair_Update_index].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
 		{
-			StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width), 955 - heightBetweenStair);
-			stairs[Stair_Update_index].setPosition(StairPosition);
-			strnum(Stair_Update_index);
+			
 			if (currstair % Stairs_OF_EachFloor == 0)
 			{
 				floor[Floor_Update_index].setPosition(Vector2f(background.LeftWall_Pos_x, 955 - heightBetweenStair));
 				Floor_Update_index++;
 				heightBetweenStair += 205;
 			}
+			StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width), 955 - heightBetweenStair);
+			stairs[Stair_Update_index].setPosition(StairPosition);
+			strnum(Stair_Update_index);
 			//powerups
 			if (GameMode == 3)
 			{
@@ -571,14 +572,15 @@ void reset()
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
 	dropBag.clear();
+	Strs10.clear();
 }
 
 
 void strnum(int currstair) {
-	if (currstair % 10 == 0) {
+	if ((currstair+1) % 10 == 0) {
 		RectangleShape numberedStr;
 		numberedStr.setPosition(Stairs.stairs[currstair].getPosition().x, Stairs.stairs[currstair].getPosition().y);
-		numberedStr.setSize(Vector2f( 50, 50));
+		numberedStr.setSize(Vector2f(50, 50));
 		numberedStr.setFillColor(Color::Black);
 		Strs10.push_back(numberedStr);
 		//for (int i = 0; i < Strs10.size(); i++)
@@ -587,8 +589,8 @@ void strnum(int currstair) {
 			//cout << i << endl;
 		//}
 		
-		cout << Stairs.stairs[Stairs.currstair].getPosition().x << " " <<  Stairs.stairs[Stairs.currstair].getPosition().y << endl;
-		cout << Stairs.currstair  <<" " <<  numberedStr.getPosition().x << " " << numberedStr.getPosition().y << endl;
+		//cout << Stairs.stairs[Stairs.currstair].getPosition().x << " " <<  Stairs.stairs[Stairs.currstair].getPosition().y << endl;
+		//cout << Stairs.currstair  <<" " <<  numberedStr.getPosition().x << " " << numberedStr.getPosition().y << endl;
 	}
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//

@@ -377,6 +377,7 @@ struct BackGround {
 
 	}
 }background;
+void strnum(int);
 struct STAIRS {
 	RectangleShape stairs[N];
 	RectangleShape floor[N];
@@ -439,7 +440,8 @@ struct STAIRS {
 			stairs[currstair].setPosition(StairPosition);
 
 			heightBetweenStair += 205;
-
+			strnum(currstair);
+			//cout << currstair << endl;
 			/*if (GameMode == 3)
 			{
 				generateDrop(stairs[i].getPosition(), stairs[i].getSize().x);
@@ -460,15 +462,15 @@ struct STAIRS {
 		}
 		if (stairs[Stair_Update_index].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
 		{
+			StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width), 955 - heightBetweenStair);
+			stairs[Stair_Update_index].setPosition(StairPosition);
+			strnum(Stair_Update_index);
 			if (currstair % Stairs_OF_EachFloor == 0)
 			{
 				floor[Floor_Update_index].setPosition(Vector2f(background.LeftWall_Pos_x, 955 - heightBetweenStair));
 				Floor_Update_index++;
 				heightBetweenStair += 205;
 			}
-			StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width), 955 - heightBetweenStair);
-			stairs[Stair_Update_index].setPosition(StairPosition);
-
 			//powerups
 			if (GameMode == 3)
 			{
@@ -485,9 +487,10 @@ struct STAIRS {
 		Stair_Update_index %= (stairsNum - 1);
 	}
 }Stairs;
+vector<RectangleShape> Strs10;
 struct MAP
 {
-	float Walls_velocity, Backgrond_Velocity, Stairs_velocity, view_velocity;
+	float Walls_velocity, Backgrond_Velocity, Stairs_velocity, view_velocity, block_velocity;
 	bool move = 0;
 	void intilization()
 	{
@@ -505,6 +508,10 @@ struct MAP
 			move = 1;
 		if (move)
 		{
+			for (int i = 0; i < Strs10.size(); i++)
+			{
+				Strs10[i].move(0, block_velocity*dt);
+			}
 			for (int i = 0; i < dropBag.size(); i++)
 				dropBag[i].dropShape.move(0, Power.PowerUP_veolcity * dt);
 
@@ -561,21 +568,27 @@ void reset()
 	Stairs.StairPosition = Stairs.floorPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
 	Stairs.Floor_Update_index = Stairs.Stair_Update_index = Stairs.currFloor = Stairs.currstair = Stairs.heightBetweenStair = Stairs.RightLimit = 0;
 
-	background.Curr_Background  = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
+	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
 	dropBag.clear();
 }
 
 
-vector<RectangleShape> Strs10;
-void strnum() {
-	if (Stairs.currstair % 10 == 0) {
+void strnum(int currstair) {
+	if (currstair % 10 == 0) {
 		RectangleShape numberedStr;
-		numberedStr.setPosition(Stairs.stairs[Stairs.currstair].getPosition().x + (Stairs.stairs[Stairs.currstair].getScale().x / 2), Stairs.stairs[Stairs.currstair].getScale().y / 2);
-		numberedStr.setScale(100, 100);
+		numberedStr.setPosition(Stairs.stairs[currstair].getPosition().x, Stairs.stairs[currstair].getPosition().y);
+		numberedStr.setSize(Vector2f( 50, 50));
 		numberedStr.setFillColor(Color::Black);
 		Strs10.push_back(numberedStr);
-		cout << Strs10.size() << endl;
+		//for (int i = 0; i < Strs10.size(); i++)
+		//{
+			//cout << Stairs.currstair << " " <<  i << " " << Strs10[i].getPosition().y << endl;
+			//cout << i << endl;
+		//}
+		
+		cout << Stairs.stairs[Stairs.currstair].getPosition().x << " " <<  Stairs.stairs[Stairs.currstair].getPosition().y << endl;
+		cout << Stairs.currstair  <<" " <<  numberedStr.getPosition().x << " " << numberedStr.getPosition().y << endl;
 	}
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
@@ -614,7 +627,6 @@ void Gameplay()
 			cout << pos.x << " " << pos.y << endl;
 		}*/
 		dt = clockk.restart().asSeconds();
-		strnum();
 		Event event;
 		while (window.pollEvent(event))
 		{
@@ -641,7 +653,7 @@ void Gameplay()
 		Map.Map_Motion();
 		Map.Backgrond_Velocity = 30.f;
 		Map.Walls_velocity = 150.f;
-		Map.Stairs_velocity = Power.PowerUP_veolcity = 70.0f;
+		Map.Stairs_velocity = Power.PowerUP_veolcity = Map.block_velocity = 70.0f;
 		Map.view_velocity = 100;
 
 		//motion of players

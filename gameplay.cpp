@@ -526,9 +526,9 @@ struct MAP
 void strnum() {
 	if (Stairs.currstair % 10 == 0) {
 		RectangleShape numberedStr;
-		numberedStr.setPosition(Stairs.stairs[Stairs.currstair].getPosition().x + Stairs.stairs[Stairs.currstair].getSize().x / 2, Stairs.stairs[Stairs.currstair].getPosition().y + 55);
+		//numberedStr.setTexture(&Block_texture);
+		numberedStr.setPosition(Stairs.stairs[Stairs.currstair].getPosition().x + Stairs.stairs[Stairs.currstair].getSize().x / 2-10, Stairs.stairs[Stairs.currstair].getPosition().y + 65);
 		numberedStr.setSize(Vector2f(50, 50));
-		numberedStr.setFillColor(Color::Black);
 		Strs10[strCnt] = numberedStr;
 		strCnt++;
 	}
@@ -584,6 +584,8 @@ void Gameplay()
 	Texture tex;
 	tex.loadFromFile("Assets/Textures/Run.png");
 	players.inti(tex);
+	Texture Block_texture;
+	Block_texture.loadFromFile("Assets/Textures/strnum.png");
 
 	//Map
 	MAP Map;
@@ -670,6 +672,7 @@ void Gameplay()
 		}
 		for (int i = 0; i <= strCnt; i++)
 		{
+			Strs10[i].setTexture(&Block_texture);
 			window.draw(Strs10[i]);
 		}
 		if (GameMode == 2)
@@ -700,6 +703,7 @@ void Gameplay()
 			}
 			for (int i = 0; i < strCnt; i++)
 			{
+				Strs10[i].setTexture(&Block_texture);
 				window.draw(Strs10[i]);
 			}
 			window.draw(players.player1);

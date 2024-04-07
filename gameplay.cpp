@@ -378,13 +378,11 @@ void strnum();
 int strCnt = 0;
 struct STAIRS {
 	RectangleShape stairs[N];
-	RectangleShape floor[N];
 	Texture stairTexture, floorTexture;
 	string StairTextures[2];
 
 	//positions
 	Vector2f StairPosition;
-	Vector2f floorPosition;
 	//sizes
 	Vector2f size_Of_Stair;
 	int floor_width;
@@ -393,8 +391,8 @@ struct STAIRS {
 	int RightLimit;
 
 	//counters
-	int heightBetweenStair;
-	int currstair = 1;
+	int heightBetweenStair = 0;
+	int currstair = 0;
 	//int Stair_Update_index = 1;
 	int Stairs_OF_EachFloor = 50;
 
@@ -415,7 +413,7 @@ struct STAIRS {
 		StairTextures[0] = "Assets/Textures/Stair.png";
 		StairTextures[1] = "Assets/Textures/floor.png";
 		//stairs & floors
-		heightBetweenStair = 0;
+	/*	heightBetweenStair = 0;*/
 		srand(static_cast<unsigned>(time(NULL)));
 		for (currstair = 0; currstair < stairsNum; currstair++)
 		{
@@ -570,7 +568,7 @@ void reset()
 {
 	Stairs.StairPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
 	Stairs.currstair = 0;
-	Stairs.heightBetweenStair = Stairs.RightLimit = 0;
+	Stairs.heightBetweenStair = 0;
 
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;

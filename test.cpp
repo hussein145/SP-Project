@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
-#include<SFML/Audio.hpp>
-#include<iostream>
+#include <SFML/Audio.hpp>
+#include <iostream>
+#include <string>
 #include <vector>
 #include <math.h>
 #define N 500
@@ -15,17 +16,11 @@ bool pressed = false;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 int pageNumber = 1000;
-int stairsNum = 200, bgNums = 200;
+int stairsNum, bgNums = 200;
 void Intilize_Numbers()
 {
-	if (GameMode == 2)
-	{
-		stairsNum = 200;
-	}
-	else
-	{
-		stairsNum = 49;
-	}
+	if (GameMode == 2) stairsNum = 200;
+	else  stairsNum = 50;
 }
 //---------------------------------------------<<Powerups>>--------------------------------------//
 struct PowerUps
@@ -145,7 +140,7 @@ struct Menu
 	int height = 1080;
 	int choises;
 	int pageNumber;
-	int positionOfHand = 70;
+	int positionOfHand = 60;
 	Texture handTex;
 	RectangleShape hand;
 
@@ -154,7 +149,7 @@ struct Menu
 		handTex.loadFromFile("Assets/Textures/hand.png");
 		hand.setTexture(&handTex);
 		hand.setSize(Vector2f(100, 70));
-		hand.setPosition(1140, 600);
+		hand.setPosition(1140, 580);
 	}
 
 	void MoveDown(int& selected, int choises)
@@ -167,7 +162,7 @@ struct Menu
 			if (selected == choises)
 			{
 				selected = 0;
-				hand.setPosition(1140, 600);
+				hand.setPosition(1140, 580);
 			}
 			mainmenu[selected].setFillColor(Color{ 255,204,0 });
 		}
@@ -418,9 +413,9 @@ struct STAIRS {
 		//stairs & floors
 		heightBetweenStair = 0;
 		srand(static_cast<unsigned>(time(NULL)));
-		for (currstair = 1; currstair < stairsNum; currstair++)
+		for (currstair = 0; currstair < stairsNum; currstair++)
 		{
-			if (currstair % Stairs_OF_EachFloor == 0 || currstair == 1)
+			if (currstair % Stairs_OF_EachFloor == 0)
 			{
 				floorTexture.loadFromFile(StairTextures[1]);
 				stairs[currstair].setTexture(&floorTexture);
@@ -464,9 +459,9 @@ struct STAIRS {
 		}
 
 		if (currstair == stairsNum)
-			currstair = 1;
+			currstair = 0;
 
-		if (currstair % Stairs_OF_EachFloor == 0 || currstair == 1)
+		if (currstair % Stairs_OF_EachFloor == 0)
 			StairPosition = (Vector2f(background.LeftWall_Pos_x, 955 - heightBetweenStair));
 		else
 			StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width), 955 - heightBetweenStair);
@@ -486,7 +481,8 @@ struct STAIRS {
 		}
 	}
 }Stairs;
-RectangleShape Strs10[100000];
+RectangleShape Strs10[10000];
+Text strTxt[10000];
 struct MAP
 {
 	float Walls_velocity, Backgrond_Velocity, Stairs_velocity, view_velocity;
@@ -510,6 +506,7 @@ struct MAP
 			for (int i = 0; i < strCnt; i++)
 			{
 				Strs10[i].move(0, Stairs_velocity * dt);
+				strTxt[i].move(0, Stairs_velocity * dt);
 			}
 			for (int i = 0; i < dropBag.size(); i++)
 				dropBag[i].dropShape.move(0, Stairs_velocity * dt);
@@ -520,7 +517,7 @@ struct MAP
 				background.wallsRight[i].move(0, Walls_velocity * dt);
 				background.wallsLeft[i].move(0, Walls_velocity * dt);
 			}
-			for (int i = 1; i <= stairsNum; i++)
+			for (int i = 0; i <= stairsNum; i++)
 			{
 				Stairs.stairs[i].move(0, Stairs_velocity * dt);
 			}
@@ -530,12 +527,18 @@ struct MAP
 	}
 };
 void strnum() {
-	if (Stairs.currstair % 10 == 0 || Stairs.currstair == 1) {
+	if (Stairs.currstair % 10 == 0) {
 		RectangleShape numberedStr;
-		numberedStr.setPosition(Stairs.stairs[Stairs.currstair].getPosition().x + Stairs.size_Of_Stair.x / 2, Stairs.stairs[Stairs.currstair].getPosition().y + 55);
+		Text strNumTxt;
+		//numberedStr.setTexture(&Block_texture);
+		numberedStr.setPosition(Stairs.stairs[Stairs.currstair].getPosition().x + Stairs.stairs[Stairs.currstair].getSize().x / 2-10, Stairs.stairs[Stairs.currstair].getPosition().y + 65);
 		numberedStr.setSize(Vector2f(50, 50));
-		numberedStr.setFillColor(Color::Black);
+		strNumTxt.setFillColor(Color::White);
+		strNumTxt.setCharacterSize(10);
+		strNumTxt.setString(to_string(Stairs.currstair));
+		strNumTxt.setPosition(numberedStr.getPosition().x + 25, numberedStr.getPosition().y + 25);
 		Strs10[strCnt] = numberedStr;
+		strTxt[strCnt] = strNumTxt;
 		strCnt++;
 	}
 }
@@ -577,8 +580,11 @@ void reset()
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
 	dropBag.clear();
 	RectangleShape clear10;
+	Text clear11;
 	clear10.setSize(Vector2f(0, 0));
+	clear11.setScale(Vector2f(0, 0));
 	fill(Strs10, Strs10 + strCnt, clear10);
+	fill(strTxt, strTxt + strCnt, clear11);
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
 void Gameplay()
@@ -590,10 +596,14 @@ void Gameplay()
 	Texture tex;
 	tex.loadFromFile("Assets/Textures/Run.png");
 	players.inti(tex);
+	Texture Block_texture;
+	Block_texture.loadFromFile("Assets/Textures/strnum.png");
 
 	//Map
 	MAP Map;
 	CameraView view;
+	Font Gfont;
+	Gfont.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
 
 	//map insilization
 	Map.intilization();
@@ -665,7 +675,7 @@ void Gameplay()
 		{
 			window.draw(background.bg[i]);
 		}
-		for (int i = 1; i <= stairsNum; i++)
+		for (int i = 0; i <= stairsNum; i++)
 		{
 			window.draw(Stairs.stairs[i]);
 		}
@@ -674,9 +684,12 @@ void Gameplay()
 			window.draw(background.wallsLeft[i]);
 			window.draw(background.wallsRight[i]);
 		}
-		for (int i = 0; i < strCnt; i++)
+		for (int i = 0; i <= strCnt; i++)
 		{
+			Strs10[i].setTexture(&Block_texture);
+			strTxt[i].setFont(Gfont);
 			window.draw(Strs10[i]);
+			window.draw(strTxt[i]);
 		}
 		if (GameMode == 2)
 			window.draw(players.player2);
@@ -695,18 +708,19 @@ void Gameplay()
 			{
 				window.draw(background.bg[i]);
 			}
-			for (int i = 1; i <= stairsNum; i++)
+			for (int i = 0; i <= stairsNum; i++)
 			{
 				window.draw(Stairs.stairs[i]);
-			}
-			for (int i = 0; i < strCnt; i++)
-			{
-				window.draw(Strs10[i]);
 			}
 			for (int i = 0; i < bgNums; i++)
 			{
 				window.draw(background.wallsLeft[i]);
 				window.draw(background.wallsRight[i]);
+			}
+			for (int i = 0; i < strCnt; i++)
+			{
+				Strs10[i].setTexture(&Block_texture);
+				window.draw(Strs10[i]);
 			}
 			window.draw(players.player1);
 			window.draw(players.player2);
@@ -716,45 +730,56 @@ void Gameplay()
 	}
 }
 //-------------------------------------------------<<Menues>>---------------------------------------------------//
+bool resusme = 1;
+int shift = 60 * resusme;
 void menu1(Menu& men1)
-{
+{	
 	men1.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
-	men1.choises = 6;
+
+	if     (resusme) men1.mainmenu[0 + resusme].setFillColor(Color::Black);
+	else   men1.mainmenu[0 + resusme].setFillColor(Color{ 255,204,0 });
+
+	men1.choises = 6 + resusme;
 	men1.mainmenu[0].setFont(men1.font);
 	men1.mainmenu[0].setFillColor(Color{ 255,204,0 });
-	men1.mainmenu[0].setString("Play Game");
+	men1.mainmenu[0].setString("Resume");
 	men1.mainmenu[0].setCharacterSize(50);
-	men1.mainmenu[0].setPosition(Vector2f(1250, men1.height / 2 + 60));
+	men1.mainmenu[0].setPosition(Vector2f(1250, men1.height / 2 + 40));
 
-	men1.mainmenu[1].setFont(men1.font);
-	men1.mainmenu[1].setFillColor(Color::Black);
-	men1.mainmenu[1].setString("Instructions");
-	men1.mainmenu[1].setCharacterSize(50);
-	men1.mainmenu[1].setPosition(Vector2f(1250, men1.height / 2 + 130));
+	men1.mainmenu[0 + resusme].setFont(men1.font);
+	men1.mainmenu[0 + resusme].setString("Play Game");
+	men1.mainmenu[0 + resusme].setCharacterSize(50);
+	men1.mainmenu[0 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 40 + shift));
 
-	men1.mainmenu[2].setFont(men1.font);
-	men1.mainmenu[2].setFillColor(Color::Black);
-	men1.mainmenu[2].setString("Profile");
-	men1.mainmenu[2].setCharacterSize(50);
-	men1.mainmenu[2].setPosition(Vector2f(1250, men1.height / 2 + 200));
+	men1.mainmenu[1 + resusme].setFont(men1.font);
+	men1.mainmenu[1 + resusme].setFillColor(Color::Black);
+	men1.mainmenu[1 + resusme].setString("Instructions");
+	men1.mainmenu[1 + resusme].setCharacterSize(50);
+	men1.mainmenu[1 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 100 + shift));
 
-	men1.mainmenu[3].setFont(men1.font);
-	men1.mainmenu[3].setFillColor(Color::Black);
-	men1.mainmenu[3].setString("High Score");
-	men1.mainmenu[3].setCharacterSize(50);
-	men1.mainmenu[3].setPosition(Vector2f(1250, men1.height / 2 + 270));
+	men1.mainmenu[2 + resusme].setFont(men1.font);
+	men1.mainmenu[2 + resusme].setFillColor(Color::Black);
+	men1.mainmenu[2 + resusme].setString("Profile");
+	men1.mainmenu[2 + resusme].setCharacterSize(50);
+	men1.mainmenu[2 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 160  + shift));
 
-	men1.mainmenu[4].setFont(men1.font);
-	men1.mainmenu[4].setFillColor(Color::Black);
-	men1.mainmenu[4].setString("Options");
-	men1.mainmenu[4].setCharacterSize(50);
-	men1.mainmenu[4].setPosition(Vector2f(1250, men1.height / 2 + 340));
+	men1.mainmenu[3 + resusme].setFont(men1.font);
+	men1.mainmenu[3 + resusme].setFillColor(Color::Black);
+	men1.mainmenu[3 + resusme].setString("High Score");
+	men1.mainmenu[3 + resusme].setCharacterSize(50);
+	men1.mainmenu[3 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 220 + shift));
 
-	men1.mainmenu[5].setFont(men1.font);
-	men1.mainmenu[5].setFillColor(Color::Black);
-	men1.mainmenu[5].setString("Exit");
-	men1.mainmenu[5].setCharacterSize(50);
-	men1.mainmenu[5].setPosition(Vector2f(1250, men1.height / 2 + 410));
+	men1.mainmenu[4 + resusme].setFont(men1.font);
+	men1.mainmenu[4 + resusme].setFillColor(Color::Black);
+	men1.mainmenu[4 + resusme].setString("Options");
+	men1.mainmenu[4 + resusme].setCharacterSize(50);
+	men1.mainmenu[4 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 280 + shift));
+
+	men1.mainmenu[5 + resusme].setFont(men1.font);
+	men1.mainmenu[5 + resusme].setFillColor(Color::Black);
+	men1.mainmenu[5 + resusme].setString("Exit");
+	men1.mainmenu[5 + resusme].setCharacterSize(50);
+	men1.mainmenu[5 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 340 + shift));
 }
 void Play_menu()
 {
@@ -767,19 +792,19 @@ void Play_menu()
 	menu2.mainmenu[0].setString("Single");
 	menu2.mainmenu[0].setCharacterSize(50);
 	menu2.mainmenu[0].setFillColor(Color{ 255,204,0 });
-	menu2.mainmenu[0].setPosition(Vector2f(1250, menu2.height / 2 + 60));
+	menu2.mainmenu[0].setPosition(Vector2f(1250, menu2.height / 2 + 40));
 
 	menu2.mainmenu[1].setFont(menu2.font);
 	menu2.mainmenu[1].setString("Multi");
 	menu2.mainmenu[1].setCharacterSize(50);
 	menu2.mainmenu[1].setFillColor(Color::Black);
-	menu2.mainmenu[1].setPosition(Vector2f(1250, menu2.height / 2 + 130));
+	menu2.mainmenu[1].setPosition(Vector2f(1250, menu2.height / 2 + 100));
 
 	menu2.mainmenu[2].setFont(menu2.font);
 	menu2.mainmenu[2].setString("PowerUps");
 	menu2.mainmenu[2].setCharacterSize(50);
 	menu2.mainmenu[2].setFillColor(Color::Black);
-	menu2.mainmenu[2].setPosition(Vector2f(1250, menu2.height / 2 + 200));
+	menu2.mainmenu[2].setPosition(Vector2f(1250, menu2.height / 2 + 160));
 
 	pageNumber = 500;
 	while (window.isOpen())
@@ -930,19 +955,19 @@ void options_menu()
 	menu4.mainmenu[0].setFillColor(Color{ 255,204,0 });
 	menu4.mainmenu[0].setString("GFX Options");
 	menu4.mainmenu[0].setCharacterSize(50);
-	menu4.mainmenu[0].setPosition(Vector2f(1250, menu4.height / 2 + 60));
+	menu4.mainmenu[0].setPosition(Vector2f(1250, menu4.height / 2 + 40));
 
 	menu4.mainmenu[1].setFont(menu4.font);
 	menu4.mainmenu[1].setFillColor(Color::Black);
 	menu4.mainmenu[1].setString("Sound options");
 	menu4.mainmenu[1].setCharacterSize(50);
-	menu4.mainmenu[1].setPosition(Vector2f(1250, menu4.height / 2 + 130));
+	menu4.mainmenu[1].setPosition(Vector2f(1250, menu4.height / 2 + 100));
 
 	menu4.mainmenu[2].setFont(menu4.font);
 	menu4.mainmenu[2].setFillColor(Color::Black);
 	menu4.mainmenu[2].setString("Back");
 	menu4.mainmenu[2].setCharacterSize(50);
-	menu4.mainmenu[2].setPosition(Vector2f(1250, menu4.height / 2 + 200));
+	menu4.mainmenu[2].setPosition(Vector2f(1250, menu4.height / 2 + 160));
 	//hand.setPosition(1155, 600);
 	while (window.isOpen())
 	{
@@ -1030,7 +1055,6 @@ int main()
 	menu_UI.back_ground();
 
 	menu1(men);
-	men.choises = 6;
 
 	while (window.isOpen())
 	{
@@ -1041,16 +1065,16 @@ int main()
 			{
 				if (event.type == Event::Closed)
 					window.close();
-				if (event.key.code == Keyboard::Escape && !pressed && men.selected != 5)
+				if (event.key.code == Keyboard::Escape && !pressed && men.selected != 5 + resusme)
 				{
 					men.mainmenu[men.selected].setFillColor(Color::Black);
-					men.selected = 5;
-					men.mainmenu[5].setFillColor(Color{ 255,204,0 });
-					men.hand.setPosition(1140, 950);
+					men.selected = 5 + resusme;
+					men.mainmenu[5 + resusme].setFillColor(Color{ 255,204,0 });
+					men.hand.setPosition(1140, 890+shift);
 					pressed = true;
 				}
 
-				if (event.key.code == Keyboard::Escape && !pressed && men.selected == 5)
+				if (event.key.code == Keyboard::Escape && !pressed && men.selected == 5 + resusme)
 				{
 					window.close();
 				}
@@ -1067,13 +1091,13 @@ int main()
 					if (event.key.code == Keyboard::Enter)
 					{
 
-						if (men.selected == 5)
+						if (men.selected == 5 + resusme)
 							pageNumber = -1;
-						if (men.selected == 0)
+						if (men.selected == 0 + resusme)
 							Play_menu();
-						if (men.selected == 4)
+						if (men.selected == 4 + resusme)
 							options_menu();
-						if (men.selected == 1)
+						if (men.selected == 1 + resusme)
 							instructions();
 					}
 				}

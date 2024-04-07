@@ -568,8 +568,8 @@ struct CameraView
 };
 void reset()
 {
-	Stairs.StairPosition = Stairs.floorPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
-	Stairs.currstair = 1;
+	Stairs.StairPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
+	Stairs.currstair = 0;
 	Stairs.heightBetweenStair = Stairs.RightLimit = 0;
 
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;

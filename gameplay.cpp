@@ -49,9 +49,14 @@ void setDrops()
 	Drops[2].setScale(0.15, 0.15);
 	Drops[3].setScale(0.15, 0.15);
 }
-void generateDrop(Vector2f stair_position, int Stair_width)
+void generateDrop(Vector2f stair_position, int Stair_width, bool check)
 {
-	if (addtimer.getElapsedTime().asSeconds() >= rand() % 5 + 1)
+	float timer;
+	if (check)
+		timer = 0.005f;
+	else
+		timer = rand() % 5 + 1;
+	if (addtimer.getElapsedTime().asSeconds() >= timer)
 	{
 		int indexDrop = rand() % 4;
 		PowerUps Powerup;
@@ -440,7 +445,7 @@ struct STAIRS {
 			strnum();
 			if (GameMode == 3)
 			{
-				generateDrop(stairs[currstair].getPosition(), stairs[currstair].getSize().x);
+				generateDrop(stairs[currstair].getPosition(), stairs[currstair].getSize().x, 1);
 			}
 		}
 
@@ -473,7 +478,7 @@ struct STAIRS {
 			//powerups
 			if (GameMode == 3)
 			{
-				generateDrop(StairPosition, stairs[currstair].getSize().x);
+				generateDrop(StairPosition, stairs[currstair].getSize().x, 0);
 			}
 			currstair++;
 			heightBetweenStair += 205;

@@ -484,6 +484,7 @@ struct STAIRS {
 	}
 }Stairs;
 RectangleShape Strs10[100000];
+Text strTxt[10000];
 struct MAP
 {
 	float Walls_velocity, Backgrond_Velocity, Stairs_velocity, view_velocity;
@@ -507,6 +508,7 @@ struct MAP
 			for (int i = 0; i < strCnt; i++)
 			{
 				Strs10[i].move(0, Stairs_velocity * dt);
+				strTxt[i].move(0, Stairs_velocity * dt);
 			}
 			for (int i = 0; i < dropBag.size(); i++)
 				dropBag[i].dropShape.move(0, Stairs_velocity * dt);
@@ -526,13 +528,20 @@ struct MAP
 		}
 	}
 };
+int Number_Of_Stair = 0;
 void strnum() {
 	if (Stairs.currstair % 10 == 0) {
 		RectangleShape numberedStr;
-		//numberedStr.setTexture(&Block_texture);
-		numberedStr.setPosition(Stairs.stairs[Stairs.currstair].getPosition().x + Stairs.stairs[Stairs.currstair].getSize().x / 2-10, Stairs.stairs[Stairs.currstair].getPosition().y + 65);
+		Text strNumTxt;
+		numberedStr.setPosition(Stairs.stairs[Stairs.currstair].getPosition().x + Stairs.stairs[Stairs.currstair].getSize().x / 2 - 10, Stairs.stairs[Stairs.currstair].getPosition().y + 65);
 		numberedStr.setSize(Vector2f(50, 50));
+		strNumTxt.setFillColor(Color::White);
+		strNumTxt.setCharacterSize(20);
+		strNumTxt.setString(to_string(Number_Of_Stair));
+		strNumTxt.setPosition(numberedStr.getPosition().x + 17, numberedStr.getPosition().y + 15);
 		Strs10[strCnt] = numberedStr;
+		strTxt[strCnt] = strNumTxt;
+		Number_Of_Stair += 10;
 		strCnt++;
 	}
 }
@@ -583,6 +592,8 @@ void DRAW()
 {
 	Texture Block_texture;
 	Block_texture.loadFromFile("Assets/Textures/strnum.png");
+	Font Gfont;
+	Gfont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	for (int i = 0; i < bgNums; i++)
 	{
 		window.draw(background.bg[i]);
@@ -604,7 +615,14 @@ void DRAW()
 	for (int i = 0; i < strCnt; i++)
 	{
 		Strs10[i].setTexture(&Block_texture);
+		strTxt[i].setFont(Gfont);
+
+		/*strTxt[i].setFillColor(Color::White);
+		strTxt[i].setCharacterSize(10);
+		strTxt[i].setString("50");
+		strTxt[i].setPosition(Strs10[i].getPosition().x + 25, Strs10[i].getPosition().y + 25);*/
 		window.draw(Strs10[i]);
+		window.draw(strTxt[i]);
 	}
 	window.draw(players.player1);
 }

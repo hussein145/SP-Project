@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include<SFML/Audio.hpp>
 #include<iostream>
+#include <string.h>
 #include <vector>
 #include <math.h>
 #define N 500
@@ -576,7 +577,7 @@ struct CameraView
 void reset()
 {
 	Stairs.StairPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
-	Stairs.currstair = 0;
+	Stairs.currstair = Number_Of_Stair = 0;
 	Stairs.heightBetweenStair = 0;
 
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
@@ -586,6 +587,9 @@ void reset()
 	clear10.setSize(Vector2f(0, 0));
 	fill(Strs10, Strs10 + strCnt, clear10);
 	fill(begin(Stairs.stairs), end(Stairs.stairs), clear10);
+	for (int i = 0; i < 10000; i++) {
+		strTxt[i].setString("");
+	}
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
 void DRAW()
@@ -616,11 +620,6 @@ void DRAW()
 	{
 		Strs10[i].setTexture(&Block_texture);
 		strTxt[i].setFont(Gfont);
-
-		/*strTxt[i].setFillColor(Color::White);
-		strTxt[i].setCharacterSize(10);
-		strTxt[i].setString("50");
-		strTxt[i].setPosition(Strs10[i].getPosition().x + 25, Strs10[i].getPosition().y + 25);*/
 		window.draw(Strs10[i]);
 		window.draw(strTxt[i]);
 	}

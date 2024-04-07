@@ -580,6 +580,30 @@ void reset()
 	fill(Strs10, Strs10 + strCnt, clear10);
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
+void DRAW()
+{
+	Texture Block_texture;
+	Block_texture.loadFromFile("Assets/Textures/strnum.png");
+	for (int i = 0; i < bgNums; i++)
+	{
+		window.draw(background.bg[i]);
+	}
+	for (int i = 0; i <= stairsNum; i++)
+	{
+		window.draw(Stairs.stairs[i]);
+	}
+	for (int i = 0; i < bgNums; i++)
+	{
+		window.draw(background.wallsLeft[i]);
+		window.draw(background.wallsRight[i]);
+	}
+	for (int i = 0; i < strCnt; i++)
+	{
+		Strs10[i].setTexture(&Block_texture);
+		window.draw(Strs10[i]);
+	}
+	window.draw(players.player1);
+}
 void Gameplay()
 {
 	// powerups
@@ -589,8 +613,6 @@ void Gameplay()
 	Texture tex;
 	tex.loadFromFile("Assets/Textures/Run.png");
 	players.inti(tex);
-	Texture Block_texture;
-	Block_texture.loadFromFile("Assets/Textures/strnum.png");
 
 	//Map
 	MAP Map;
@@ -657,72 +679,28 @@ void Gameplay()
 			Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = Power.PowerUP_veolcity = 0;
 			END = 0;
 		}
+
 		players.Players_Motion();
 		players.update();
 
 		window.clear();
 		window.setView(player1_View);
-		for (int i = 0; i < bgNums; i++)
-		{
-			window.draw(background.bg[i]);
-		}
-		for (int i = 0; i <= stairsNum; i++)
-		{
-			window.draw(Stairs.stairs[i]);
-		}
-		for (int i = 0; i < bgNums; i++)
-		{
-			window.draw(background.wallsLeft[i]);
-			window.draw(background.wallsRight[i]);
-		}
-		for (int i = 0; i <= strCnt; i++)
-		{
-			Strs10[i].setTexture(&Block_texture);
-			window.draw(Strs10[i]);
-		}
-		if (GameMode == 2)
-			window.draw(players.player2);
-		window.draw(players.player1);
-		if (GameMode == 3)
-		{
-			for (int i = 0; i < dropBag.size(); i++)
-				window.draw(dropBag[i].dropShape);
-		}
+		DRAW();
 		window.setView(window.getDefaultView());
-		//set position of clock1 then draw it
+		//set position of clock then draw it
 		/////////
 		
 		//------------------------------------------------------
 		if (GameMode == 2)
 		{
 			window.setView(player2_View);
-
-			for (int i = 0; i < bgNums; i++)
-			{
-				window.draw(background.bg[i]);
-			}
-			for (int i = 0; i <= stairsNum; i++)
-			{
-				window.draw(Stairs.stairs[i]);
-			}
-			for (int i = 0; i < bgNums; i++)
-			{
-				window.draw(background.wallsLeft[i]);
-				window.draw(background.wallsRight[i]);
-			}
-			for (int i = 0; i < strCnt; i++)
-			{
-				Strs10[i].setTexture(&Block_texture);
-				window.draw(Strs10[i]);
-			}
-			window.draw(players.player1);
+			DRAW();
 			window.draw(players.player2);
-		}
-		//--------------------------------------------------------------
-		window.setView(window.getDefaultView());
-		//set position of clock2 then draw it
-		/////////
+			window.setView(window.getDefaultView());
+			//set position of clock then draw it
+			/////////
 
+		}
 		window.display();
 	}
 }

@@ -646,12 +646,12 @@ void Gameplay()
 		players.velocity_y = 0;
 
 		//freeze game
-		/*if (players.player1.getPosition().y > player1_View.getCenter().y + 550
+		if (players.player1.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && players.player2.getPosition().y > player2_View.getCenter().y + 540))
 		{
 			Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = Power.PowerUP_veolcity = 0;
 			END = 0;
-		}*/
+		}
 		players.Players_Motion();
 		players.update();
 
@@ -683,6 +683,10 @@ void Gameplay()
 			for (int i = 0; i < dropBag.size(); i++)
 				window.draw(dropBag[i].dropShape);
 		}
+		window.setView(window.getDefaultView());
+		//set position of clock1 then draw it
+		/////////
+		
 		//------------------------------------------------------
 		if (GameMode == 2)
 		{
@@ -710,6 +714,10 @@ void Gameplay()
 			window.draw(players.player2);
 		}
 		//--------------------------------------------------------------
+		window.setView(window.getDefaultView());
+		//set position of clock2 then draw it
+		/////////
+
 		window.display();
 	}
 }

@@ -592,6 +592,11 @@ void DRAW()
 	{
 		window.draw(Stairs.stairs[i]);
 	}
+	if (GameMode == 3)
+	{
+		for (int i = 0; i < dropBag.size(); i++)
+			window.draw(dropBag[i].dropShape);
+	}
 	for (int i = 0; i < bgNums; i++)
 	{
 		window.draw(background.wallsLeft[i]);

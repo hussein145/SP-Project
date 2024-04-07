@@ -576,6 +576,7 @@ void reset()
 	RectangleShape clear10;
 	clear10.setSize(Vector2f(0, 0));
 	fill(Strs10, Strs10 + strCnt, clear10);
+	fill(begin(Stairs.stairs), end(Stairs.stairs), clear10);
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
 void DRAW()

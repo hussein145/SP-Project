@@ -50,7 +50,7 @@ void setDrops()
 	Drops[2].setScale(0.15, 0.15);
 	Drops[3].setScale(0.15, 0.15);
 }
-void generateDrop(Vector2f stair_position, int Stair_width, bool check)
+void generateDrop(Vector2f stair_position, bool check)
 {
 	float timer;
 	if (check)
@@ -62,7 +62,7 @@ void generateDrop(Vector2f stair_position, int Stair_width, bool check)
 		int indexDrop = rand() % 4;
 		PowerUps Powerup;
 		Powerup.dropShape = Drops[indexDrop];
-		Powerup.dropShape.setPosition(stair_position.x + (Stair_width / 2), stair_position.y);
+		Powerup.dropShape.setPosition(stair_position);
 		Powerup.type = indexDrop;
 		dropBag.push_back(Powerup);
 		addtimer.restart();
@@ -377,10 +377,10 @@ struct BackGround {
 }background;
 void strnum();
 int strCnt = 0;
+int Number_Of_Stair = 0;
 struct STAIRS {
 	RectangleShape stairs[N];
-	Texture stairTexture, floorTexture;
-	string StairTextures[2];
+	Texture stairTexture[3], floorTexture[3];
 
 	//positions
 	Vector2f StairPosition;
@@ -394,7 +394,6 @@ struct STAIRS {
 	//counters
 	int heightBetweenStair = 0;
 	int currstair = 0;
-	//int Stair_Update_index = 1;
 	int Stairs_OF_EachFloor = 50;
 
 	//stairs intiliztion
@@ -411,32 +410,33 @@ struct STAIRS {
 			background.LeftWall_Pos_x = 240, background.RightWalls_Pos_x = 1680;
 			background.bg_width = 1420, floor_width = 1420;
 		}
-		StairTextures[0] = "Assets/Textures/Stair.png";
-		StairTextures[1] = "Assets/Textures/floor.png";
+		
 		//stairs & floors
-	/*	heightBetweenStair = 0;*/
 		srand(static_cast<unsigned>(time(NULL)));
 		for (currstair = 0; currstair < stairsNum; currstair++)
 		{
 			if (currstair % Stairs_OF_EachFloor == 0)
 			{
-				floorTexture.loadFromFile(StairTextures[1]);
-				stairs[currstair].setTexture(&floorTexture);
-				stairs[currstair].setSize(Vector2f(floor_width, 150));
-				stairs[currstair].setPosition(Vector2f(background.LeftWall_Pos_x, 955 - heightBetweenStair));
+				floorTexture[0].loadFromFile("Assets/Textures/floor.png");
+				stairs[currstair].setTexture(&floorTexture[0]);
+				stairs[currstair].setSize(Vector2f(floor_width, 50));
+				stairs[currstair].setOrigin(floor_width / 2, 0);
+				stairs[currstair].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width/2, 955 - heightBetweenStair));
 				heightBetweenStair += 205;
 			}
 			else
 			{
-				stairTexture.loadFromFile(StairTextures[0]);
-				stairs[currstair].setTexture(&stairTexture);
+				stairTexture[0].loadFromFile("Assets/Textures/Stair.png");
+				stairs[currstair].setTexture(&stairTexture[0]);
 				////SET SIZE
-				size_Of_Stair = Vector2f((rand() % 300 + 250), 150);
+				size_Of_Stair = Vector2f((rand() % 300 + 200), 60);
 				stairs[currstair].setSize(size_Of_Stair);
+				stairs[currstair].setOrigin(size_Of_Stair.x/2, 0);
+				                     //1680                       240    =   1440                  size stair         (480)                 1440                   240
 				RightLimit = (background.RightWalls_Pos_x - background.Walls_Width) - stairs[currstair].getSize().x - (1920 - (background.RightWalls_Pos_x - background.Walls_Width));
-
+	
 				////SET POSITION
-				StairPosition = Vector2f((rand() % RightLimit) + (background.LeftWall_Pos_x + background.Walls_Width), 955 - heightBetweenStair);
+				StairPosition = Vector2f((rand() % RightLimit) + (background.LeftWall_Pos_x + background.Walls_Width + stairs[currstair].getSize().x / 2), 955 - heightBetweenStair);
 				stairs[currstair].setPosition(StairPosition);
 
 				heightBetweenStair += 205;
@@ -444,8 +444,9 @@ struct STAIRS {
 			strnum();
 			if (GameMode == 3)
 			{
-				generateDrop(stairs[currstair].getPosition(), stairs[currstair].getSize().x, 1);
+				generateDrop(stairs[currstair].getPosition(), 1);
 			}
+			Number_Of_Stair++;
 		}
 
 	}
@@ -464,23 +465,49 @@ struct STAIRS {
 		if (currstair == stairsNum)
 			currstair = 0;
 
-		if (currstair % Stairs_OF_EachFloor == 0)
-			StairPosition = (Vector2f(background.LeftWall_Pos_x, 955 - heightBetweenStair));
-		else
-			StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width), 955 - heightBetweenStair);
-
 		if (stairs[currstair].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
-		{
+		{	
+			if (currstair % Stairs_OF_EachFloor == 0)
+			{
+				if (Number_Of_Stair >= 50 && Number_Of_Stair < 100)
+				{
+					floorTexture[1].loadFromFile("Assets/Textures/floor2.png");
+					stairs[currstair].setTexture(&floorTexture[1]);
+				}
+				else if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
+				{
+					floorTexture[2].loadFromFile("Assets/Textures/floor3.png");
+					stairs[currstair].setTexture(&floorTexture[2]);
+				}
+				StairPosition = (Vector2f(background.LeftWall_Pos_x + floor_width / 2, 955 - heightBetweenStair));
+			}
+			else
+			{
+				if (Number_Of_Stair >= 50 && Number_Of_Stair < 100)
+				{
+					stairTexture[1].loadFromFile("Assets/Textures/Stair2.png");
+					stairs[currstair].setTexture(&stairTexture[1]);
+				}
+				else if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
+				{
+					stairTexture[2].loadFromFile("Assets/Textures/Stair3.png");
+					stairs[currstair].setTexture(&stairTexture[2]);
+				}
+				StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width + stairs[currstair].getSize().x / 2), 955 - heightBetweenStair);
+			}
 
+
+		
 			stairs[currstair].setPosition(StairPosition);
 			strnum();
 			//powerups
 			if (GameMode == 3)
 			{
-				generateDrop(StairPosition, stairs[currstair].getSize().x, 0);
+				generateDrop(StairPosition, 0);
 			}
 			currstair++;
 			heightBetweenStair += 205;
+			Number_Of_Stair++;
 		}
 	}
 }Stairs;
@@ -529,12 +556,11 @@ struct MAP
 		}
 	}
 };
-int Number_Of_Stair = 0;
 void strnum() {
 	if (Stairs.currstair % 10 == 0) {
 		RectangleShape numberedStr;
 		Text strNumTxt;
-		numberedStr.setPosition(Stairs.stairs[Stairs.currstair].getPosition().x + Stairs.stairs[Stairs.currstair].getSize().x / 2 - 10, Stairs.stairs[Stairs.currstair].getPosition().y + 65);
+		numberedStr.setPosition(Stairs.stairs[Stairs.currstair].getPosition().x, Stairs.stairs[Stairs.currstair].getPosition().y + 30);
 		numberedStr.setSize(Vector2f(50, 50));
 		strNumTxt.setFillColor(Color::White);
 		strNumTxt.setCharacterSize(20);
@@ -542,7 +568,6 @@ void strnum() {
 		strNumTxt.setPosition(numberedStr.getPosition().x + 17, numberedStr.getPosition().y + 15);
 		Strs10[strCnt] = numberedStr;
 		strTxt[strCnt] = strNumTxt;
-		Number_Of_Stair += 10;
 		strCnt++;
 	}
 }

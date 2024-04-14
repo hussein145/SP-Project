@@ -20,7 +20,7 @@ int stairsNum, bgNums = 200;
 void Intilize_Numbers()
 {
 	if (GameMode == 2) stairsNum = 200;
-	else  stairsNum = 50;
+	else  stairsNum = 100;
 }
 //---------------------------------------------<<Powerups>>--------------------------------------//
 struct PowerUps
@@ -62,7 +62,7 @@ void generateDrop(Vector2f stair_position, bool check)
 		int indexDrop = rand() % 4;
 		PowerUps Powerup;
 		Powerup.dropShape = Drops[indexDrop];
-		Powerup.dropShape.setPosition(stair_position);
+		Powerup.dropShape.setPosition(stair_position.x, stair_position.y-30);
 		Powerup.type = indexDrop;
 		dropBag.push_back(Powerup);
 		addtimer.restart();
@@ -394,7 +394,7 @@ struct STAIRS {
 	//counters
 	int heightBetweenStair = 0;
 	int currstair = 0;
-	int Stairs_OF_EachFloor = 50;
+	int Stairs_OF_EachFloor = 100;
 
 	//stairs intiliztion
 	void intiliztion()
@@ -469,12 +469,12 @@ struct STAIRS {
 		{	
 			if (currstair % Stairs_OF_EachFloor == 0)
 			{
-				if (Number_Of_Stair >= 50 && Number_Of_Stair < 100)
+				if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
 				{
 					floorTexture[1].loadFromFile("Assets/Textures/floor2.png");
 					stairs[currstair].setTexture(&floorTexture[1]);
 				}
-				else if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
+				else if (Number_Of_Stair >= 200 && Number_Of_Stair < 300)
 				{
 					floorTexture[2].loadFromFile("Assets/Textures/floor3.png");
 					stairs[currstair].setTexture(&floorTexture[2]);
@@ -483,12 +483,12 @@ struct STAIRS {
 			}
 			else
 			{
-				if (Number_Of_Stair >= 50 && Number_Of_Stair < 100)
+				if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
 				{
 					stairTexture[1].loadFromFile("Assets/Textures/Stair2.png");
 					stairs[currstair].setTexture(&stairTexture[1]);
 				}
-				else if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
+				else if (Number_Of_Stair >= 200 && Number_Of_Stair < 300)
 				{
 					stairTexture[2].loadFromFile("Assets/Textures/Stair3.png");
 					stairs[currstair].setTexture(&stairTexture[2]);
@@ -648,7 +648,7 @@ void DRAW()
 		window.draw(Strs10[i]);
 		window.draw(strTxt[i]);
 	}
-	window.draw(players.player1);
+	
 }
 void Gameplay()
 {
@@ -732,6 +732,10 @@ void Gameplay()
 		window.clear();
 		window.setView(player1_View);
 		DRAW();
+		if (GameMode == 2){
+			window.draw(players.player2);
+		}
+		window.draw(players.player1);
 		window.setView(window.getDefaultView());
 		//set position of clock then draw it
 		/////////
@@ -741,7 +745,9 @@ void Gameplay()
 		{
 			window.setView(player2_View);
 			DRAW();
+			window.draw(players.player1);
 			window.draw(players.player2);
+
 			window.setView(window.getDefaultView());
 			//set position of clock then draw it
 			/////////

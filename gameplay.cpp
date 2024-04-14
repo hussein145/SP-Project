@@ -378,6 +378,7 @@ struct BackGround {
 void strnum();
 int strCnt = 0;
 int Number_Of_Stair = 0;
+
 struct STAIRS {
 	RectangleShape stairs[N];
 	Texture stairTexture[3], floorTexture[3];
@@ -513,12 +514,48 @@ struct STAIRS {
 }Stairs;
 RectangleShape Strs10[100000];
 Text strTxt[10000];
+struct Gameclock
+{
+	Texture clo;
+	Sprite cl;
+	Texture clo2;
+	Sprite cl2;
+	float l = 0;
+}gameclock;
+void setclock()
+{
+
+	gameclock.clo.loadFromFile("Assets/Textures/clock2.png");
+
+	gameclock.cl.setTexture(gameclock.clo);
+
+	gameclock.cl.setScale(2, 2);
+
+
+	gameclock.clo2.loadFromFile("Assets/Textures/clock 1.png");
+
+	gameclock.cl2.setTexture(gameclock.clo2);
+
+	gameclock.cl2.setScale(1.7, 1.7);
+	gameclock.cl2.setOrigin(9.5, 30);
+	gameclock.cl2.setRotation(int(0));
+
+
+
+}
+void update_clock()
+{
+	gameclock.l += .08;
+	gameclock.cl2.setRotation(int(gameclock.l) * 2);
+}
 struct MAP
 {
 	float Walls_velocity, Backgrond_Velocity, Stairs_velocity, view_velocity;
 	bool move = 0;
+
 	void intilization()
 	{
+		setclock();
 		background.intiliztion();
 		Stairs.intiliztion();
 	}
@@ -533,6 +570,7 @@ struct MAP
 			move = 1;
 		if (move)
 		{
+			update_clock();
 			for (int i = 0; i < strCnt; i++)
 			{
 				Strs10[i].move(0, Stairs_velocity * dt);
@@ -599,11 +637,13 @@ struct CameraView
 		}
 	}
 };
+
 void reset()
 {
 	Stairs.StairPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
 	Stairs.currstair = Number_Of_Stair = 0;
 	Stairs.heightBetweenStair = 0;
+	//gameclock.l = 0;
 
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
@@ -641,6 +681,7 @@ void DRAW()
 		window.draw(background.wallsLeft[i]);
 		window.draw(background.wallsRight[i]);
 	}
+	
 	for (int i = 0; i < strCnt; i++)
 	{
 		Strs10[i].setTexture(&Block_texture);
@@ -652,6 +693,9 @@ void DRAW()
 }
 void Gameplay()
 {
+
+	
+
 	// powerups
 	setDrops();
 
@@ -704,6 +748,9 @@ void Gameplay()
 				pressed = false;
 			}
 		}
+		//clock
+		
+
 		Map.update();
 		view.SetView();
 
@@ -736,9 +783,22 @@ void Gameplay()
 			window.draw(players.player2);
 		}
 		window.draw(players.player1);
+		
 		window.setView(window.getDefaultView());
 		//set position of clock then draw it
 		/////////
+		if (GameMode == 2){
+			gameclock.cl.setScale(1, 1);
+			gameclock.cl2.setScale(1, 1);
+			gameclock.cl.setPosition(0, 118);
+			gameclock.cl2.setPosition(40, 180);
+		}
+		else {
+			gameclock.cl.setPosition(230, 118);
+			gameclock.cl2.setPosition(315, 235);
+		}
+		window.draw(gameclock.cl);
+		window.draw(gameclock.cl2);
 		
 		//------------------------------------------------------
 		if (GameMode == 2)
@@ -751,6 +811,12 @@ void Gameplay()
 			window.setView(window.getDefaultView());
 			//set position of clock then draw it
 			/////////
+			gameclock.cl.setScale(1, 1);
+			gameclock.cl2.setScale(1, 1);
+			gameclock.cl.setPosition(950, 118);
+			gameclock.cl2.setPosition(990, 180);
+			window.draw(gameclock.cl);
+			window.draw(gameclock.cl2);
 
 		}
 		window.display();
@@ -1015,7 +1081,7 @@ void options_menu()
 					menu4.mainmenu[menu4.selected].setFillColor(Color::Black);
 					menu4.selected = 2;
 					menu4.mainmenu[2].setFillColor(Color{ 255,204,0 });
-					menu4.hand.setPosition(1140, 740);
+					menu4.hand.setPosition(1140, 700);
 					pressed = true;
 				}
 				if (!Keyboard::isKeyPressed(Keyboard::Escape))

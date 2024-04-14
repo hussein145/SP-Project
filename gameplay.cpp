@@ -16,11 +16,11 @@ bool pressed = false;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 int pageNumber = 1000;
-int stairsNum, bgNums = 200;
+int stairsNum = 100, bgNums = 200;
 void Intilize_Numbers()
 {
-	if (GameMode == 2) stairsNum = 200;
-	else  stairsNum = 100;
+	/*if (GameMode == 2) stairsNum = 200;
+	else  stairsNum = 100;*/
 }
 //---------------------------------------------<<Powerups>>--------------------------------------//
 struct PowerUps

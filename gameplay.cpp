@@ -16,7 +16,7 @@ bool pressed = false;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 int pageNumber = 1000;
-int stairsNum = 100, bgNums = 200;
+int stairsNum = 200, bgNums = 200;
 void Intilize_Numbers()
 {
 	/*if (GameMode == 2) stairsNum = 200;
@@ -52,13 +52,15 @@ void setDrops()
 }
 void generateDrop(Vector2f stair_position, bool check)
 {
-	float timer;
+	float time;
 	if (check)
-		timer = 0.005f;
+		time = addtimer.getElapsedTime().asMilliseconds();
 	else
-		timer = rand() % 5 + 1;
-	if (addtimer.getElapsedTime().asSeconds() >= timer)
+		time = addtimer.getElapsedTime().asSeconds();
+	//cout << addtimer.getElapsedTime().asMilliseconds() << endl;
+	if (time >= rand() % 5 + 1)
 	{
+		
 		int indexDrop = rand() % 4;
 		PowerUps Powerup;
 		Powerup.dropShape = Drops[indexDrop];
@@ -395,9 +397,34 @@ struct STAIRS {
 	//counters
 	int heightBetweenStair = 0;
 	int currstair = 0;
-	int Stairs_OF_EachFloor = 100;
+	int Stairs_OF_EachFloor = 50;
 
 	//stairs intiliztion
+	void StairsTextures()
+	{
+		if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
+		{
+			stairTexture[1].loadFromFile("Assets/Textures/Stair2.png");
+			stairs[currstair].setTexture(&stairTexture[1]);
+		}
+		else if (Number_Of_Stair >= 200 && Number_Of_Stair < 300)
+		{
+			stairTexture[2].loadFromFile("Assets/Textures/Stair3.png");
+			stairs[currstair].setTexture(&stairTexture[2]);
+		}
+	}
+	void FloorTextures() {
+		if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
+		{
+			floorTexture[1].loadFromFile("Assets/Textures/floor2.png");
+			stairs[currstair].setTexture(&floorTexture[1]);
+		}
+		else if (Number_Of_Stair >= 200 && Number_Of_Stair < 300)
+		{
+			floorTexture[2].loadFromFile("Assets/Textures/floor3.png");
+			stairs[currstair].setTexture(&floorTexture[2]);
+		}
+	}
 	void intiliztion()
 	{
 		Intilize_Numbers();
@@ -418,8 +445,10 @@ struct STAIRS {
 		{
 			if (currstair % Stairs_OF_EachFloor == 0)
 			{
+				//cout << currstair << endl;
 				floorTexture[0].loadFromFile("Assets/Textures/floor.png");
 				stairs[currstair].setTexture(&floorTexture[0]);
+				FloorTextures();
 				stairs[currstair].setSize(Vector2f(floor_width, 50));
 				stairs[currstair].setOrigin(floor_width / 2, 0);
 				stairs[currstair].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width/2, 955 - heightBetweenStair));
@@ -429,6 +458,7 @@ struct STAIRS {
 			{
 				stairTexture[0].loadFromFile("Assets/Textures/Stair.png");
 				stairs[currstair].setTexture(&stairTexture[0]);
+				StairsTextures();
 				////SET SIZE
 				size_Of_Stair = Vector2f((rand() % 300 + 200), 60);
 				stairs[currstair].setSize(size_Of_Stair);
@@ -468,37 +498,18 @@ struct STAIRS {
 
 		if (stairs[currstair].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
 		{	
+			
 			if (currstair % Stairs_OF_EachFloor == 0)
 			{
-				if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
-				{
-					floorTexture[1].loadFromFile("Assets/Textures/floor2.png");
-					stairs[currstair].setTexture(&floorTexture[1]);
-				}
-				else if (Number_Of_Stair >= 200 && Number_Of_Stair < 300)
-				{
-					floorTexture[2].loadFromFile("Assets/Textures/floor3.png");
-					stairs[currstair].setTexture(&floorTexture[2]);
-				}
+				FloorTextures();
 				StairPosition = (Vector2f(background.LeftWall_Pos_x + floor_width / 2, 955 - heightBetweenStair));
 			}
 			else
 			{
-				if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
-				{
-					stairTexture[1].loadFromFile("Assets/Textures/Stair2.png");
-					stairs[currstair].setTexture(&stairTexture[1]);
-				}
-				else if (Number_Of_Stair >= 200 && Number_Of_Stair < 300)
-				{
-					stairTexture[2].loadFromFile("Assets/Textures/Stair3.png");
-					stairs[currstair].setTexture(&stairTexture[2]);
-				}
+				StairsTextures();
 				StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width + stairs[currstair].getSize().x / 2), 955 - heightBetweenStair);
 			}
 
-
-		
 			stairs[currstair].setPosition(StairPosition);
 			strnum();
 			//powerups
@@ -526,16 +537,11 @@ void setclock()
 {
 
 	gameclock.clo.loadFromFile("Assets/Textures/clock2.png");
-
 	gameclock.cl.setTexture(gameclock.clo);
-
 	gameclock.cl.setScale(2, 2);
 
-
 	gameclock.clo2.loadFromFile("Assets/Textures/clock 1.png");
-
 	gameclock.cl2.setTexture(gameclock.clo2);
-
 	gameclock.cl2.setScale(1.7, 1.7);
 	gameclock.cl2.setOrigin(9.5, 30);
 	gameclock.cl2.setRotation(int(0));
@@ -595,7 +601,7 @@ struct MAP
 	}
 };
 void strnum() {
-	if (Stairs.currstair % 10 == 0) {
+	if (Number_Of_Stair % 10 == 0) {
 		RectangleShape numberedStr;
 		Text strNumTxt;
 		numberedStr.setPosition(Stairs.stairs[Stairs.currstair].getPosition().x, Stairs.stairs[Stairs.currstair].getPosition().y + 30);
@@ -643,7 +649,7 @@ void reset()
 	Stairs.StairPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
 	Stairs.currstair = Number_Of_Stair = 0;
 	Stairs.heightBetweenStair = 0;
-	//gameclock.l = 0;
+	gameclock.l = 0;
 
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;

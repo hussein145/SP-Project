@@ -444,7 +444,7 @@ struct STAIRS {
 	}
 	void updateStairs()
 	{
-		RightLimit = ((background.RightWalls_Pos_x-distanceOfMove) - background.Walls_Width) - stairs[currstair].getSize().x - (1920 - ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width));
+		RightLimit = ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width) - stairs[currstair].getSize().x - (1920 - ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width));
 		bool player2_Notexist = 1;
 		if (GameMode == 2)
 		{
@@ -643,15 +643,15 @@ void setDrops()
 }
 void generateDrop(Vector2f stair_position, bool check)
 {
-	float time;
+	float timee;
 	if (check)
-		time = addtimer.getElapsedTime().asMilliseconds();
+		timee = addtimer.getElapsedTime().asMilliseconds();
 	else
-		time = addtimer.getElapsedTime().asSeconds();
+		timee = addtimer.getElapsedTime().asSeconds();
 
-	if (time >= rand() % 5 + 4)
+	int x = rand() % 5 + 4;
+	if (timee >= x)
 	{
-
 		int indexDrop = rand() % 4;
 		//PowerUps Powerup;
 		Power.dropShape = Drops[indexDrop];
@@ -664,18 +664,18 @@ void generateDrop(Vector2f stair_position, bool check)
 bool skip = 0;
 void dropcollision()
 {
-	if(!skip)
-	for (int i = 0; i < stairsNum; i++)
-	{
-		if (players.player1.getGlobalBounds().intersects(dropBag[i].dropShape.getGlobalBounds()))
+	if (!skip)
+		for (int i = 0; i < stairsNum; i++)
 		{
-			players.droptype = dropBag[i].type;
-			dropBag[i].dropShape.setScale(0, 0);///////////Stairs.currstair
+			if (players.player1.getGlobalBounds().intersects(dropBag[i].dropShape.getGlobalBounds()))
+			{
+				players.droptype = dropBag[i].type;
+				dropBag[i].dropShape.setScale(0, 0);///////////Stairs.currstair
+			}
 		}
-	}
 }
 float velocity_x = 20;
-void checkdrop(Clock &timerOfMove, bool &start, bool &StartReturning)
+void checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning)
 {
 	if (players.droptype == 0)
 	{
@@ -683,7 +683,7 @@ void checkdrop(Clock &timerOfMove, bool &start, bool &StartReturning)
 		skip = 1;
 		start = 1;
 		if (timerOfMove.getElapsedTime().asSeconds() <= 5)
-		{	
+		{
 			for (int i = 0; i < stairsNum; i++)
 			{
 				if (Stairs.stairs[i].getPosition().x > 960)
@@ -697,11 +697,11 @@ void checkdrop(Clock &timerOfMove, bool &start, bool &StartReturning)
 			gameclock.cl.move(velocity_x * dt, 0);
 			gameclock.cl2.move(velocity_x * dt, 0);
 		}
-		else if(timerOfMove.getElapsedTime().asSeconds() > 5 && timerOfMove.getElapsedTime().asSeconds() < 8)
+		else if (timerOfMove.getElapsedTime().asSeconds() > 5 && timerOfMove.getElapsedTime().asSeconds() < 8)
 		{
 			velocity_x = 0;
 		}
-		else if(timerOfMove.getElapsedTime().asSeconds() >= 8)
+		else if (timerOfMove.getElapsedTime().asSeconds() >= 8)
 		{
 			StartReturning = 1;
 			velocity_x = -20;
@@ -736,7 +736,7 @@ void reset()
 
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
-	delete [] dropBag;
+	delete[] dropBag;
 	dropBag = nullptr;
 	RectangleShape clear10;
 	clear10.setSize(Vector2f(0, 0));
@@ -745,6 +745,8 @@ void reset()
 	for (int i = 0; i < 200; i++) {
 		strTxt[i].setString("");
 	}
+	players.droptype = -1;
+	skip = 0;
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
 void DRAW()
@@ -766,10 +768,10 @@ void DRAW()
 		window.draw(strTxt[i]);
 		if (GameMode == 3)
 		{
-			window.draw(dropBag[i].dropShape); ///////////Stairs.currstair
+			window.draw(dropBag[i].dropShape);
 		}
 	}
-	
+
 	for (int i = 0; i < bgNums; i++)
 	{
 		window.draw(background.wallsLeft[i]);
@@ -832,14 +834,16 @@ void Gameplay()
 		}
 		Set_ObjectsOnStairs();
 
-		dropcollision();
-
-		//clock
-		if (!StartMoving)
+		if (GameMode == 3)
 		{
-			TimeOfMove.restart();
+			dropcollision();
+			//clock
+			if (!StartMoving)
+			{
+				TimeOfMove.restart();
+			}
+			checkdrop(TimeOfMove, StartMoving, StartReturning);
 		}
-		checkdrop(TimeOfMove, StartMoving, StartReturning);
 		Map.update();
 		view.SetView();
 

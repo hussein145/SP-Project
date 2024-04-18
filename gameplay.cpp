@@ -16,68 +16,11 @@ bool pressed = false;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 int pageNumber = 1000;
-int stairsNum = 200, bgNums = 200;
+int stairsNum = 100, bgNums = 200;
 void Intilize_Numbers()
 {
 	/*if (GameMode == 2) stairsNum = 200;
 	else  stairsNum = 100;*/
-}
-//---------------------------------------------<<Powerups>>--------------------------------------//
-struct PowerUps
-{
-	Sprite dropShape;		   // random powerup
-	//RectangleShape blockShape; // random block
-	int type;				   // drop type
-	int PowerUP_veolcity;
-}Power;
-Texture DropsTex[4];
-vector<PowerUps> dropBag;
-Sprite Drops[4];
-Clock addtimer, deletetimer;
-void setDrops()
-{
-	DropsTex[0].loadFromFile("Assets//Textures//heart.png");
-	DropsTex[1].loadFromFile("Assets//Textures//speed.png");
-	DropsTex[2].loadFromFile("Assets//Textures//superjump.png");
-	DropsTex[3].loadFromFile("Assets//Textures//danger.png");
-	for (size_t i = 0; i < 4; i++)
-	{
-		Drops[i].setTexture(DropsTex[i]);
-		Drops[i].setOrigin(Drops[i].getScale().x / 2, Drops[i].getScale().y / 2);
-	}
-	Drops[0].setScale(0.15, 0.15);
-	Drops[1].setScale(0.15, 0.15);
-	Drops[2].setScale(0.15, 0.15);
-	Drops[3].setScale(0.15, 0.15);
-}
-void generateDrop(Vector2f stair_position, bool check)
-{
-	float time;
-	if (check)
-		time = addtimer.getElapsedTime().asMilliseconds();
-	else
-		time = addtimer.getElapsedTime().asSeconds();
-	//cout << addtimer.getElapsedTime().asMilliseconds() << endl;
-	if (time >= rand() % 5 + 1)
-	{
-		
-		int indexDrop = rand() % 4;
-		PowerUps Powerup;
-		Powerup.dropShape = Drops[indexDrop];
-		Powerup.dropShape.setPosition(stair_position.x, stair_position.y-30);
-		Powerup.type = indexDrop;
-		dropBag.push_back(Powerup);
-		addtimer.restart();
-
-	}
-	if (deletetimer.getElapsedTime().asSeconds() >= 20)
-	{
-		if (!dropBag.empty())
-		{
-			dropBag.erase(dropBag.begin());
-			deletetimer.restart();
-		}
-	}
 }
 //-------------------------------------------<<Main menu>>---------------------------------------------//
 struct menu_Bg_and_Face
@@ -146,7 +89,7 @@ struct Menu
 	Font font;
 	int height = 1080;
 	int choises;
-	int pageNumber;
+	//int pageNumber;
 	int positionOfHand = 60;
 	Texture handTex;
 	RectangleShape hand;
@@ -192,6 +135,7 @@ struct Menu
 		}
 	}
 };
+
 bool END = 1;
 //---------------------------------------------<<Players>>---------------------------------------------------//
 struct sprite {
@@ -203,6 +147,7 @@ struct sprite {
 	float x;
 	bool check_on_ground;
 	int last_button_pressed = 1;
+	int droptype = -1;
 	void inti(Texture& texture)
 	{
 		player1.setTexture(texture);
@@ -234,10 +179,10 @@ struct sprite {
 			player1.setTextureRect(IntRect(128 * int(x), 0, 128, 128));
 
 		}
-		/*if (velocity_y < 0)
-		{
-			check_on_ground = false;
-		}*/
+		//if (velocity_y < 0)
+		//{
+			//check_on_ground = false;
+		//}
 
 		if (x >= 7)
 			x = 0;
@@ -291,6 +236,21 @@ struct sprite {
 		}
 	}
 }players;
+//---------------------------------------------<<powers>>---------------------------------------------------//
+struct PowerUps
+{
+	Sprite dropShape;		   // random powerup
+	//RectangleShape blockShape; // random block
+	int type;				   // drop type
+	int PowerUP_veolcity;
+}Power;
+Texture DropsTex[4];
+
+Sprite Drops[4]; // 0 walls inwards(heart)
+PowerUps* dropBag = new PowerUps[stairsNum];
+
+void generateDrop(Vector2f stair_position, bool check);
+void setDrops();
 //---------------------------------------------<<GameBackground & Stairs>>------------------------------------//
 struct BackGround {
 	Texture backGround, wallTexture;
@@ -381,6 +341,7 @@ void strnum();
 int strCnt = 0;
 int Number_Of_Stair = 0;
 
+int distanceOfMove = 0;
 struct STAIRS {
 	RectangleShape stairs[N];
 	Texture stairTexture[3], floorTexture[3];
@@ -438,12 +399,12 @@ struct STAIRS {
 			background.LeftWall_Pos_x = 240, background.RightWalls_Pos_x = 1680;
 			background.bg_width = 1420, floor_width = 1420;
 		}
-		
+
 		//stairs & floors
 		srand(static_cast<unsigned>(time(NULL)));
 		for (currstair = 0; currstair < stairsNum; currstair++)
 		{
-			if (currstair % Stairs_OF_EachFloor == 0)
+			if (currstair % Stairs_OF_EachFloor == 0) //50
 			{
 				//cout << currstair << endl;
 				floorTexture[0].loadFromFile("Assets/Textures/floor.png");
@@ -451,7 +412,7 @@ struct STAIRS {
 				FloorTextures();
 				stairs[currstair].setSize(Vector2f(floor_width, 50));
 				stairs[currstair].setOrigin(floor_width / 2, 0);
-				stairs[currstair].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width/2, 955 - heightBetweenStair));
+				stairs[currstair].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width / 2, 955 - heightBetweenStair));
 				heightBetweenStair += 205;
 			}
 			else
@@ -462,10 +423,10 @@ struct STAIRS {
 				////SET SIZE
 				size_Of_Stair = Vector2f((rand() % 300 + 200), 60);
 				stairs[currstair].setSize(size_Of_Stair);
-				stairs[currstair].setOrigin(size_Of_Stair.x/2, 0);
-				                     //1680                       240    =   1440                  size stair         (480)                 1440                   240
+				stairs[currstair].setOrigin(size_Of_Stair.x / 2, 0);
+				//1680                       240    =   1440                  size stair         (480)                 1440                   240
 				RightLimit = (background.RightWalls_Pos_x - background.Walls_Width) - stairs[currstair].getSize().x - (1920 - (background.RightWalls_Pos_x - background.Walls_Width));
-	
+
 				////SET POSITION
 				StairPosition = Vector2f((rand() % RightLimit) + (background.LeftWall_Pos_x + background.Walls_Width + stairs[currstair].getSize().x / 2), 955 - heightBetweenStair);
 				stairs[currstair].setPosition(StairPosition);
@@ -483,7 +444,7 @@ struct STAIRS {
 	}
 	void updateStairs()
 	{
-		RightLimit = (background.RightWalls_Pos_x - background.Walls_Width) - stairs[currstair].getSize().x - (1920 - (background.RightWalls_Pos_x - background.Walls_Width));
+		RightLimit = ((background.RightWalls_Pos_x-distanceOfMove) - background.Walls_Width) - stairs[currstair].getSize().x - (1920 - ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width));
 		bool player2_Notexist = 1;
 		if (GameMode == 2)
 		{
@@ -497,9 +458,9 @@ struct STAIRS {
 			currstair = 0;
 
 		if (stairs[currstair].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
-		{	
-			
-			if (currstair % Stairs_OF_EachFloor == 0)
+		{
+
+			if (currstair % Stairs_OF_EachFloor == 0) //50
 			{
 				FloorTextures();
 				StairPosition = (Vector2f(background.LeftWall_Pos_x + floor_width / 2, 955 - heightBetweenStair));
@@ -507,7 +468,7 @@ struct STAIRS {
 			else
 			{
 				StairsTextures();
-				StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width + stairs[currstair].getSize().x / 2), 955 - heightBetweenStair);
+				StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width + distanceOfMove + stairs[currstair].getSize().x / 2), 955 - heightBetweenStair);
 			}
 
 			stairs[currstair].setPosition(StairPosition);
@@ -523,8 +484,9 @@ struct STAIRS {
 		}
 	}
 }Stairs;
-RectangleShape Strs10[100000];
-Text strTxt[10000];
+
+RectangleShape Strs10[200];
+Text strTxt[200];
 struct Gameclock
 {
 	Texture clo;
@@ -535,19 +497,25 @@ struct Gameclock
 }gameclock;
 void setclock()
 {
-
 	gameclock.clo.loadFromFile("Assets/Textures/clock2.png");
 	gameclock.cl.setTexture(gameclock.clo);
-	gameclock.cl.setScale(2, 2);
 
 	gameclock.clo2.loadFromFile("Assets/Textures/clock 1.png");
 	gameclock.cl2.setTexture(gameclock.clo2);
-	gameclock.cl2.setScale(1.7, 1.7);
 	gameclock.cl2.setOrigin(9.5, 30);
 	gameclock.cl2.setRotation(int(0));
-
-
-
+	if (GameMode == 2) {
+		gameclock.cl.setScale(1, 1);
+		gameclock.cl2.setScale(1, 1);
+		gameclock.cl.setPosition(0, 118);
+		gameclock.cl2.setPosition(40, 180);
+	}
+	else {
+		gameclock.cl.setScale(2, 2);
+		gameclock.cl2.setScale(1.7, 1.7);
+		gameclock.cl.setPosition(230, 118);
+		gameclock.cl2.setPosition(315, 235);
+	}
 }
 void update_clock()
 {
@@ -556,7 +524,8 @@ void update_clock()
 }
 struct MAP
 {
-	float Walls_velocity, Backgrond_Velocity, Stairs_velocity, view_velocity;
+	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y, view_velocity;
+	float Walls_velocity_x, Stairs_velocity_x;
 	bool move = 0;
 
 	void intilization()
@@ -577,23 +546,23 @@ struct MAP
 		if (move)
 		{
 			update_clock();
-			for (int i = 0; i < strCnt; i++)
+			/*for (int i = 0; i < stairsNum; i++)
 			{
-				Strs10[i].move(0, Stairs_velocity * dt);
-				strTxt[i].move(0, Stairs_velocity * dt);
-			}
-			for (int i = 0; i < dropBag.size(); i++)
-				dropBag[i].dropShape.move(0, Stairs_velocity * dt);
+				Strs10[i].move(0, Stairs_velocity_y * dt);
+				strTxt[i].move(0, Stairs_velocity_y * dt);
+			}*/
+			/*for (int i = 0; i < stairsNum; i++)
+				dropBag[i].dropShape.move(0, Stairs_velocity_y * dt);*/
 
 			for (int i = 0; i < bgNums; i++)
 			{
-				background.bg[i].move(0, Backgrond_Velocity * dt);
-				background.wallsRight[i].move(0, Walls_velocity * dt);
-				background.wallsLeft[i].move(0, Walls_velocity * dt);
+				background.bg[i].move(0, Backgrond_Velocity_y * dt);
+				background.wallsRight[i].move(0, Walls_velocity_y * dt);
+				background.wallsLeft[i].move(0, Walls_velocity_y * dt);
 			}
 			for (int i = 0; i <= stairsNum; i++)
 			{
-				Stairs.stairs[i].move(0, Stairs_velocity * dt);
+				Stairs.stairs[i].move(0, Stairs_velocity_y * dt);
 			}
 			player2_View.move(0, -view_velocity * dt);
 			player1_View.move(0, -view_velocity * dt);
@@ -606,13 +575,24 @@ void strnum() {
 		Text strNumTxt;
 		numberedStr.setPosition(Stairs.stairs[Stairs.currstair].getPosition().x, Stairs.stairs[Stairs.currstair].getPosition().y + 30);
 		numberedStr.setSize(Vector2f(50, 50));
+		numberedStr.setOrigin(numberedStr.getSize().x / 2, 0);
+
 		strNumTxt.setFillColor(Color::White);
 		strNumTxt.setCharacterSize(20);
 		strNumTxt.setString(to_string(Number_Of_Stair));
-		strNumTxt.setPosition(numberedStr.getPosition().x + 17, numberedStr.getPosition().y + 15);
-		Strs10[strCnt] = numberedStr;
-		strTxt[strCnt] = strNumTxt;
-		strCnt++;
+		//strNumTxt.setOrigin(strNumTxt.getScale().x/2, strNumTxt.getScale().y);
+		strNumTxt.setPosition(numberedStr.getPosition().x, numberedStr.getPosition().y + 15);
+		Strs10[Stairs.currstair] = numberedStr;
+		strTxt[Stairs.currstair] = strNumTxt;
+	}
+}
+void Set_ObjectsOnStairs()
+{
+	for (int i = 0; i < stairsNum; i++)
+	{
+		Strs10[i].setPosition(Stairs.stairs[i].getPosition().x, Stairs.stairs[i].getPosition().y + 30);
+		strTxt[i].setPosition(Stairs.stairs[i].getPosition().x, Stairs.stairs[i].getPosition().y + 30);
+		dropBag[i].dropShape.setPosition(Stairs.stairs[i].getPosition().x, Stairs.stairs[i].getPosition().y - 30);
 	}
 }
 struct CameraView
@@ -643,7 +623,110 @@ struct CameraView
 		}
 	}
 };
+//------------------------------------------------<<powerups>>-------------------------------------------//
+Clock addtimer;
+void setDrops()
+{
+	DropsTex[0].loadFromFile("Assets//Textures//heart.png");
+	DropsTex[1].loadFromFile("Assets//Textures//speed.png");
+	DropsTex[2].loadFromFile("Assets//Textures//superjump.png");
+	DropsTex[3].loadFromFile("Assets//Textures//danger.png");
+	for (size_t i = 0; i < 4; i++)
+	{
+		Drops[i].setTexture(DropsTex[i]);
+		Drops[i].setOrigin(Drops[i].getScale().x / 2, Drops[i].getScale().y / 2);
+	}
+	Drops[0].setScale(0.15, 0.15);
+	Drops[1].setScale(0.15, 0.15);
+	Drops[2].setScale(0.15, 0.15);
+	Drops[3].setScale(0.15, 0.15);
+}
+void generateDrop(Vector2f stair_position, bool check)
+{
+	float time;
+	if (check)
+		time = addtimer.getElapsedTime().asMilliseconds();
+	else
+		time = addtimer.getElapsedTime().asSeconds();
 
+	if (time >= rand() % 5 + 4)
+	{
+
+		int indexDrop = rand() % 4;
+		//PowerUps Powerup;
+		Power.dropShape = Drops[indexDrop];
+		Power.dropShape.setPosition(stair_position.x, stair_position.y - 30);
+		Power.type = indexDrop;
+		dropBag[Stairs.currstair] = Power;
+		addtimer.restart();
+	}
+}
+bool skip = 0;
+void dropcollision()
+{
+	if(!skip)
+	for (int i = 0; i < stairsNum; i++)
+	{
+		if (players.player1.getGlobalBounds().intersects(dropBag[i].dropShape.getGlobalBounds()))
+		{
+			players.droptype = dropBag[i].type;
+			dropBag[i].dropShape.setScale(0, 0);///////////Stairs.currstair
+		}
+	}
+}
+float velocity_x = 20;
+void checkdrop(Clock &timerOfMove, bool &start, bool &StartReturning)
+{
+	if (players.droptype == 0)
+	{
+		distanceOfMove = 100;
+		skip = 1;
+		start = 1;
+		if (timerOfMove.getElapsedTime().asSeconds() <= 5)
+		{	
+			for (int i = 0; i < stairsNum; i++)
+			{
+				if (Stairs.stairs[i].getPosition().x > 960)
+					Stairs.stairs[i].move(-velocity_x * dt, 0);
+				else if (Stairs.stairs[i].getPosition().x < 960)
+					Stairs.stairs[i].move(velocity_x * dt, 0);
+
+				background.wallsLeft[i].move(velocity_x * dt, 0);
+				background.wallsRight[i].move(-velocity_x * dt, 0);
+			}
+			gameclock.cl.move(velocity_x * dt, 0);
+			gameclock.cl2.move(velocity_x * dt, 0);
+		}
+		else if(timerOfMove.getElapsedTime().asSeconds() > 5 && timerOfMove.getElapsedTime().asSeconds() < 8)
+		{
+			velocity_x = 0;
+		}
+		else if(timerOfMove.getElapsedTime().asSeconds() >= 8)
+		{
+			StartReturning = 1;
+			velocity_x = -20;
+			timerOfMove.restart();
+		}
+		if (timerOfMove.getElapsedTime().asSeconds() >= 5 && StartReturning)
+		{
+			StartReturning = 0;
+			players.droptype = -1;
+			start = 0;
+			velocity_x = 20;
+			skip = 0;
+			distanceOfMove = 0;
+		}
+	}
+	else if (players.droptype == 1)
+	{
+
+	}
+	else if (players.droptype == 2)
+	{
+
+	}
+}
+//--------------------------------------------------------------------------------------------------
 void reset()
 {
 	Stairs.StairPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
@@ -653,12 +736,13 @@ void reset()
 
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
-	dropBag.clear();
+	delete [] dropBag;
+	dropBag = nullptr;
 	RectangleShape clear10;
 	clear10.setSize(Vector2f(0, 0));
 	fill(Strs10, Strs10 + strCnt, clear10);
 	fill(begin(Stairs.stairs), end(Stairs.stairs), clear10);
-	for (int i = 0; i < 10000; i++) {
+	for (int i = 0; i < 200; i++) {
 		strTxt[i].setString("");
 	}
 }
@@ -673,36 +757,29 @@ void DRAW()
 	{
 		window.draw(background.bg[i]);
 	}
-	for (int i = 0; i <= stairsNum; i++)
+	for (int i = 0; i < stairsNum; i++)
 	{
 		window.draw(Stairs.stairs[i]);
+		Strs10[i].setTexture(&Block_texture);
+		strTxt[i].setFont(Gfont);
+		window.draw(Strs10[i]);
+		window.draw(strTxt[i]);
+		if (GameMode == 3)
+		{
+			window.draw(dropBag[i].dropShape); ///////////Stairs.currstair
+		}
 	}
-	if (GameMode == 3)
-	{
-		for (int i = 0; i < dropBag.size(); i++)
-			window.draw(dropBag[i].dropShape);
-	}
+	
 	for (int i = 0; i < bgNums; i++)
 	{
 		window.draw(background.wallsLeft[i]);
 		window.draw(background.wallsRight[i]);
 	}
-	
-	for (int i = 0; i < strCnt; i++)
-	{
-		Strs10[i].setTexture(&Block_texture);
-		strTxt[i].setFont(Gfont);
-		window.draw(Strs10[i]);
-		window.draw(strTxt[i]);
-	}
-	
 }
 void Gameplay()
 {
-
-	
-
 	// powerups
+	dropBag = new PowerUps[stairsNum];
 	setDrops();
 
 	//player
@@ -719,16 +796,13 @@ void Gameplay()
 
 	//view insilization
 	view.view_insilization();
-
+	//////////////////////////////////////////
+	Clock TimeOfMove, TimeOfReturn;
+	bool StartMoving = 0;
+	bool StartReturning = 0;
+	//////////////////////////////////////////////
 	while (window.isOpen())
 	{
-		for (int i = 0; i < dropBag.size(); i++)
-		{
-			if (players.player1.getGlobalBounds().intersects(dropBag[i].dropShape.getGlobalBounds()))
-			{
-				dropBag[i].dropShape.setScale(0, 0);
-			}
-		}
 		/*if (Mouse::isButtonPressed(Mouse::Left))
 		{
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
@@ -747,24 +821,33 @@ void Gameplay()
 				pageNumber = 500;
 				window.setView(window.getDefaultView());
 				reset();
+				////////////////////////////////////////////////////////////
+				////////////////
 				return;
 			}
-			if (!Keyboard::isKeyPressed(Keyboard::Escape))
+			/*if (!Keyboard::isKeyPressed(Keyboard::Escape))
 			{
 				pressed = false;
-			}
+			}*/
 		}
-		//clock
-		
+		Set_ObjectsOnStairs();
 
+		dropcollision();
+
+		//clock
+		if (!StartMoving)
+		{
+			TimeOfMove.restart();
+		}
+		checkdrop(TimeOfMove, StartMoving, StartReturning);
 		Map.update();
 		view.SetView();
 
 		//map Motion
 		Map.Map_Motion();
-		Map.Backgrond_Velocity = 30.f;
-		Map.Walls_velocity = 150.f;
-		Map.Stairs_velocity = 70.0f;
+		Map.Backgrond_Velocity_y = 30.f;
+		Map.Walls_velocity_y = 150.f;
+		Map.Stairs_velocity_y = 70.0f;
 		Map.view_velocity = 100;
 
 		//motion of players
@@ -775,7 +858,7 @@ void Gameplay()
 		if (players.player1.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && players.player2.getPosition().y > player2_View.getCenter().y + 540))
 		{
-			Map.Backgrond_Velocity = Map.Walls_velocity = Map.Stairs_velocity = Map.view_velocity = Power.PowerUP_veolcity = 0;
+			Map.Backgrond_Velocity_y = Map.Walls_velocity_y = Map.Stairs_velocity_y = Map.view_velocity = Power.PowerUP_veolcity = 0;
 			END = 0;
 		}
 
@@ -785,27 +868,23 @@ void Gameplay()
 		window.clear();
 		window.setView(player1_View);
 		DRAW();
-		if (GameMode == 2){
+		if (GameMode == 2) {
 			window.draw(players.player2);
 		}
 		window.draw(players.player1);
-		
+
 		window.setView(window.getDefaultView());
 		//set position of clock then draw it
 		/////////
-		if (GameMode == 2){
+		if (GameMode == 2) {
 			gameclock.cl.setScale(1, 1);
 			gameclock.cl2.setScale(1, 1);
 			gameclock.cl.setPosition(0, 118);
 			gameclock.cl2.setPosition(40, 180);
 		}
-		else {
-			gameclock.cl.setPosition(230, 118);
-			gameclock.cl2.setPosition(315, 235);
-		}
 		window.draw(gameclock.cl);
 		window.draw(gameclock.cl2);
-		
+
 		//------------------------------------------------------
 		if (GameMode == 2)
 		{
@@ -817,8 +896,6 @@ void Gameplay()
 			window.setView(window.getDefaultView());
 			//set position of clock then draw it
 			/////////
-			gameclock.cl.setScale(1, 1);
-			gameclock.cl2.setScale(1, 1);
 			gameclock.cl.setPosition(950, 118);
 			gameclock.cl2.setPosition(990, 180);
 			window.draw(gameclock.cl);
@@ -832,10 +909,10 @@ void Gameplay()
 bool resusme = 1;
 int shift = 60 * resusme;
 void menu1(Menu& men1)
-{	
+{
 	men1.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
 
-	if     (resusme) men1.mainmenu[0 + resusme].setFillColor(Color::Black);
+	if (resusme) men1.mainmenu[0 + resusme].setFillColor(Color::Black);
 	else   men1.mainmenu[0 + resusme].setFillColor(Color{ 255,204,0 });
 
 	men1.choises = 6 + resusme;
@@ -860,7 +937,7 @@ void menu1(Menu& men1)
 	men1.mainmenu[2 + resusme].setFillColor(Color::Black);
 	men1.mainmenu[2 + resusme].setString("Profile");
 	men1.mainmenu[2 + resusme].setCharacterSize(50);
-	men1.mainmenu[2 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 160  + shift));
+	men1.mainmenu[2 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 160 + shift));
 
 	men1.mainmenu[3 + resusme].setFont(men1.font);
 	men1.mainmenu[3 + resusme].setFillColor(Color::Black);
@@ -1169,7 +1246,7 @@ int main()
 					men.mainmenu[men.selected].setFillColor(Color::Black);
 					men.selected = 5 + resusme;
 					men.mainmenu[5 + resusme].setFillColor(Color{ 255,204,0 });
-					men.hand.setPosition(1140, 890+shift);
+					men.hand.setPosition(1140, 890 + shift);
 					pressed = true;
 				}
 

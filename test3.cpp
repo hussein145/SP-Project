@@ -43,6 +43,7 @@ struct sprite {
 	const float Right_wall = 1500;
 	const float Left_wall = 450;
 	int droptype = -1;
+	float incspeed = 1, addspeed = 0, superjump = 1, addsuperjump = 0;
 	void inti(Texture& texture)
 	{
 		player1.setTexture(texture);
@@ -100,7 +101,7 @@ struct sprite {
 					clockk2.restart();
 					dt2 = 0;
 				}
-				velocity_x = 7 * dt2;
+				velocity_x = 7 * dt2 * incspeed;
 				pree = true;
 				pree2 = false;
 			}
@@ -111,7 +112,7 @@ struct sprite {
 					clockk2.restart();
 					dt2 = 0;
 				}
-				velocity_x = -7 * dt2;
+				velocity_x = -7 * dt2 * incspeed; 
 				pree2 = true;
 				pree = false;
 			}
@@ -164,7 +165,7 @@ struct sprite {
 		if (Keyboard::isKeyPressed(Keyboard::Space) && check_on_ground)
 		{
 			//cout << dt << endl;
-			velocity_y -= 5.f;
+			velocity_y -= 5.f * superjump;
 			//velocity_y -= 5.f * (int(dt2) ? float(dt2)*100 : 1);
 			check_on_ground = false;
 		}
@@ -674,11 +675,13 @@ void checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning)
 	}
 	else if (players.droptype == 1)
 	{
-
+		players.addsuperjump = 7;
+		players.superjump = 1.5;
 	}
 	else if (players.droptype == 2)
 	{
-
+		players.addspeed = 7;
+		players.incspeed = 2;
 	}
 }
 //--------------------------------------------------------------------------------------------------
@@ -702,6 +705,25 @@ void reset()
 	}
 	players.droptype = -1;
 	skip = 0;
+}
+void resetPowerups()
+{
+	if (players.addspeed <= 0) {
+		players.addspeed = 0;
+		players.incspeed = 1;
+	}
+	else {
+		players.addspeed -= 0.01;
+		players.droptype = -1;
+	}
+	if (players.addsuperjump <= 0) {
+		players.addsuperjump = 0;
+		players.superjump = 1;
+	}
+	else {
+		players.addsuperjump -= 0.01;
+		players.droptype = -1;
+	}
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
 void DRAW()
@@ -816,6 +838,7 @@ void Gameplay()
 				TimeOfMove.restart();
 			}
 			checkdrop(TimeOfMove, StartMoving, StartReturning);
+			resetPowerups();
 		}
 		Map.update();
 		view.SetView();

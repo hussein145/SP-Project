@@ -1,6 +1,6 @@
 #include"Menu.h"
 #include "menu_Bg_and_Face.h"
-#include "PauseMenu.h"
+#include "Walls_And_Background.h"
 #include <SFML/Graphics.hpp>
 #include<SFML/Audio.hpp>
 #include<iostream>
@@ -15,13 +15,17 @@ int select = 0;
 //PauseMenu pausemenu;
 //Menu Pause1;
 Menu menu;
+Walls_And_Background background;
+
+
+
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Close | Style::Fullscreen);
 int GameMode;
 Clock clockk, clockk2;
 float dt, dt2;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
-int stairsNum = 100, bgNums = 200;
+int stairsNum = 100;/* bgNums = 200;*/
 void Intilize_Numbers()
 {
 	/*if (GameMode == 2) stairsNum = 200;
@@ -203,91 +207,6 @@ PowerUps* dropBag = new PowerUps[stairsNum];
 void generateDrop(Vector2f stair_position, bool check);
 void setDrops();
 //---------------------------------------------<<GameBackground & Stairs>>------------------------------------//
-struct BackGround {
-	Texture backGround, wallTexture;
-
-	RectangleShape bg[N];
-	RectangleShape wallsLeft[N], wallsRight[N];
-
-	int Curr_Background = 0, Curr_walls = 0;
-	int update_Background = 0, update_wall_index = 0, Difference_Between_bg = 0;
-
-	int LeftWall_Pos_x, RightWalls_Pos_x, bg_width, floor_width;
-	int Walls_Width = 160;
-
-	bool player2_Out_of_Walls = 1;
-	bool player2_Out_of_Background = 1;
-
-	void intiliztion()
-	{
-
-		backGround.loadFromFile("Assets/Textures/BackGround game1.png");
-		wallTexture.loadFromFile("Assets/Textures/wall1.png");
-		//background
-		if (GameMode == 2)
-		{
-			LeftWall_Pos_x = 0, RightWalls_Pos_x = 1920;
-			bg_width = 1920, floor_width = 1920;
-		}
-		else
-		{
-			LeftWall_Pos_x = 240, RightWalls_Pos_x = 1680;
-			bg_width = 1420, floor_width = 1420;
-		}
-		for (Curr_Background = 0; Curr_Background < bgNums; Curr_Background++)
-		{
-			Curr_walls = Curr_Background;
-			wallsLeft[Curr_walls].setTexture(&wallTexture);
-			wallsLeft[Curr_walls].setSize(Vector2f(Walls_Width, 1080));
-			wallsLeft[Curr_walls].setPosition(LeftWall_Pos_x, -Difference_Between_bg);
-
-			wallsRight[Curr_walls].setTexture(&wallTexture);
-			wallsRight[Curr_walls].setSize(Vector2f(Walls_Width, 1080));
-			wallsRight[Curr_walls].setScale(-1, 1);
-			wallsRight[Curr_walls].setPosition(RightWalls_Pos_x, -Difference_Between_bg);
-
-			bg[Curr_Background].setTexture(&backGround);
-			bg[Curr_Background].setSize(Vector2f(bg_width, 1080));
-			bg[Curr_Background].setPosition(LeftWall_Pos_x, -Difference_Between_bg);
-			Difference_Between_bg += 1080;
-		}
-		Curr_Background--;
-	}
-	void updateBackground_And_Walls()
-	{
-		if (GameMode == 2) // 2player
-		{
-			if (bg[update_Background].getPosition().y >= player2_View.getCenter().y + 540)
-				player2_Out_of_Background = 1;
-			else
-				player2_Out_of_Background = 0;
-		}
-		if (bg[update_Background].getPosition().y >= player1_View.getCenter().y + 540 && player2_Out_of_Background)
-		{
-			bg[update_Background].setPosition(Vector2f(LeftWall_Pos_x, bg[Curr_Background].getPosition().y - 1080));
-			Curr_Background = update_Background;
-			update_Background++;
-
-		}
-		if (GameMode == 2) // 2player
-		{
-			if (wallsLeft[update_wall_index].getPosition().y >= player2_View.getCenter().y + 540)
-				player2_Out_of_Walls = 1;
-			else
-				player2_Out_of_Walls = 0;
-		}
-		if (wallsLeft[update_wall_index].getPosition().y >= player1_View.getCenter().y + 540 && player2_Out_of_Walls)
-		{
-			wallsLeft[update_wall_index].setPosition(Vector2f(LeftWall_Pos_x, wallsLeft[Curr_walls].getPosition().y - 1080));
-			wallsRight[update_wall_index].setPosition(Vector2f(RightWalls_Pos_x, wallsLeft[Curr_walls].getPosition().y - 1080));
-			Curr_walls = update_wall_index;
-			update_wall_index++;
-		}
-		update_Background %= (bgNums - 1);
-		update_wall_index %= (bgNums - 1);
-
-	}
-}background;
 void strnum();
 int strCnt = 0;
 int Number_Of_Stair = 0;
@@ -491,13 +410,13 @@ struct MAP
 	void intilization()
 	{
 		setclock();
-		background.intiliztion();
+		background.intiliztion(GameMode, player1_View, player2_View);
 		Stairs.intiliztion();
 	}
 	void update()
 	{
 		Stairs.updateStairs();
-		background.updateBackground_And_Walls();
+		background.updateBackground_And_Walls(GameMode, player1_View, player2_View);
 	}
 	void Map_Motion()
 	{
@@ -507,7 +426,7 @@ struct MAP
 		{
 			update_clock();
 
-			for (int i = 0; i < bgNums; i++)
+			for (int i = 0; i < 200; i++)
 			{
 				background.bg[i].move(0, Backgrond_Velocity_y * dt);
 				background.wallsRight[i].move(0, Walls_velocity_y * dt);
@@ -729,7 +648,7 @@ void DRAW()
 	Block_texture.loadFromFile("Assets/Textures/strnum.png");
 	Font Gfont;
 	Gfont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
-	for (int i = 0; i < bgNums; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		window.draw(background.bg[i]);
 	}
@@ -746,7 +665,7 @@ void DRAW()
 		}
 	}
 
-	for (int i = 0; i < bgNums; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		window.draw(background.wallsLeft[i]);
 		window.draw(background.wallsRight[i]);

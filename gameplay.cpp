@@ -1,26 +1,26 @@
-#include <SFML/Graphics.hpp>
-#include<SFML/Audio.hpp>
 #include"Menu.h"
 #include "menu_Bg_and_Face.h"
+#include "PauseMenu.h"
+#include <SFML/Graphics.hpp>
+#include<SFML/Audio.hpp>
 #include<iostream>
-
 #include <string.h>
 #include <vector>
 #include <math.h>
 #define N 500
 using namespace sf;
 using namespace std;
+
+int select = 0;
+//PauseMenu pausemenu;
+//Menu Pause1;
 Menu menu;
-
-RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Fullscreen);
+RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Close | Style::Fullscreen);
 int GameMode;
-Clock clockk;
-float dt;
-//bool pressed = false;
-
+Clock clockk, clockk2;
+float dt, dt2;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
-
 int stairsNum = 100, bgNums = 200;
 void Intilize_Numbers()
 {
@@ -28,8 +28,6 @@ void Intilize_Numbers()
 	else  stairsNum = 100;*/
 }
 //-------------------------------------------<<Main menu>>---------------------------------------------//
-
-
 bool END = 1;
 //---------------------------------------------<<Players>>---------------------------------------------------//
 struct sprite {
@@ -40,93 +38,152 @@ struct sprite {
 	float velocity_y;
 	float x;
 	bool check_on_ground;
-	int last_button_pressed = 1;
+	int gravity = -1;
+	bool pree;
+	bool pree2;
+	int reflectionR;
+	int reflectionL;
+	const float Ground = 900;
+	const float Right_wall = 1500;
+	const float Left_wall = 450;
 	int droptype = -1;
+	float incspeed = 1, addspeed = 0, superjump = 1, addsuperjump = 0;
 	void inti(Texture& texture)
 	{
 		player1.setTexture(texture);
 		player1.setPosition(500, 500);
-		player1.setTextureRect(IntRect(0, 0, 128, 128));
-		player1.setOrigin(player1.getTextureRect().width / 2, player1.getTextureRect().height / 2);
+		player1.setTextureRect(IntRect(0, 0, 50, 60));
+		player1.setOrigin(25, 30);
+		player1.setScale(2.4, 2.4);
 		//player2
 		player2.setSize(Vector2f(100, 100));
 		player2.setPosition(450, 500);
-
 		velocity_x = 0;
 		velocity_y = 0;
 		x = 0;
 		check_on_ground = 0;
+		pree = false;
+		pree2 = false;
+		reflectionR = 0;
+		reflectionL = 0;
 	}
 	void update()
 	{
-		player1.move(velocity_x * dt, velocity_y * dt);
+		player1.move(velocity_x, velocity_y);
 		if (velocity_x > 0)
 		{
-			player1.setScale(1, 1);
-			x += 0.01f;
-			player1.setTextureRect(IntRect(128 * int(x), 0, 128, 128));
+			player1.setScale(2.4, 2.4);
+			x += 0.09f;
+			player1.setTextureRect(IntRect(50 * (int)(x), 60, 50, 60));
 		}
 		if (velocity_x < 0)
 		{
-			player1.setScale(-1, 1);
-			x += 0.01f;
-			player1.setTextureRect(IntRect(128 * int(x), 0, 128, 128));
-
+			player1.setScale(-2.4, 2.4);
+			x += 0.09f;
+			player1.setTextureRect(IntRect(50 * (int)(x), 60, 50, 60));
 		}
-		//if (velocity_y < 0)
-		//{
-			//check_on_ground = false;
-		//}
-
-		if (x >= 7)
+		if (velocity_y < 0)
+		{
+			player1.setTextureRect(IntRect(0, 60 * 2, 50, 60));
+		}
+		else if (velocity_y < 0 && Keyboard::isKeyPressed(Keyboard::Right))
+		{
+			player1.setTextureRect(IntRect(50, 60 * 2, 50, 60));
+		}
+		if (x > 3.9)
 			x = 0;
-
 	}
 	void Players_Motion()
 	{
-		if (Keyboard::isKeyPressed(Keyboard::D) && END)
-		{
-			velocity_x = 200;
-			last_button_pressed = 1;
 
-		}
-		if (Keyboard::isKeyPressed(Keyboard::A) && END)
+		if (reflectionL <= 0 && reflectionR <= 0)
 		{
-			velocity_x = -200;
-			last_button_pressed = 2;
-		}
-
-		if (Keyboard::isKeyPressed(Keyboard::W) && END)
-		{
-			velocity_y = -700;
-		}
-		if (Keyboard::isKeyPressed(Keyboard::S) && END)
-		{
-			velocity_y = 400;
-
-		}
-		//player2 --------------------------------------------------
-		if (GameMode == 2)
-		{
-			if (Keyboard::isKeyPressed(Keyboard::Up) && END)
+			if (Keyboard::isKeyPressed(Keyboard::Right))
 			{
-				player2.move(0, -700 * dt);
+				if (pree2 && !pree)
+				{
+					clockk2.restart();
+					dt2 = 0;
+				}
+				velocity_x = 7 * dt2 * incspeed;
+				pree = true;
+				pree2 = false;
 			}
-			if (Keyboard::isKeyPressed(Keyboard::Down) && END)
+			if (Keyboard::isKeyPressed(Keyboard::Left))
 			{
-				player2.move(0, 700 * dt);
+				if (pree && !pree2)
+				{
+					clockk2.restart();
+					dt2 = 0;
+				}
+				velocity_x = -7 * dt2 * incspeed;
+				pree2 = true;
+				pree = false;
 			}
-		}
-		//------------------------------------------------------------------
+			if (velocity_x == 0)
+			{
+				x += 0.04f;
+				player1.setTextureRect(IntRect(50 * int(x), 0, 50, 60));
+				clockk2.restart();
+				pree = false;
+				pree2 = false;
+				reflectionR = 0;
+				reflectionL = 0;
+			}
+			/*if(check_on_ground && velocity_x == 0)
+				dt2 = 0;*/
 
-		if (players.last_button_pressed == 1)
-		{
-			player1.setTextureRect(IntRect(0, 0, 128, 128));
 		}
-		if (players.last_button_pressed == 2)
+		else
 		{
-			player1.setScale(-1, 1);
-			player1.setTextureRect(IntRect(0, 0, 128, 128));
+			if (reflectionL > 0)
+			{
+				velocity_x = reflectionL;
+				reflectionL--;
+			}
+			if (reflectionR > 0)
+			{
+				velocity_x = -reflectionR;
+				reflectionR--;
+			}
+			pree = false;
+			pree2 = false;
+		}
+
+		if (velocity_y > 0 || !check_on_ground)
+		{
+			//velocity_y = 3;
+			player1.setTextureRect(IntRect(50 * 3, 60 * 2, 50, 60));
+		}
+
+		if (check_on_ground)
+		{
+			//cout << "hu" << endl;
+			velocity_y = 0;
+		}
+		else
+		{
+			velocity_y += 0.05;
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Space) && check_on_ground)
+		{
+			//cout << dt << endl;
+			velocity_y -= 5.f * superjump;
+			//velocity_y -= 5.f * (int(dt2) ? float(dt2)*100 : 1);
+			check_on_ground = false;
+		}
+		//cout << velocity_y << endl;
+
+		if (player1.getPosition().x > Right_wall)
+		{
+			player1.setPosition(Right_wall - 5, player1.getPosition().y);
+			reflectionR = abs(velocity_x) - 2;
+		}
+		if (player1.getPosition().x < Left_wall)
+		{
+			player1.setPosition(Left_wall + 5, player1.getPosition().y);
+			reflectionL = abs(velocity_x) - 2;
 		}
 	}
 }players;
@@ -251,7 +308,7 @@ struct STAIRS {
 
 	//counters
 	int heightBetweenStair = 0;
-	int currstair = 0;
+	int currstair = 0, updatestair = 0;
 	int Stairs_OF_EachFloor = 50;
 
 	//stairs intiliztion
@@ -334,53 +391,62 @@ struct STAIRS {
 			}
 			Number_Of_Stair++;
 		}
+		currstair--;
 
 	}
 	void updateStairs()
 	{
-		RightLimit = ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width) - stairs[currstair].getSize().x - (1920 - ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width));
+		heightBetweenStair = 205;
+		RightLimit = ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width) - stairs[updatestair].getSize().x - (1920 - ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width));
 		bool player2_Notexist = 1;
 		if (GameMode == 2)
 		{
-			if (stairs[currstair].getPosition().y > player2_View.getCenter().y + 540)
+			if (stairs[updatestair].getPosition().y > player2_View.getCenter().y + 540)
 				player2_Notexist = 1;
 			else
 				player2_Notexist = 0;
 		}
 
-		if (currstair == stairsNum)
-			currstair = 0;
+		//if (currstair == stairsNum)
+		//{
+		//	updatestair = 0;
+		//	//currstair = 0;
+		//}
 
-		if (stairs[currstair].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
+		if (stairs[updatestair].getPosition().y > player1_View.getCenter().y + 540 && player2_Notexist)
 		{
 
-			if (currstair % Stairs_OF_EachFloor == 0) //50
+			if (updatestair % Stairs_OF_EachFloor == 0) //50
 			{
+				StairPosition = (Vector2f(background.LeftWall_Pos_x + floor_width / 2, stairs[currstair].getPosition().y - heightBetweenStair));
+				currstair = updatestair;
 				FloorTextures();
-				StairPosition = (Vector2f(background.LeftWall_Pos_x + floor_width / 2, 955 - heightBetweenStair));
 			}
 			else
 			{
+				StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width + distanceOfMove + stairs[updatestair].getSize().x / 2), stairs[currstair].getPosition().y - heightBetweenStair);
+				currstair = updatestair;
 				StairsTextures();
-				StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width + distanceOfMove + stairs[currstair].getSize().x / 2), 955 - heightBetweenStair);
 			}
 
-			stairs[currstair].setPosition(StairPosition);
-			strnum();
+			stairs[updatestair].setPosition(StairPosition);
 			//powerups
+			//currstair = updatestair;
+			updatestair++;
+			updatestair %= stairsNum;
+			strnum();
 			if (GameMode == 3)
 			{
 				generateDrop(StairPosition, 0);
 			}
-			currstair++;
-			heightBetweenStair += 205;
+			//heightBetweenStair += 205;
 			Number_Of_Stair++;
 		}
 	}
 }Stairs;
 
-RectangleShape Strs10[200];
-Text strTxt[200];
+RectangleShape Strs10[N];
+Text strTxt[N];
 struct Gameclock
 {
 	Texture clo;
@@ -418,8 +484,8 @@ void update_clock()
 }
 struct MAP
 {
-	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y, view_velocity;
-	float Walls_velocity_x, Stairs_velocity_x;
+	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y , view_velocity ;
+	//float Walls_velocity_x, Stairs_velocity_x;
 	bool move = 0;
 
 	void intilization()
@@ -440,13 +506,6 @@ struct MAP
 		if (move)
 		{
 			update_clock();
-			/*for (int i = 0; i < stairsNum; i++)
-			{
-				Strs10[i].move(0, Stairs_velocity_y * dt);
-				strTxt[i].move(0, Stairs_velocity_y * dt);
-			}*/
-			/*for (int i = 0; i < stairsNum; i++)
-				dropBag[i].dropShape.move(0, Stairs_velocity_y * dt);*/
 
 			for (int i = 0; i < bgNums; i++)
 			{
@@ -543,7 +602,7 @@ void generateDrop(Vector2f stair_position, bool check)
 	else
 		timee = addtimer.getElapsedTime().asSeconds();
 
-	int x = rand() % 5 + 4;
+	int x = rand() % 5 + 2;
 	if (timee >= x)
 	{
 		int indexDrop = rand() % 4;
@@ -613,18 +672,20 @@ void checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning)
 	}
 	else if (players.droptype == 1)
 	{
-
+		players.addsuperjump = 7;
+		players.superjump = 1.5;
 	}
 	else if (players.droptype == 2)
 	{
-
+		players.addspeed = 7;
+		players.incspeed = 2;
 	}
 }
 //--------------------------------------------------------------------------------------------------
 void reset()
 {
 	Stairs.StairPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
-	Stairs.currstair = Number_Of_Stair = 0;
+	Stairs.currstair = Stairs.updatestair = Number_Of_Stair = 0;
 	Stairs.heightBetweenStair = 0;
 	gameclock.l = 0;
 
@@ -641,6 +702,25 @@ void reset()
 	}
 	players.droptype = -1;
 	skip = 0;
+}
+void resetPowerups()
+{
+	if (players.addspeed <= 0) {
+		players.addspeed = 0;
+		players.incspeed = 1;
+	}
+	else {
+		players.addspeed -= 0.01;
+		players.droptype = -1;
+	}
+	if (players.addsuperjump <= 0) {
+		players.addsuperjump = 0;
+		players.superjump = 1;
+	}
+	else {
+		players.addsuperjump -= 0.01;
+		players.droptype = -1;
+	}
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
 void DRAW()
@@ -674,13 +754,14 @@ void DRAW()
 }
 void Gameplay()
 {
+	//window.setFramerateLimit(60);
 	// powerups
 	dropBag = new PowerUps[stairsNum];
 	setDrops();
 
 	//player
 	Texture tex;
-	tex.loadFromFile("Assets/Textures/Run.png");
+	tex.loadFromFile("Assets/Textures/icytower1.png");
 	players.inti(tex);
 
 	//Map
@@ -692,11 +773,10 @@ void Gameplay()
 
 	//view insilization
 	view.view_insilization();
-	//////////////////////////////////////////
-	Clock TimeOfMove, TimeOfReturn;
+	Clock TimeOfMove;
+	//Time TimeOfMove;
 	bool StartMoving = 0;
 	bool StartReturning = 0;
-	//////////////////////////////////////////////
 	while (window.isOpen())
 	{
 		/*if (Mouse::isButtonPressed(Mouse::Left))
@@ -704,22 +784,41 @@ void Gameplay()
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
 			cout << pos.x << " " << pos.y << endl;
 		}*/
-		dt = clockk.restart().asSeconds();
-		Event event;
-		while (window.pollEvent(event))
+		Event Play;
+		while (window.pollEvent(Play))
 		{
-			if (event.type == Event::Closed)
+			if (Play.type == Event::Closed)
 				window.close();
-			if (Keyboard::isKeyPressed(Keyboard::Escape) && !menu.pressed)
+			if (Play.key.code == Keyboard::Escape)  //&& !menu.pressed
 			{
-				menu.pageNumber = 500;
-				menu.pressed = true;
-				menu.pageNumber = 500;
-				window.setView(window.getDefaultView());
-				reset();
-				////////////////////////////////////////////////////////////
-				////////////////
-				return;
+				//pausedtime += TimeOfMove.getElapsedTime();
+				//TimeOfMove.restart();
+				Map.Backgrond_Velocity_y = Map.Walls_velocity_y = Map.Stairs_velocity_y = Map.view_velocity = Power.PowerUP_veolcity = 0;
+				menu.Pause(window);
+				//TimeOfMove.restart();
+				if (menu.exit)
+				{
+					menu.exit = 0;
+					reset();
+					return;
+				}
+			}
+		}
+		//--------------------------collisions----------------------------//
+		dt = clockk.restart().asSeconds();
+		dt2 = clockk2.getElapsedTime().asSeconds();
+		players.check_on_ground = false;
+		if (players.velocity_y >= 0) {
+			for (int i = 0; i < stairsNum; i++)
+			{
+				if (players.player1.getGlobalBounds().intersects(Stairs.stairs[i].getGlobalBounds()))
+				{
+					if (players.player1.getPosition().y + 60 <= Stairs.stairs[i].getPosition().y)
+					{
+						players.player1.setPosition(players.player1.getPosition().x, Stairs.stairs[i].getPosition().y - 60);
+						players.check_on_ground = true;
+					}
+				}
 			}
 		}
 		Set_ObjectsOnStairs();
@@ -733,6 +832,7 @@ void Gameplay()
 				TimeOfMove.restart();
 			}
 			checkdrop(TimeOfMove, StartMoving, StartReturning);
+			resetPowerups();
 		}
 		Map.update();
 		view.SetView();
@@ -746,7 +846,7 @@ void Gameplay()
 
 		//motion of players
 		players.velocity_x = 0;
-		players.velocity_y = 0;
+		//players.velocity_y = 0;
 
 		//freeze game
 		if (players.player1.getPosition().y > player1_View.getCenter().y + 550
@@ -800,9 +900,6 @@ void Gameplay()
 	}
 }
 //-------------------------------------------------<<Menues>>---------------------------------------------------//
-
-
-
 int main()
 {
 	//MainMenu;

@@ -8,6 +8,7 @@ using namespace sf;
 
 menu_Bg_and_Face menu_UI;
 void Gameplay();
+void DRAW();
 void Menu::Hand_intilization()
 {
 	handTex.loadFromFile("Assets/Textures/hand.png");
@@ -192,7 +193,6 @@ void  Menu::Play_menu(RenderWindow& window, int &GameMode)
 	menu2.mainmenu[2].setFillColor(Color::Black);
 	menu2.mainmenu[2].setPosition(Vector2f(1250, menu2.height / 2 + 160));
 
-	
 	pageNumber = 500;
 	while (window.isOpen())
 	{
@@ -455,6 +455,11 @@ void Menu::Pause(RenderWindow& window)
 	Pause1.mainmenu[2].setCharacterSize(90);
 	Pause1.mainmenu[2].setPosition(800, 500);
 
+	Texture photo;
+	photo.loadFromFile("Assets\\Textures\\pauseBG2.png");
+	Sprite photo2;
+	photo2.setTexture(photo);
+
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
@@ -483,7 +488,10 @@ void Menu::Pause(RenderWindow& window)
 					}
 				}
 			}
-			//window.clear();
+			window.clear();
+			DRAW();
+			window.draw(photo2);
+
 			for (int i = 0; i < 3; i++) {
 				window.draw(Pause1.mainmenu[i]);
 			}

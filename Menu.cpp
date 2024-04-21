@@ -1,5 +1,6 @@
-#include "Menu.h"
+#include"Menu.h"
 #include "menu_Bg_and_Face.h"
+#include "Walls_And_Background.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 using namespace std;
@@ -7,7 +8,7 @@ using namespace sf;
 
 menu_Bg_and_Face menu_UI;
 void Gameplay();
-void Menu:: Hand_intilization()
+void Menu::Hand_intilization()
 {
 	handTex.loadFromFile("Assets/Textures/hand.png");
 	hand.setTexture(&handTex);
@@ -191,6 +192,7 @@ void  Menu::Play_menu(RenderWindow& window, int &GameMode)
 	menu2.mainmenu[2].setFillColor(Color::Black);
 	menu2.mainmenu[2].setPosition(Vector2f(1250, menu2.height / 2 + 160));
 
+	
 	pageNumber = 500;
 	while (window.isOpen())
 	{

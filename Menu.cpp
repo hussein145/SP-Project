@@ -428,3 +428,76 @@ void  Menu::instructions(RenderWindow& window)
 		window.display();
 	}
 }
+void Menu::Pause(RenderWindow& window)
+{
+	Menu Pause1;
+	Pause1.choises = 3;
+	//Pause1.c = 3;
+	//if (!font.loadFromFile("arial.ttf")) {}
+	Pause1.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
+	Pause1.mainmenu[0].setFont(Pause1.font);
+	Pause1.mainmenu[0].setFillColor(Color{ 255,204,0 });
+	Pause1.mainmenu[0].setString("continue");
+	Pause1.mainmenu[0].setCharacterSize(90);
+	Pause1.mainmenu[0].setPosition(800, 100);
+
+	Pause1.mainmenu[1].setFont(Pause1.font);
+	Pause1.mainmenu[1].setFillColor(sf::Color::Black);
+	Pause1.mainmenu[1].setString("resume");
+	Pause1.mainmenu[1].setCharacterSize(90);
+	Pause1.mainmenu[1].setPosition(800, 300);
+
+	Pause1.mainmenu[2].setFont(Pause1.font);
+	Pause1.mainmenu[2].setFillColor(sf::Color::Black);
+	Pause1.mainmenu[2].setString("exit");
+	Pause1.mainmenu[2].setCharacterSize(90);
+	Pause1.mainmenu[2].setPosition(800, 500);
+
+	while (window.isOpen()) {
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed)
+				window.close();
+			if (event.type == sf::Event::KeyReleased) {
+				if (event.key.code == sf::Keyboard::Up) {
+					Pause1.MoveUp(Pause1.selected, 3);
+					//break;
+				}
+				if (event.key.code == sf::Keyboard::Down) {
+					Pause1.MoveDown(Pause1.selected, 3);
+					//break;
+				}
+				if (event.key.code == sf::Keyboard::Enter) {
+					if (Pause1.selected == 0) {
+						return;
+					}
+					if (Pause1.selected == 1) {
+
+					}
+					if (Pause1.selected == 2) {
+						window.setView(window.getDefaultView());
+						exit = 1;
+						return;
+					}
+				}
+			}
+			//window.clear();
+			for (int i = 0; i < 3; i++) {
+				window.draw(Pause1.mainmenu[i]);
+			}
+			window.display();
+		}
+		if (exit)
+			break;
+		//----------------------------------------//
+		////pageNumber = 500;
+		//menu.pressed = true;
+		//menu.pageNumber = 500;
+		//reset();
+		//////////////////////////////////////////////////////////////
+		//////////////////
+		//return;
+
+		//mainmenuselected = 0;
+	}
+}

@@ -20,4 +20,3 @@ struct menu_Bg_and_Face
 	void FaceMotion(RenderWindow& window);
 	
 };
-

@@ -642,7 +642,7 @@ void resetPowerups()
 	}
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
-void DRAW()
+void DRAW(RenderWindow &window)
 {
 	Texture Block_texture;
 	Block_texture.loadFromFile("Assets/Textures/strnum.png");
@@ -673,6 +673,9 @@ void DRAW()
 }
 void Gameplay()
 {
+	Texture GameTexture;
+	/*GameTexture.create(50, 50);*/
+	
 	//window.setFramerateLimit(60);
 	// powerups
 	dropBag = new PowerUps[stairsNum];
@@ -696,6 +699,7 @@ void Gameplay()
 	//Time TimeOfMove;
 	bool StartMoving = 0;
 	bool StartReturning = 0;
+	bool x = 1;
 	while (window.isOpen())
 	{
 		/*if (Mouse::isButtonPressed(Mouse::Left))
@@ -703,6 +707,7 @@ void Gameplay()
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
 			cout << pos.x << " " << pos.y << endl;
 		}*/
+
 		Event Play;
 		while (window.pollEvent(Play))
 		{
@@ -713,7 +718,9 @@ void Gameplay()
 				//pausedtime += TimeOfMove.getElapsedTime();
 				//TimeOfMove.restart();
 				Map.Backgrond_Velocity_y = Map.Walls_velocity_y = Map.Stairs_velocity_y = Map.view_velocity = Power.PowerUP_veolcity = 0;
-				menu.Pause(window);
+				GameTexture.create(1920, 1080);
+				GameTexture.update(window);
+				menu.Pause(window, GameTexture);
 				//TimeOfMove.restart();
 				if (menu.exit)
 				{
@@ -780,7 +787,7 @@ void Gameplay()
 
 		window.clear();
 		window.setView(player1_View);
-		DRAW();
+		DRAW(window);
 		if (GameMode == 2) {
 			window.draw(players.player2);
 		}
@@ -802,7 +809,7 @@ void Gameplay()
 		if (GameMode == 2)
 		{
 			window.setView(player2_View);
-			DRAW();
+			DRAW(window);
 			window.draw(players.player1);
 			window.draw(players.player2);
 

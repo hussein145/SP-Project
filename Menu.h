@@ -28,6 +28,6 @@ struct Menu
 	void options_menu1(RenderWindow& window);
 	void options_menu(RenderWindow& window);
 	void instructions(RenderWindow& window);
-	void Pause(RenderWindow& window);
+	void Pause(RenderWindow& window, Texture gametexture);
 
 };

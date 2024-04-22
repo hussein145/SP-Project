@@ -8,7 +8,7 @@ using namespace sf;
 
 menu_Bg_and_Face menu_UI;
 void Gameplay();
-void DRAW();
+void DRAW(RenderWindow &window);
 void Menu::Hand_intilization()
 {
 	handTex.loadFromFile("Assets/Textures/hand.png");
@@ -430,7 +430,7 @@ void  Menu::instructions(RenderWindow& window)
 		window.display();
 	}
 }
-void Menu::Pause(RenderWindow& window)
+void Menu::Pause(RenderWindow& window, Texture gametexture)
 {
 	Menu Pause1;
 	Pause1.choises = 3;
@@ -455,10 +455,12 @@ void Menu::Pause(RenderWindow& window)
 	Pause1.mainmenu[2].setCharacterSize(90);
 	Pause1.mainmenu[2].setPosition(800, 500);
 
-	Texture photo;
-	photo.loadFromFile("Assets\\Textures\\pauseBG2.png");
-	Sprite photo2;
-	photo2.setTexture(photo);
+	RectangleShape photo2;
+	photo2.setSize(Vector2f(1920, 1080));
+	photo2.setFillColor(Color(0, 0, 0, 100));
+	Sprite game;
+	game.setTexture(gametexture);
+
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -488,26 +490,13 @@ void Menu::Pause(RenderWindow& window)
 					}
 				}
 			}
-			window.clear();
-			DRAW();
-			window.draw(photo2);
-
-			for (int i = 0; i < 3; i++) {
-				window.draw(Pause1.mainmenu[i]);
-			}
-			window.display();
 		}
-		if (exit)
-			break;
-		//----------------------------------------//
-		////pageNumber = 500;
-		//menu.pressed = true;
-		//menu.pageNumber = 500;
-		//reset();
-		//////////////////////////////////////////////////////////////
-		//////////////////
-		//return;
-
-		//mainmenuselected = 0;
+		window.clear();
+		window.draw(game);
+		window.draw(photo2);
+		for (int i = 0; i < 3; i++) {
+			window.draw(Pause1.mainmenu[i]);
+		}
+		window.display();
 	}
 }

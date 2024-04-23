@@ -35,6 +35,7 @@ void Intilize_Numbers()
 bool END = 1;
 //---------------------------------------------<<Players>>---------------------------------------------------//
 struct sprite {
+	int Score = 0;
 	Sprite player1;
 	RectangleShape player2;
 	Texture texture;
@@ -55,7 +56,7 @@ struct sprite {
 	void inti(Texture& texture)
 	{
 		player1.setTexture(texture);
-		player1.setPosition(500, 500);
+		player1.setPosition(500, 850);
 		player1.setTextureRect(IntRect(0, 0, 50, 60));
 		player1.setOrigin(25, 30);
 		player1.setScale(2.4, 2.4);
@@ -607,6 +608,7 @@ void reset()
 	Stairs.currstair = Stairs.updatestair = Number_Of_Stair = 0;
 	Stairs.heightBetweenStair = 0;
 	gameclock.l = 0;
+	players.Score = 0;
 
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
@@ -699,7 +701,14 @@ void Gameplay()
 	//Time TimeOfMove;
 	bool StartMoving = 0;
 	bool StartReturning = 0;
-	bool x = 1;
+	/*===========================<<Score>>=================================*/
+	int curr_colission = 0;
+	Font score_Tex;
+	score_Tex.loadFromFile("Assets//Fonts//BrownieStencil-8O8MJ.ttf");
+	Text score;
+	score.setFont(score_Tex);
+	score.setCharacterSize(50);
+	score.setPosition(240, 1000);
 	while (window.isOpen())
 	{
 		/*if (Mouse::isButtonPressed(Mouse::Left))
@@ -743,10 +752,26 @@ void Gameplay()
 					{
 						players.player1.setPosition(players.player1.getPosition().x, Stairs.stairs[i].getPosition().y - 60);
 						players.check_on_ground = true;
+
+						if (curr_colission > i) {
+							if ((curr_colission - i) <= 9) { // Fall from stair
+								players.Score -= curr_colission - i;
+							}
+							else { // Jump and loop repeat itself
+								players.Score += (stairsNum - curr_colission) + i;
+							}
+						}
+						else { // i > curr_colission (Normal Condition)
+							players.Score += (i - curr_colission);
+						}
+
+						curr_colission = i;
 					}
 				}
 			}
 		}
+		
+		score.setString("Score: " + to_string(players.Score*10));
 		Set_ObjectsOnStairs();
 
 		if (GameMode == 3)
@@ -804,6 +829,7 @@ void Gameplay()
 		}
 		window.draw(gameclock.cl);
 		window.draw(gameclock.cl2);
+		window.draw(score);
 
 		//------------------------------------------------------
 		if (GameMode == 2)

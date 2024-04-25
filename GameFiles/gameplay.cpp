@@ -116,7 +116,7 @@ struct sprite {
 					clockk2.restart();
 					dt2 = 0;
 				}
-				velocity_x = 6 * dt2;
+				velocity_x = 6 * dt2 * incspeed;
 				pree = true;
 				pree2 = false;
 			}
@@ -125,7 +125,7 @@ struct sprite {
 					clockk2.restart();
 					dt2 = 0;
 				}
-				velocity_x = -6 * dt2;
+				velocity_x = -6 * dt2 * incspeed;
 				pree2 = true;
 				pree = false;
 			}
@@ -169,7 +169,7 @@ struct sprite {
 		if (Keyboard::isKeyPressed(Keyboard::Space) && check_on_ground) {
 			so4.setBuffer(buff);
 			//cout << dt << endl;
-			velocity_y -= 5 * (dt2 / 4.5 > 1 ? dt2 / 4.5 : 1);
+			velocity_y -= 5 * (dt2 / 4.5 > 1 ? dt2 / 4.5 : 1) * superjump;
 			//velocity_y -= 5.f * (int(dt2) ? float(dt2)*100 : 1);
 			check_on_ground = false;
 			so4.play();
@@ -243,7 +243,7 @@ void update_clock()
 }
 struct MAP
 {
-	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y, view_velocity;
+	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y, view_velocity, mapspeed = 1, addmapspeed = 0;
 	//float Walls_velocity_x, Stairs_velocity_x;
 	bool move = 0;
 	int m = 1;
@@ -279,7 +279,22 @@ struct MAP
 				Stairs.stairs[i].move(0, Stairs_velocity_y * dt);
 			}
 			player2_View.move(0, -view_velocity * dt);
-			player1_View.move(0, -view_velocity * dt);
+			player1_View.move(0, -view_velocity * dt * mapspeed);
+			if (players.droptype == 3)
+			{
+				mapspeed = 2;
+				addmapspeed = 7;
+			}
+			if (mapspeed <= 0)
+			{
+				mapspeed = 1;
+				addmapspeed = 0;
+			}
+			else
+			{
+				addmapspeed -= 0.01;
+				players.droptype = -1;
+			}
 		}
 	}
 };
@@ -422,7 +437,7 @@ void checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning)
 	else if (players.droptype == 2)
 	{
 		players.addspeed = 7;
-		players.incspeed = 2;
+		players.incspeed = 1.5;
 	}
 }
 //--------------------------------------------------------------------------------------------------

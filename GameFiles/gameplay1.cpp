@@ -85,13 +85,13 @@ struct sprite {
 		if (velocity_x > 0)
 		{
 			player1.setScale(2.4, 2.4);
-			x += 0.09f;
+			x += 0.005f;
 			player1.setTextureRect(IntRect(50 * (int)(x), 60, 50, 60));
 		}
 		if (velocity_x < 0)
 		{
 			player1.setScale(-2.4, 2.4);
-			x += 0.09f;
+			x += 0.008f;
 			player1.setTextureRect(IntRect(50 * (int)(x), 60, 50, 60));
 		}
 		if (velocity_y < 0)
@@ -128,7 +128,7 @@ struct sprite {
 				pree = false;
 			}
 			if (velocity_x == 0 && velocity_y == 0) {
-				x += 0.04f;
+				x += 0.009f;
 				player1.setTextureRect(IntRect(50 * int(x), 0, 50, 60));
 				clockk2.restart();
 				dt2 = 0;
@@ -161,8 +161,11 @@ struct sprite {
 			velocity_y = 0;
 		}
 		else {
-			velocity_y += 4*dt;
+			velocity_y += 4.f*dt;
 		}
+		/*if (!check_on_ground) {
+			velocity_y += 1.f * dt;*/
+		//}
 		if (Keyboard::isKeyPressed(Keyboard::Space) && check_on_ground) {
 			velocity_y -= 2;
 			check_on_ground = false;
@@ -490,12 +493,6 @@ void DRAW(RenderWindow& window)
 }
 void Gameplay()
 {
-	/*Texture Block_texture;
-	Block_texture.loadFromFile("Assets/Textures/strnum.png");
-	Font Gfont;
-	Gfont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");*/
-
-
 	SoundBuffer buff;
 	buff.loadFromFile("Assets//Sounds//jump.ogg");
 
@@ -536,6 +533,8 @@ void Gameplay()
 	score.setPosition(240, 1000);
 	while (window.isOpen())
 	{
+		dt = clockk.restart().asSeconds();
+		dt2 = clockk2.getElapsedTime().asSeconds();
 		/*if (Mouse::isButtonPressed(Mouse::Left))
 		{
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
@@ -569,8 +568,6 @@ void Gameplay()
 			}
 		}
 		//--------------------------collisions----------------------------//
-		dt = clockk.restart().asSeconds();
-		dt2 = clockk2.getElapsedTime().asSeconds();
 		/*if (dt2 > 10)
 		{
 			dt2 = 10;

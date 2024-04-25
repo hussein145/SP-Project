@@ -49,7 +49,7 @@ struct sprite {
 	float velocity_x;
 	float velocity_y;
 	float x;
-	bool check_on_ground;
+	bool check_on_ground = 1;
 	int gravity = -1;
 	bool pree;
 	bool pree2;

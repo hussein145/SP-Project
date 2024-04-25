@@ -26,6 +26,9 @@ float dt, dt2;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 int stairsNum = 100;/* bgNums = 200;*/
+
+
+
 void Intilize_Numbers()
 {
 	/*if (GameMode == 2) stairsNum = 200;
@@ -98,6 +101,10 @@ struct sprite {
 		if (x > 3.9)
 			x = 0;
 	}
+	SoundBuffer buff;
+	Sound so4;
+	
+
 	void Players_Motion()
 	{
 
@@ -170,13 +177,16 @@ struct sprite {
 		{
 			velocity_y += 0.05;
 		}
-
+		
 		if (Keyboard::isKeyPressed(Keyboard::Space) && check_on_ground)
 		{
+			buff.loadFromFile("jump.ogg");
+			so4.setBuffer(buff);
 			//cout << dt << endl;
 			velocity_y -= 5.f * superjump;
 			//velocity_y -= 5.f * (int(dt2) ? float(dt2)*100 : 1);
 			check_on_ground = false;
+			so4.play();
 		}
 		//cout << velocity_y << endl;
 
@@ -407,7 +417,9 @@ struct MAP
 	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y , view_velocity ;
 	//float Walls_velocity_x, Stairs_velocity_x;
 	bool move = 0;
-
+	int m = 1;
+	
+	
 	void intilization()
 	{
 		setclock();
@@ -650,6 +662,7 @@ void DRAW(RenderWindow &window)
 	Block_texture.loadFromFile("Assets/Textures/strnum.png");
 	Font Gfont;
 	Gfont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
+	
 	for (int i = 0; i < 200; i++)
 	{
 		window.draw(background.bg[i]);
@@ -675,6 +688,7 @@ void DRAW(RenderWindow &window)
 }
 void Gameplay()
 {
+	menu.music(1);
 	Texture GameTexture;
 	/*GameTexture.create(50, 50);*/
 	
@@ -687,7 +701,7 @@ void Gameplay()
 	Texture tex;
 	tex.loadFromFile("Assets/Textures/icytower1.png");
 	players.inti(tex);
-
+	//music(k);
 	//Map
 	MAP Map;
 	CameraView view;
@@ -724,6 +738,7 @@ void Gameplay()
 				window.close();
 			if (Play.key.code == Keyboard::Escape)  //&& !menu.pressed
 			{
+			
 				//pausedtime += TimeOfMove.getElapsedTime();
 				//TimeOfMove.restart();
 				Map.Backgrond_Velocity_y = Map.Walls_velocity_y = Map.Stairs_velocity_y = Map.view_velocity = Power.PowerUP_veolcity = 0;
@@ -731,9 +746,12 @@ void Gameplay()
 				GameTexture.update(window);
 				menu.Pause(window, GameTexture);
 				//TimeOfMove.restart();
+				
 				if (menu.exit)
 				{
 					menu.exit = 0;
+					menu.music(0);
+					//music(k);
 					reset();
 					return;
 				}

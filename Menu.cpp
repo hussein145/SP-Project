@@ -3,8 +3,39 @@
 #include "Walls_And_Background.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 using namespace std;
 using namespace sf;
+int k = 0;
+Music bgmusic;
+void Menu::music(int n) {
+	
+	if (n == 0) {
+		bgmusic.openFromFile("ori music.ogg");
+	}
+	else if (n == 1) {
+		bgmusic.openFromFile("backgmusic.ogg");
+	}
+	bgmusic.play();
+
+}
+SoundBuffer buf;
+Sound so, so2, so3;
+void Menu::change_option_Sound() {
+	
+	buf.loadFromFile("menu_change.ogg");
+	
+	so.setBuffer(buf);
+	so.play();
+}
+void Menu::select_option_Sound() {
+
+	buf.loadFromFile("menu_choose.ogg");
+
+	so2.setBuffer(buf);
+	so2.play();
+}
+
 
 menu_Bg_and_Face menu_UI;
 void Gameplay();
@@ -51,6 +82,7 @@ void Menu::MoveUp(int& selected, int choises)
 void  Menu::menu1(RenderWindow &window, int &GameMode)
 {
 	Menu men1;
+	music(k);
 	men1.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
 
 	if (resusme) men1.mainmenu[0 + resusme].setFillColor(Color::Black);
@@ -99,6 +131,7 @@ void  Menu::menu1(RenderWindow &window, int &GameMode)
 	men1.mainmenu[5 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 340 + shift));
 	menu_UI.back_ground(window);
 	men1.Hand_intilization();
+	
 	while (window.isOpen())
 	{
 		if (pageNumber == 1000)
@@ -110,6 +143,7 @@ void  Menu::menu1(RenderWindow &window, int &GameMode)
 					window.close();
 				if (event.key.code == Keyboard::Escape && !pressed && men1.selected != 5 + resusme)
 				{
+					change_option_Sound();
 					men1.mainmenu[men1.selected].setFillColor(Color::Black);
 					men1.selected = 5 + resusme;
 					men1.mainmenu[5 + resusme].setFillColor(Color{ 255,204,0 });
@@ -128,12 +162,20 @@ void  Menu::menu1(RenderWindow &window, int &GameMode)
 				if (event.type == Event::KeyPressed)
 				{
 					if (event.key.code == Keyboard::Down)
+					{
+						change_option_Sound();
+						
 						men1.MoveDown(men1.selected, men1.choises);
+					}
 					if (event.key.code == Keyboard::Up)
+					{
+						change_option_Sound();
+						//so.play();
 						men1.MoveUp(men1.selected, men1.choises);
+					}
 					if (event.key.code == Keyboard::Enter)
 					{
-
+						select_option_Sound();
 						if (men1.selected == 5 + resusme)
 							pageNumber = -1;
 						if (men1.selected == 0 + resusme)
@@ -194,12 +236,14 @@ void  Menu::Play_menu(RenderWindow& window, int &GameMode)
 	menu2.mainmenu[2].setPosition(Vector2f(1250, menu2.height / 2 + 160));
 
 	pageNumber = 500;
+	
 	while (window.isOpen())
 	{
 		Event event;
 
 		if (Keyboard::isKeyPressed(Keyboard::Escape) && !pressed)
 		{
+			select_option_Sound();
 			pageNumber = 1000;
 			pressed = true;
 			break;
@@ -214,13 +258,18 @@ void  Menu::Play_menu(RenderWindow& window, int &GameMode)
 				window.close();
 			if (event.type == Event::KeyPressed)
 			{
-				if (event.key.code == Keyboard::Down)
+				if (event.key.code == Keyboard::Down) {
+					change_option_Sound();
 					menu2.MoveDown(menu2.selected, menu2.choises);
-				if (event.key.code == Keyboard::Up)
-					menu2.MoveUp(menu2.selected, menu2.choises);
+				}
+				if (event.key.code == Keyboard::Up){
+					change_option_Sound();
+				menu2.MoveUp(menu2.selected, menu2.choises);
+			}
 				//cout << Enter_Game << endl;
 				if (event.key.code == Keyboard::Enter)
 				{
+					select_option_Sound();
 					if (menu2.selected == 0)   GameMode = 1;
 					if (menu2.selected == 1)   GameMode = 2;
 					if (menu2.selected == 2)   GameMode = 3;
@@ -366,12 +415,17 @@ void  Menu::options_menu(RenderWindow& window)
 				window.close();
 			if (event.type == Event::KeyPressed)
 			{
-				if (event.key.code == Keyboard::Down)
+				if (event.key.code == Keyboard::Down) {
+					change_option_Sound();
 					menu4.MoveDown(menu4.selected, menu4.choises);
-				if (event.key.code == Keyboard::Up)
+				}
+				if (event.key.code == Keyboard::Up) {
+					change_option_Sound();
 					menu4.MoveUp(menu4.selected, menu4.choises);
+				}
 				if (event.key.code == Keyboard::Escape && !pressed && menu4.selected != 2)
 				{
+					change_option_Sound();
 					menu4.mainmenu[menu4.selected].setFillColor(Color::Black);
 					menu4.selected = 2;
 					menu4.mainmenu[2].setFillColor(Color{ 255,204,0 });
@@ -384,6 +438,7 @@ void  Menu::options_menu(RenderWindow& window)
 				}
 				if (event.key.code == Keyboard::Enter)
 				{
+					select_option_Sound();
 					if (menu4.selected == 0)  options_menu1(window);
 					if (menu4.selected == 2) {
 						pageNumber = 1000;
@@ -422,6 +477,7 @@ void  Menu::instructions(RenderWindow& window)
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
+			select_option_Sound();
 			pageNumber = 1000;
 			return;
 		}
@@ -469,14 +525,17 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 				window.close();
 			if (event.type == sf::Event::KeyReleased) {
 				if (event.key.code == sf::Keyboard::Up) {
+					change_option_Sound();
 					Pause1.MoveUp(Pause1.selected, 3);
 					//break;
 				}
 				if (event.key.code == sf::Keyboard::Down) {
+					change_option_Sound();
 					Pause1.MoveDown(Pause1.selected, 3);
 					//break;
 				}
 				if (event.key.code == sf::Keyboard::Enter) {
+					select_option_Sound();
 					if (Pause1.selected == 0) {
 						return;
 					}

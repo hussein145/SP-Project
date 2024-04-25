@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 using namespace std;
 using namespace sf;
 
@@ -29,5 +30,7 @@ struct Menu
 	void options_menu(RenderWindow& window);
 	void instructions(RenderWindow& window);
 	void Pause(RenderWindow& window, Texture gametexture);
-
+	void music(int n);
+	void change_option_Sound();
+	void select_option_Sound();
 };

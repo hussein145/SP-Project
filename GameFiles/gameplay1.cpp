@@ -63,7 +63,7 @@ struct sprite {
 	void inti(Texture& texture)
 	{
 		player1.setTexture(texture);
-		player1.setPosition(500, 850);
+		player1.setPosition(500, 750);
 		player1.setTextureRect(IntRect(0, 0, 50, 60));
 		player1.setOrigin(25, 30);
 		player1.setScale(2.4, 2.4);

@@ -501,7 +501,7 @@ void DRAW(RenderWindow& window)
 void Gameplay()
 {
 	SoundBuffer buff;
-	buff.loadFromFile("jump.ogg");
+	buff.loadFromFile("Assets//Sounds//jump.ogg");
 
 	sound.music(1);
 	Texture GameTexture;

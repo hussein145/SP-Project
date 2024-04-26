@@ -20,7 +20,7 @@ struct STAIRS
 	int RightLimit;
 
 	//counters
-	int heightBetweenStair = 0;
+	int heightBetweenStair = 205;
 	int currstair = 0, updatestair = 0;
 	int Stairs_OF_EachFloor = 50;
 

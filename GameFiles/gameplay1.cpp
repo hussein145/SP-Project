@@ -427,7 +427,6 @@ void reset()
 {
 	Stairs.StairPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
 	Stairs.currstair = Stairs.updatestair = Stairs.Number_Of_Stair = 0;
-	Stairs.heightBetweenStair = 0;
 	gameclock.l = 0;
 	players.Score = 0;
 

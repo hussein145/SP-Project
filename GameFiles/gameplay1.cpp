@@ -155,12 +155,6 @@ struct sprite {
 			player1.setTextureRect(IntRect(50 * 3, 60 * 2, 50, 60));
 		}
 
-		if (check_on_ground) {
-			velocity_y = 0;
-		}
-		else {
-			velocity_y += 4.f * dt;
-		}
 		if (Keyboard::isKeyPressed(Keyboard::Space) && check_on_ground) {
 			velocity_y = -(900*dt) ;
 			//cout << velocity_y << " " << dt << endl;
@@ -168,6 +162,12 @@ struct sprite {
 			so4.setBuffer(buff);
 			so4.play();
 		//cout << dt << endl;
+		}
+		if (check_on_ground) {
+			velocity_y = 0;
+		}
+		else {
+			velocity_y += 4.f * dt;
 		}
 		if (player1.getPosition().x > background.wallsRight[0].getPosition().x - background.Walls_Width)
 		{

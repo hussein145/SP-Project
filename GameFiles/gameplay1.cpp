@@ -161,26 +161,22 @@ struct sprite {
 		else {
 			velocity_y += 4.f * dt;
 		}
-		/*if (!check_on_ground) {
-			velocity_y += 1.f * dt;*/
-			//}
 		if (Keyboard::isKeyPressed(Keyboard::Space) && check_on_ground) {
-			velocity_y -= 2.5 + addsuperjump;
+			velocity_y = -(900*dt) ;
+			//cout << velocity_y << " " << dt << endl;
 			check_on_ground = false;
 			so4.setBuffer(buff);
 			so4.play();
-			//cout << dt << endl;
+		//cout << dt << endl;
 		}
-		//cout << velocity_y << endl;
-
-		if (player1.getPosition().x > background.RightWalls_Pos_x - background.Walls_Width)
+		if (player1.getPosition().x > background.wallsRight[0].getPosition().x - background.Walls_Width)
 		{
-			player1.setPosition(background.RightWalls_Pos_x - background.Walls_Width - 5, player1.getPosition().y);
+			player1.setPosition(background.wallsRight[0].getPosition().x - background.Walls_Width - 5, player1.getPosition().y);
 			reflectionR = abs(velocity_x) - 2;
 		}
-		if (player1.getPosition().x < background.LeftWall_Pos_x + background.Walls_Width)
+		if (player1.getPosition().x < background.wallsLeft[0].getPosition().x + background.Walls_Width)
 		{
-			player1.setPosition(background.LeftWall_Pos_x + background.Walls_Width + 5, player1.getPosition().y);
+			player1.setPosition(background.wallsLeft[0].getPosition().x + background.Walls_Width + 5, player1.getPosition().y);
 			reflectionL = abs(velocity_x) - 2;
 		}
 	}
@@ -278,6 +274,7 @@ struct MAP
 			player2_View.move(0, -view_velocity * dt);
 			player1_View.move(0, -view_velocity * dt);
 		}
+		//cout << dt << endl;
 	}
 };
 void Set_ObjectsOnStairs()
@@ -550,10 +547,11 @@ void Gameplay()
 	score.setFont(score_Tex);
 	score.setCharacterSize(50);
 	score.setPosition(240, 1000);
+	clockk.restart();
 	while (window.isOpen())
 	{
 		dt = clockk.restart().asSeconds();
-		dt2 = clockk2.getElapsedTime().asSeconds();
+		//dt2 = clockk2.restart().asSeconds();
 		/*if (Mouse::isButtonPressed(Mouse::Left))
 		{
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
@@ -612,13 +610,12 @@ void Gameplay()
 						else { // i > curr_colission (Normal Condition)
 							players.Score += (i - curr_colission);
 						}
-
 						curr_colission = i;
+						break;
 					}
 				}
 			}
 		}
-
 		score.setString("Score: " + to_string(players.Score * 10));
 		Set_ObjectsOnStairs();
 
@@ -637,6 +634,7 @@ void Gameplay()
 		view.SetView();
 
 		//map Motion
+		//cout << dt << endl;
 		Map.Map_Motion();
 		Map.Backgrond_Velocity_y = 30.f;
 		Map.Walls_velocity_y = 150.f;
@@ -654,7 +652,7 @@ void Gameplay()
 			Map.Backgrond_Velocity_y = Map.Walls_velocity_y = Map.Stairs_velocity_y = Map.view_velocity = Power.PowerUP_veolcity = 0;
 			END = 0;
 		}
-
+		//cout << dt << endl;
 		players.Players_Motion(buff);
 		players.update();
 
@@ -696,6 +694,7 @@ void Gameplay()
 			window.draw(gameclock.cl2);
 
 		}
+		//cout << dt << endl;
 		window.display();
 	}
 }

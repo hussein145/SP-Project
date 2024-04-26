@@ -12,19 +12,14 @@ void generateDrop(Vector2f stair_position, bool check);
 
 void STAIRS::strnum() {
 	if (Number_Of_Stair % 10 == 0) {
-		RectangleShape numberedStr;
-		Text strNumTxt;
-		numberedStr.setPosition(stairs[currstair].getPosition().x, stairs[currstair].getPosition().y + 30);
-		numberedStr.setSize(Vector2f(50, 50));
-		numberedStr.setOrigin(numberedStr.getSize().x / 2, 0);
+		Strs10[currstair].setPosition(stairs[currstair].getPosition().x, stairs[currstair].getPosition().y + 30);
+		Strs10[currstair].setSize(Vector2f(50, 50));
+		Strs10[currstair].setOrigin(Strs10[currstair].getSize().x / 2, 0);
 
-		strNumTxt.setFillColor(Color::White);
-		strNumTxt.setCharacterSize(20);
-		strNumTxt.setString(to_string(Number_Of_Stair));
-		//strNumTxt.setOrigin(strNumTxt.getScale().x/2, strNumTxt.getScale().y);
-		strNumTxt.setPosition(numberedStr.getPosition().x, numberedStr.getPosition().y + 15);
-		Strs10[currstair] = numberedStr;
-		strTxt[currstair] = strNumTxt;
+		strTxt[currstair].setFillColor(Color::White);
+		strTxt[currstair].setCharacterSize(20);
+		strTxt[currstair].setString(to_string(Number_Of_Stair));
+		strTxt[currstair].setPosition(Strs10[currstair].getPosition().x, Strs10[currstair].getPosition().y + 15);
 	}
 }
 void STAIRS::StairsTextures()
@@ -57,17 +52,22 @@ void STAIRS::intiliztion1(int GameMode) {
 	{
 		background.LeftWall_Pos_x = 0, background.RightWalls_Pos_x = 1920;
 		background.bg_width = 1920, floor_width = 1920;
+		heightBetweenStair = 130;
 	}
 	else
 	{
 		background.LeftWall_Pos_x = 240, background.RightWalls_Pos_x = 1680;
 		background.bg_width = 1420, floor_width = 1420;
 	}
-
+	stairs[0].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width / 2, 955));
+	Block_texture.loadFromFile("Assets/Textures/strnum.png");
+	Gfont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	//stairs & floors
 	srand(static_cast<unsigned>(time(NULL)));
 	for (currstair = 0; currstair < stairsNum; currstair++)
 	{
+		Strs10[currstair].setTexture(&Block_texture);
+		strTxt[currstair].setFont(Gfont);
 		if (currstair % Stairs_OF_EachFloor == 0) //50
 		{
 			//cout << currstair << endl;
@@ -76,8 +76,8 @@ void STAIRS::intiliztion1(int GameMode) {
 			FloorTextures();
 			stairs[currstair].setSize(Vector2f(floor_width, 50));
 			stairs[currstair].setOrigin(floor_width / 2, 0);
-			stairs[currstair].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width / 2, 955 - heightBetweenStair));
-			heightBetweenStair += 205;
+			if(currstair)
+			stairs[currstair].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width / 2, stairs[currstair-1].getPosition().y - heightBetweenStair));
 		}
 		else
 		{
@@ -92,10 +92,8 @@ void STAIRS::intiliztion1(int GameMode) {
 			RightLimit = (background.RightWalls_Pos_x - background.Walls_Width) - stairs[currstair].getSize().x - (1920 - (background.RightWalls_Pos_x - background.Walls_Width));
 
 			////SET POSITION
-			StairPosition = Vector2f((rand() % RightLimit) + (background.LeftWall_Pos_x + background.Walls_Width + stairs[currstair].getSize().x / 2), 955 - heightBetweenStair);
+			StairPosition = Vector2f((rand() % RightLimit) + (background.LeftWall_Pos_x + background.Walls_Width + stairs[currstair].getSize().x / 2), stairs[currstair - 1].getPosition().y - heightBetweenStair);
 			stairs[currstair].setPosition(StairPosition);
-
-			heightBetweenStair += 205;
 		}
 		strnum();
 		if (GameMode == 3)
@@ -107,7 +105,6 @@ void STAIRS::intiliztion1(int GameMode) {
 	currstair--;
 }
 void STAIRS::updateStairs(int GameMode, View &player1_View, View &player2_View) {
-	heightBetweenStair = 205;
 	RightLimit = ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width) - stairs[updatestair].getSize().x - (1920 - ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width));
 	bool player2_Notexist = 1;
 	if (GameMode == 2)
@@ -135,8 +132,6 @@ void STAIRS::updateStairs(int GameMode, View &player1_View, View &player2_View) 
 		}
 
 		stairs[updatestair].setPosition(StairPosition);
-		//powerups
-		//currstair = updatestair;
 		updatestair++;
 		updatestair %= stairsNum;
 		strnum();

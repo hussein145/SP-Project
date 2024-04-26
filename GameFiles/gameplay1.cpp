@@ -112,7 +112,7 @@ struct sprite {
 					clockk2.restart();
 					dt2 = 0;
 				}
-				velocity_x = 700 * dt;
+				velocity_x = 710 * dt;
 				pree = true;
 				pree2 = false;
 			}
@@ -121,7 +121,7 @@ struct sprite {
 					clockk2.restart();
 					dt2 = 0;
 				}
-				velocity_x = -700 * dt;
+				velocity_x = -710 * dt;
 				pree2 = true;
 				pree = false;
 			}

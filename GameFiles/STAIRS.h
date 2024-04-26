@@ -2,6 +2,9 @@
 //#define N 500
 struct STAIRS
 {
+	Texture Block_texture;
+	Font Gfont;
+
 	int stairsNum = 100;
 	int Number_Of_Stair = 0;
 	RectangleShape stairs[500];

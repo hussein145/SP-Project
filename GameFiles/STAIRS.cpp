@@ -52,13 +52,11 @@ void STAIRS::intiliztion1(int GameMode) {
 	{
 		background.LeftWall_Pos_x = 0, background.RightWalls_Pos_x = 1920;
 		background.bg_width = 1920, floor_width = 1920;
-		heightBetweenStair = 130;
 	}
 	else
 	{
 		background.LeftWall_Pos_x = 240, background.RightWalls_Pos_x = 1680;
 		background.bg_width = 1420, floor_width = 1420;
-		heightBetweenStair = 205;
 	}
 	stairs[0].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width / 2, 955));
 	Block_texture.loadFromFile("Assets/Textures/strnum.png");

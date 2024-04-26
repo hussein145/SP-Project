@@ -159,17 +159,17 @@ struct sprite {
 			velocity_y = 0;
 		}
 		else {
-			velocity_y += 4.f*dt;
+			velocity_y += 4.f * dt;
 		}
 		/*if (!check_on_ground) {
 			velocity_y += 1.f * dt;*/
-		//}
+			//}
 		if (Keyboard::isKeyPressed(Keyboard::Space) && check_on_ground) {
-			velocity_y -= 2 + addsuperjump;
+			velocity_y -= 2.5 + addsuperjump;
 			check_on_ground = false;
 			so4.setBuffer(buff);
 			so4.play();
-			cout << dt << endl;
+			//cout << dt << endl;
 		}
 		//cout << velocity_y << endl;
 
@@ -303,6 +303,7 @@ struct CameraView
 		else
 		{
 			player1_View.setViewport(FloatRect(0.f, 0.f, 1.f, 1.f));
+			player2_View.setViewport(FloatRect(0.f, 0.f, 0.f, 0.f));
 		}
 	}
 	void SetView()
@@ -466,6 +467,28 @@ void resetPowerups()
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
 void DRAW(RenderWindow& window)
 {
+	window.setView(player2_View);
+	for (int i = 0; i < 100; i++)
+	{
+		window.draw(background.bg[i]);
+	}
+	for (int i = 0; i < Stairs.stairsNum; i++)
+	{
+		window.draw(Stairs.stairs[i]);
+		window.draw(Stairs.Strs10[i]);
+		window.draw(Stairs.strTxt[i]);
+		if (GameMode == 3)
+		{
+			window.draw(dropBag[i].dropShape);
+		}
+	}
+
+	for (int i = 0; i < background.bgNums; i++)
+	{
+		window.draw(background.wallsLeft[i]);
+		window.draw(background.wallsRight[i]);
+	}
+	window.setView(player1_View);
 	for (int i = 0; i < 100; i++)
 	{
 		window.draw(background.bg[i]);
@@ -660,7 +683,7 @@ void Gameplay()
 		if (GameMode == 2)
 		{
 			window.setView(player2_View);
-			DRAW(window);
+			//DRAW(window);
 			window.draw(players.player1);
 			window.draw(players.player2);
 

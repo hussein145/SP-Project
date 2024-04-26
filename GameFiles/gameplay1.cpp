@@ -21,8 +21,6 @@ Walls_And_Background background;
 STAIRS Stairs;
 Sounds sound;
 
-
-
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Close | Style::Fullscreen);
 int GameMode;
 Clock clockk, clockk2;
@@ -167,10 +165,11 @@ struct sprite {
 			velocity_y += 1.f * dt;*/
 		//}
 		if (Keyboard::isKeyPressed(Keyboard::Space) && check_on_ground) {
-			velocity_y -= 2;
+			velocity_y -= 2 + addsuperjump;
 			check_on_ground = false;
 			so4.setBuffer(buff);
 			so4.play();
+			cout << dt << endl;
 		}
 		//cout << velocity_y << endl;
 
@@ -414,7 +413,7 @@ void checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning)
 	}
 	else if (players.droptype == 1)
 	{
-		players.addsuperjump = 7;
+		players.addsuperjump = 3;
 		players.superjump = 1.5;
 	}
 	else if (players.droptype == 2)
@@ -461,15 +460,13 @@ void resetPowerups()
 		players.superjump = 1;
 	}
 	else {
-		players.addsuperjump -= 0.01;
+		players.addsuperjump -= 0.001;
 		players.droptype = -1;
 	}
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
 void DRAW(RenderWindow& window)
 {
-	
-
 	for (int i = 0; i < 100; i++)
 	{
 		window.draw(background.bg[i]);
@@ -548,7 +545,6 @@ void Gameplay()
 				window.close();
 			if (Play.key.code == Keyboard::Escape)  //&& !menu.pressed
 			{
-
 				//pausedtime += TimeOfMove.getElapsedTime();
 				//TimeOfMove.restart();
 				Map.Backgrond_Velocity_y = Map.Walls_velocity_y = Map.Stairs_velocity_y = Map.view_velocity = Power.PowerUP_veolcity = 0;
@@ -556,7 +552,6 @@ void Gameplay()
 				GameTexture.update(window);
 				menu.Pause(window, GameTexture);
 				//TimeOfMove.restart();
-
 				if (menu.exit)
 				{
 					menu.exit = 0;
@@ -687,5 +682,6 @@ int main()
 {
 	//MainMenu
 	menu.menu1(window, GameMode);
+	//menu.Menues(window);
 
 }

@@ -71,7 +71,7 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 				//clockk2.restart();
 				//dt2 = 0;
 			}
-			velocity_x = 710 * dt;
+			velocity_x = 710 * dt * incspeed;
 			pree = true;
 			pree2 = false;
 		}
@@ -80,7 +80,7 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 				//clockk2.restart();
 				//dt2 = 0;
 			}
-			velocity_x = -710 * dt;
+			velocity_x = -710 * dt * incspeed;
 			pree2 = true;
 			pree = false;
 		}

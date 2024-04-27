@@ -220,6 +220,7 @@ void DRAW(RenderWindow& window)
 	{
 		window.draw(background.bg[i]);
 	}
+	window.draw(gameclock.herry2);
 	for (int i = 0; i < Stairs.stairsNum; i++)
 	{
 		window.draw(Stairs.stairs[i]);
@@ -325,19 +326,9 @@ void Gameplay()
 	//Time TimeOfMove;
 	bool StartMoving = 0;
 	bool StartReturning = 0;
-	/*===========================<<Score>>=================================*/
-	
-	/*Font score_Tex;
-	score_Tex.loadFromFile("Assets//Fonts//BrownieStencil-8O8MJ.ttf");
-	Text score1, score2;*/
-	/*score1.setFont(score_Tex);*/
-	//score2.setFont(score_Tex);
-	/*score.setCharacterSize(50);
-	score.setPosition(240, 1000);*/
 	clockk.restart();
 	while (window.isOpen())
 	{
-		//cout << player1_View.getCenter().y << endl;
 		dt = clockk.restart().asSeconds();
 		//dt2 = clockk2.restart().asSeconds();
 		/*if (Mouse::isButtonPressed(Mouse::Left))
@@ -364,7 +355,6 @@ void Gameplay()
 				{
 					menu.exit = 0;
 					sound.music(0);
-					//music(k);
 					reset();
 					return;
 				}
@@ -392,10 +382,10 @@ void Gameplay()
 
 		//map Motion
 		Map.Map_Motion();
-		Map.Backgrond_Velocity_y = 30.f;
-		Map.Walls_velocity_y = 150.f;
-		Map.Stairs_velocity_y = 70.0f;
-		Map.view_velocity = 100;
+		Map.Backgrond_Velocity_y = 20.f;
+		Map.Walls_velocity_y = 120.f;
+		Map.Stairs_velocity_y = 50.0f;
+		Map.view_velocity = 80;
 
 		//motion of players
 		player1.velocity_x = 0;
@@ -460,6 +450,7 @@ void Gameplay()
 //-------------------------------------------------<<Menues>>---------------------------------------------------//
 int main()
 {
+	window.setFramerateLimit(100);
 	//MainMenu
 	menu.menu1(window, GameMode);
 	//menu.Menues(window);

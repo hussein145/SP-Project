@@ -7,6 +7,7 @@
 #include "STAIRS.h"
 #include "Players.h"
 #include "PowerUps.h"
+#include "GameClock.h"
 using namespace std;
 using namespace sf;
 
@@ -14,8 +15,9 @@ extern PowerUps Power;
 extern Players player1;
 extern STAIRS Stairs;
 extern Walls_And_Background background;
+extern GameClock gameclock;
 extern float dt;
-//extern Gameclock gameclock;
+
 
 PowerUps* dropBag = new PowerUps[100];//stairsNum
 //PowerUps Power;
@@ -86,8 +88,8 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 				background.wallsLeft[i].move(velocity_x * dt, 0);
 				background.wallsRight[i].move(-velocity_x * dt, 0);
 			}
-			//gameclock.cl.move(velocity_x * dt, 0);
-			//gameclock.cl2.move(velocity_x * dt, 0);
+			gameclock.cl.move(velocity_x * dt, 0);
+			gameclock.cl2.move(velocity_x * dt, 0);
 		}
 		else if (timerOfMove.getElapsedTime().asSeconds() > 5 && timerOfMove.getElapsedTime().asSeconds() < 8)
 		{

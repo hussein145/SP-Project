@@ -11,6 +11,7 @@
 #include "Sounds.h"
 #include "Players.h"
 #include "PowerUps.h"
+#include "GameClock.h"
 #define N 500
 using namespace sf;
 using namespace std;
@@ -25,6 +26,8 @@ STAIRS Stairs;
 Sounds sound;
 Players player1; Players player2;
 PowerUps Power;
+GameClock gameclock;
+
 
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Close | Style::Fullscreen);
 int GameMode;
@@ -56,61 +59,64 @@ bool END = 1;
 //void setDrops();
 int strCnt = 0;
 
-struct Gameclock
-{
-	Texture clo;
-	Sprite cl;
-	Texture clo2;
-	Sprite cl2;
-	float l = 0;
-	Texture herry;
-	Sprite herry2;
-	bool f = 0;
-}gameclock;
-void setclock()
-{
-	gameclock.herry.loadFromFile("Assets\\Textures\\Hurry_Up.png");
-	gameclock.herry2.setTexture(gameclock.herry);
-	gameclock.herry2.setScale(0, 0);
-
-	gameclock.clo.loadFromFile("Assets/Textures/clock2.png");
-	gameclock.cl.setTexture(gameclock.clo);
-
-	gameclock.clo2.loadFromFile("Assets/Textures/clock 1.png");
-	gameclock.cl2.setTexture(gameclock.clo2);
-	gameclock.cl2.setOrigin(9.5, 30);
-	gameclock.cl2.setRotation(int(0));
-	if (GameMode == 2) {
-		gameclock.cl.setScale(1, 1);
-		gameclock.cl2.setScale(1, 1);
-		gameclock.cl.setPosition(0, 118);
-		gameclock.cl2.setPosition(40, 180);
-	}
-	else {
-		gameclock.cl.setScale(2, 2);
-		gameclock.cl2.setScale(1.7, 1.7);
-		gameclock.cl.setPosition(230, 118);
-		gameclock.cl2.setPosition(315, 235);
-	}
-}
-void update_clock()
-{
-	gameclock.l += 0.04f;
-	gameclock.cl2.setRotation(int(gameclock.l) );
-
-	gameclock.herry2.move(0, -550*dt);
-	int end = int(gameclock.l) ;
-	if (end % 360 != 0) {
-
-		gameclock.f = true;
-
-	}
-	if (end % 360 == 0 && gameclock.f == true) {
-		gameclock.herry2.setScale(2.5, 2.5);
-		gameclock.herry2.setPosition(650, player1_View.getCenter().y + 540);
-
-	}
-}
+//struct Gameclock
+//{
+//	Texture clo;
+//	Sprite cl;
+//	Texture clo2;
+//	Sprite cl2;
+//	float velocity_cl = 0;
+//	float velocity_clo2 = 0;
+//
+//	float l = 0;
+//	Texture herry;
+//	Sprite herry2;
+//	bool f = 0;
+//}gameclock;
+//void setclock()
+//{
+//	gameclock.herry.loadFromFile("Assets\\Textures\\Hurry_Up.png");
+//	gameclock.herry2.setTexture(gameclock.herry);
+//	gameclock.herry2.setScale(0, 0);
+//
+//	gameclock.clo.loadFromFile("Assets/Textures/clock2.png");
+//	gameclock.cl.setTexture(gameclock.clo);
+//
+//	gameclock.clo2.loadFromFile("Assets/Textures/clock 1.png");
+//	gameclock.cl2.setTexture(gameclock.clo2);
+//	gameclock.cl2.setOrigin(9.5, 30);
+//	gameclock.cl2.setRotation(int(0));
+//	if (GameMode == 2) {
+//		gameclock.cl.setScale(1, 1);
+//		gameclock.cl2.setScale(1, 1);
+//		gameclock.cl.setPosition(0, 118);
+//		gameclock.cl2.setPosition(40, 180);
+//	}
+//	else {
+//		gameclock.cl.setScale(2, 2);
+//		gameclock.cl2.setScale(1.7, 1.7);
+//		gameclock.cl.setPosition(230, 118);
+//		gameclock.cl2.setPosition(315, 235);
+//	}
+//}
+//void update_clock()
+//{
+//	gameclock.l += 0.04f;
+//	gameclock.cl2.setRotation(int(gameclock.l) );
+//
+//	gameclock.herry2.move(0, -550*dt);
+//	int end = int(gameclock.l) ;
+//	if (end % 360 != 0) {
+//
+//		gameclock.f = true;
+//
+//	}
+//	if (end % 360 == 0 && gameclock.f == true) {
+//		gameclock.herry2.setScale(2.5, 2.5);
+//		gameclock.herry2.setPosition(650, player1_View.getCenter().y + 540);
+//
+//	}
+//}
 struct MAP
 {
 	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y, view_velocity;
@@ -119,7 +125,7 @@ struct MAP
 	int m = 1;
 	void intilization()
 	{
-		setclock();
+		gameclock.setclock();
 		background.intiliztion(GameMode, player1_View, player2_View);
 		Stairs.intiliztion1(GameMode);
 	}
@@ -134,7 +140,7 @@ struct MAP
 			move = 1;
 		if (move)
 		{
-			update_clock();
+			gameclock.update_clock();
 
 			for (int i = 0; i < 200; i++)
 			{

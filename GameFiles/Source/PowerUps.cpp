@@ -111,7 +111,7 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 	}
 	else if (player1.droptype == 1)
 	{
-		player1.addsuperjump = 3;
+		player1.addsuperjump = 4;
 		player1.superjump = 1.5;
 	}
 	else if (player1.droptype == 2)
@@ -135,7 +135,7 @@ void PowerUps::resetPowerups()
 		player1.superjump = 1;
 	}
 	else {
-		player1.addsuperjump -= 0.001;
+		player1.addsuperjump -= 0.005;
 		player1.droptype = -1;
 	}
 }

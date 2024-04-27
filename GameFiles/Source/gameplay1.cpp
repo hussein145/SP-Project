@@ -195,6 +195,7 @@ void reset()
 	Stairs.StairPosition = Stairs.size_Of_Stair = Vector2f(0, 0);
 	Stairs.currstair = Stairs.updatestair = Stairs.Number_Of_Stair = 0;
 	gameclock.l = 0;
+	gameclock.f = 0;
 	player1.Score = player1.curr_colission = 0;
 	player2.Score = player2.curr_colission = 0;
 
@@ -450,7 +451,7 @@ void Gameplay()
 //-------------------------------------------------<<Menues>>---------------------------------------------------//
 int main()
 {
-	window.setFramerateLimit(100);
+	window.setFramerateLimit(120);
 	//MainMenu
 	menu.menu1(window, GameMode);
 	//menu.Menues(window);

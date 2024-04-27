@@ -48,7 +48,8 @@ struct sprite {
 	float velocity_y;
 	float x;
 	bool check_on_ground = 1;
-	int gravity = -1;
+	const float gravity = 4.0f;
+	const float jumpVelocity = 900.0f;
 	bool pree;
 	bool pree2;
 	int reflectionR;
@@ -60,6 +61,7 @@ struct sprite {
 	float incspeed = 1, addspeed = 0, superjump = 1, addsuperjump = 0;
 	void inti(Texture& texture)
 	{
+
 		player1.setTexture(texture);
 		player1.setPosition(500, 850);
 		player1.setTextureRect(IntRect(0, 0, 50, 60));
@@ -154,20 +156,19 @@ struct sprite {
 		if (velocity_y > 0 || !check_on_ground) {
 			player1.setTextureRect(IntRect(50 * 3, 60 * 2, 50, 60));
 		}
-
 		if (Keyboard::isKeyPressed(Keyboard::Space) && check_on_ground) {
-			velocity_y = -(900*dt) ;
+			velocity_y = -jumpVelocity * dt;
 			//cout << velocity_y << " " << dt << endl;
 			check_on_ground = false;
 			so4.setBuffer(buff);
 			so4.play();
-		//cout << dt << endl;
+			//cout << dt << endl;
 		}
 		if (check_on_ground) {
 			velocity_y = 0;
 		}
 		else {
-			velocity_y += 4.f * dt;
+			velocity_y += gravity * dt;
 		}
 		if (player1.getPosition().x > background.wallsRight[0].getPosition().x - background.Walls_Width)
 		{
@@ -550,6 +551,7 @@ void Gameplay()
 	clockk.restart();
 	while (window.isOpen())
 	{
+		//cout << player1_View.getCenter().y << endl;
 		dt = clockk.restart().asSeconds();
 		//dt2 = clockk2.restart().asSeconds();
 		/*if (Mouse::isButtonPressed(Mouse::Left))

@@ -37,19 +37,19 @@ void Players::inti(Texture& texture){
 void Players::update(){
 	character.move(velocity_x, velocity_y);
 	if (velocity_x == 0 && velocity_y == 0) {
-		x += 0.005f;
+		x += 0.02f;
 		character.setTextureRect(IntRect(50 * int(x), 0, 50, 60));
 	}
 	if (velocity_x > 0)
 	{
 		character.setScale(2.4, 2.4);
-		x += 0.005f;
+		x += 0.02f;
 		character.setTextureRect(IntRect(50 * (int)(x), 60, 50, 60));
 	}
 	if (velocity_x < 0)
 	{
 		character.setScale(-2.4, 2.4);
-		x += 0.005f;
+		x += 0.02f;
 		character.setTextureRect(IntRect(50 * (int)(x), 60, 50, 60));
 	}
 	if (velocity_y < 0)

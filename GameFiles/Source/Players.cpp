@@ -11,9 +11,8 @@ using namespace sf;
 extern Clock clockk;
 extern float dt;
 extern Walls_And_Background background;
-extern RenderWindow window;
 
-void Players::inti(Texture& texture){
+void Players::inti(Texture& texture) {
 	character.setTexture(texture);
 	character.setPosition(500, 850);
 	character.setTextureRect(IntRect(0, 0, 50, 60));
@@ -34,7 +33,7 @@ void Players::inti(Texture& texture){
 	reflectionL = 0;
 }
 
-void Players::update(){
+void Players::update() {
 	character.move(velocity_x, velocity_y);
 	if (velocity_x == 0 && velocity_y == 0) {
 		x += 0.02f;
@@ -64,7 +63,7 @@ void Players::update(){
 		x = 0;
 }
 
-void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump){
+void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump) {
 	if (reflectionL <= 0 && reflectionR <= 0) {
 		if (Keyboard::isKeyPressed(right)) {
 			if (pree2 && !pree) {
@@ -116,8 +115,8 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		velocity_y += gravity;
 	}
 	if (Keyboard::isKeyPressed(jump) && check_on_ground) {
-		
-		velocity_y = -jumpVelocity-addsuperjump;
+
+		velocity_y = -jumpVelocity - addsuperjump;
 		//cout << velocity_y << " " << dt << endl;
 		check_on_ground = false;
 		so4.setBuffer(buff);

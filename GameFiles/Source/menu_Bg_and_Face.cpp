@@ -21,7 +21,7 @@ void menu_Bg_and_Face::back_ground(RenderWindow& window)
 }
 void menu_Bg_and_Face::FaceMotion(RenderWindow& window)
 {
-	current_face += 0.0008f;
+	current_face += 0.008f;
 	if (current_face >= 2.999999)
 		current_face = 0;
 	face.setTextureRect(IntRect(209 * int(current_face), 0, 209, 258));
@@ -34,9 +34,9 @@ void menu_Bg_and_Face::FaceMotion(RenderWindow& window)
 		porm = false;
 
 	if (porm)
-		rotation -= 0.03;
+		rotation -= 0.3;
 	else
-		rotation += 0.03;
+		rotation += 0.3;
 
 	if (updown >= 10)
 		morp = true;
@@ -44,9 +44,9 @@ void menu_Bg_and_Face::FaceMotion(RenderWindow& window)
 		morp = false;
 
 	if (morp)
-		updown -= 0.005;
+		updown -= 0.1;
 	else
-		updown += 0.005;
+		updown += 0.1;
 
 	face.setPosition(1450 - rotation, 460 + updown);
 	face.setRotation(rotation);

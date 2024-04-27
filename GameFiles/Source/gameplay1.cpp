@@ -148,7 +148,6 @@ void reset()
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
 void DRAW(RenderWindow& window)
 {
-	window.setView(player2_View);
 	for (int i = 0; i < 100; i++)
 	{
 		window.draw(background.bg[i]);
@@ -164,29 +163,6 @@ void DRAW(RenderWindow& window)
 			window.draw(dropBag[i].dropShape);
 		}
 	}
-
-	for (int i = 0; i < background.bgNums; i++)
-	{
-		window.draw(background.wallsLeft[i]);
-		window.draw(background.wallsRight[i]);
-	}
-	window.setView(player1_View);
-	for (int i = 0; i < 100; i++)
-	{
-		window.draw(background.bg[i]);
-	}
-	window.draw(gameclock.herry2);
-	for (int i = 0; i < Stairs.stairsNum; i++)
-	{
-		window.draw(Stairs.stairs[i]);
-		window.draw(Stairs.Strs10[i]);
-		window.draw(Stairs.strTxt[i]);
-		if (GameMode == 3)
-		{
-			window.draw(dropBag[i].dropShape);
-		}
-	}
-
 	for (int i = 0; i < background.bgNums; i++)
 	{
 		window.draw(background.wallsLeft[i]);
@@ -337,8 +313,9 @@ void Gameplay()
 		player2.update();
 
 		window.clear();
-		DRAW(window);
+		/*====================================================DRAW=================================*/
 		window.setView(player1_View);
+		DRAW(window);
 		if (GameMode == 2) {
 			window.draw(player2.character);
 		}
@@ -361,7 +338,7 @@ void Gameplay()
 		if (GameMode == 2)
 		{
 			window.setView(player2_View);
-			//DRAW(window);
+			DRAW(window);
 			window.draw(player1.character);
 			window.draw(player2.character);
 

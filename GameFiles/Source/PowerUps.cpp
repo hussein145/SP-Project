@@ -39,25 +39,25 @@ void PowerUps::setDrops()
 	Drops[3].setScale(0.15, 0.15);
 }
 void PowerUps::generateDrop(Vector2f stair_position, bool check)
-	{
-		float timee;
-		if (check)
-			timee = addtimer.getElapsedTime().asMilliseconds();
-		else
-			timee = addtimer.getElapsedTime().asSeconds();
+{
+	float timee;
+	if (check)
+		timee = addtimer.getElapsedTime().asMilliseconds();
+	else
+		timee = addtimer.getElapsedTime().asSeconds();
 
-		int x = rand() % 5 + 2;
-		if (timee >= x)
-		{
-			int indexDrop = rand() % 4;
-			//PowerUps Powerup;
-			Power.dropShape = Drops[indexDrop];
-			Power.dropShape.setPosition(stair_position.x, stair_position.y - 30);
-			Power.type = indexDrop;
-			dropBag[Stairs.currstair] = Power;
-			addtimer.restart();
-		}
+	int x = rand() % 5 + 2;
+	if (timee >= x)
+	{
+		int indexDrop = rand() % 4;
+		//PowerUps Powerup;
+		Power.dropShape = Drops[indexDrop];
+		Power.dropShape.setPosition(stair_position.x, stair_position.y - 30);
+		Power.type = indexDrop;
+		dropBag[Stairs.currstair] = Power;
+		addtimer.restart();
 	}
+}
 void PowerUps::dropcollision()
 {
 	if (!skip)

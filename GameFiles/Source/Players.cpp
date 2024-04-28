@@ -86,7 +86,9 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 				//clockk2.restart();
 				//dt2 = 0;
 			}
-			velocity_x = 710 * dt * incspeed;
+			PosCnt += 0.018;
+			NegCnt = 1;
+			velocity_x = 710 * dt * incspeed * PosCnt;
 			pree = true;
 			pree2 = false;
 		}
@@ -95,9 +97,19 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 				//clockk2.restart();
 				//dt2 = 0;
 			}
-			velocity_x = -710 * dt * incspeed;
+			NegCnt += 0.018;
+			PosCnt = 1;
+			velocity_x = -710 * dt * incspeed * NegCnt;
 			pree2 = true;
 			pree = false;
+		}
+		if (velocity_x==0) {
+			if (NegCnt != 1) {
+				NegCnt -= 0.018;
+			}
+			if (PosCnt != 1) {
+				PosCnt -= 0.018;
+			}
 		}
 		if (velocity_x == 0 && velocity_y == 0) {
 			//clockk2.restart();
@@ -131,8 +143,13 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		velocity_y += gravity;
 	}
 	if (Keyboard::isKeyPressed(jump) && check_on_ground) {
-
 		velocity_y = -jumpVelocity - addsuperjump;
+		float num = max(PosCnt, NegCnt);
+		if (num != 1.0) {
+			num/=1.5;
+		}
+		velocity_y *= num;
+		
 		//cout << velocity_y << " " << dt << endl;
 		check_on_ground = false;
 		so4.setBuffer(buff);

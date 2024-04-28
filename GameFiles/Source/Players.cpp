@@ -11,8 +11,9 @@ using namespace sf;
 extern Clock clockk;
 extern float dt;
 extern Walls_And_Background background;
+extern STAIRS Stairs;
 
-void Players::inti(Texture& texture) {
+void Players::inti(Texture& texture)  {
 	character.setTexture(texture);
 	character.setPosition(500, 850);
 	character.setTextureRect(IntRect(0, 0, 50, 60));
@@ -31,6 +32,7 @@ void Players::inti(Texture& texture) {
 	pree2 = false;
 	reflectionR = 0;
 	reflectionL = 0;
+	
 }
 
 void Players::update() {
@@ -51,13 +53,27 @@ void Players::update() {
 		x += 0.02f;
 		character.setTextureRect(IntRect(50 * (int)(x), 60, 50, 60));
 	}
-	if (velocity_y < 0)
+	
+	if (velocity_y < 0 && velocity_x>0)
+	{
+		character.setTextureRect(IntRect(50, 60 * 2, 50, 60));
+	}
+	if (velocity_y < 0 && velocity_x<0)
+	{
+		character.setScale(-2.4, 2.4);
+		character.setTextureRect(IntRect(50, 60 * 2, 50, 60));
+	}
+	if (velocity_y < 0 && velocity_x==0)
 	{
 		character.setTextureRect(IntRect(0, 60 * 2, 50, 60));
 	}
-	else if (velocity_y < 0 && Keyboard::isKeyPressed(Keyboard::Right))
-	{
-		character.setTextureRect(IntRect(50, 60 * 2, 50, 60));
+	if (Stairs.stairs[curr_colission].getPosition().x + (Stairs.stairs[curr_colission].getSize().x) / 2 <= character.getPosition().x && check_on_ground) {
+		character.setTextureRect(IntRect(50, 60 * 3, 50, 60));
+	}
+	if (Stairs.stairs[curr_colission].getPosition().x - (Stairs.stairs[curr_colission].getSize().x) / 2 >= character.getPosition().x && check_on_ground){
+		character.setScale(-2.4, 2.4);
+		character.setTextureRect(IntRect(50, 60 * 3, 50, 60));
+		
 	}
 	if (x > 3.9)
 		x = 0;
@@ -121,6 +137,7 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		check_on_ground = false;
 		so4.setBuffer(buff);
 		so4.play();
+		
 		//cout << dt << endl;
 	}
 	if (character.getPosition().x > background.wallsRight[0].getPosition().x - background.Walls_Width)

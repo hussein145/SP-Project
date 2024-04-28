@@ -194,7 +194,7 @@ void collisions(Players& player)
 		{
 			if (player.character.getGlobalBounds().intersects(Stairs.stairs[i].getGlobalBounds()))
 			{
-				if (player.character.getPosition().y + 60 <= Stairs.stairs[i].getPosition().y)
+				if (player.character.getPosition().y + 30 <= Stairs.stairs[i].getPosition().y)
 				{
 					player.character.setPosition(player.character.getPosition().x, Stairs.stairs[i].getPosition().y - 60);
 					player.check_on_ground = true;

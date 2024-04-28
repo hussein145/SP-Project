@@ -11,8 +11,8 @@ struct Players
 	float x;
 	bool check_on_ground = 1;
 	int curr_colission = 0;
-	const float gravity = 0.1f;
-	const float jumpVelocity = 7.f;
+	const float gravity = 0.2f;
+	const float jumpVelocity = 10.f;
 	bool pree;
 	bool pree2;
 	int reflectionR;

@@ -11,6 +11,7 @@ struct Players
 	float Motion_Velocity = 350.f;
 	float PosCnt = 1;
 	float NegCnt = 1;
+	bool validL = 1, validR = 1;
 	float x;
 	float t = 0.f;
 	bool check_on_ground = 1;

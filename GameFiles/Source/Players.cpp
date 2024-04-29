@@ -83,6 +83,21 @@ void Players::update() {
 }
 
 void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump) {
+
+	if (character.getGlobalBounds().left <= background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width)
+	{
+		NegCnt = 1;
+		PosCnt += 0.018;
+	}
+	else if (character.getGlobalBounds().left+ character.getGlobalBounds().width >= background.wallsRight[0].getGlobalBounds().left )
+	{
+		PosCnt = 1;
+		NegCnt += 0.018;
+	}
+
+
+
+
 	if (reflectionL <= 0 && reflectionR <= 0) {
 		if (Keyboard::isKeyPressed(right)) {
 			if (pree2 && !pree) {

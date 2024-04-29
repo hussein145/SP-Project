@@ -310,10 +310,6 @@ void Gameplay()
 		Map.Stairs_velocity_y = 50.0f;
 		Map.view_velocity = 80.0;
 
-		//motion of players
-		player1.velocity_x = 0;
-		player2.velocity_x = 0;
-
 		//freeze game
 		if (player1.character.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540))

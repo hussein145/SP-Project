@@ -20,6 +20,7 @@ void Sounds::music(int n) {
 	else if (n == 1) {
 		bgmusic.openFromFile("Assets//Sounds//backgmusic.ogg");
 	}
+	bgmusic.setLoop(true);
 	bgmusic.play();
 
 }

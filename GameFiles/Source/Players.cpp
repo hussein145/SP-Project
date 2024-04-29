@@ -125,14 +125,14 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 	{
 		character.setPosition(background.wallsLeft[0].getPosition().x + background.Walls_Width + 5, character.getPosition().y);
 	}
-	if (character.getGlobalBounds().left <= background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width && j == 0)
+	if (character.getGlobalBounds().left + 10 <= background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width && j == 0)
 	{
-		velocity_x = -velocity_x / 2.5f;
+		velocity_x = -velocity_x / 1.5f;
 		j = 1;
 	}
-	else if (character.getGlobalBounds().left + character.getGlobalBounds().width >= background.wallsRight[0].getGlobalBounds().left && j == 0)
+	else if (character.getGlobalBounds().left + character.getGlobalBounds().width - 10 >= background.wallsRight[0].getGlobalBounds().left && j == 0)
 	{
-		velocity_x = -velocity_x / 2.5f;
+		velocity_x = -velocity_x / 1.5f;
 		j = 1;
 	}
 	if(j)

@@ -28,10 +28,6 @@ void Players::inti(Texture& texture) {
 	velocity_y = 0;
 	x = 0;
 	check_on_ground = 0;
-	pree = false;
-	pree2 = false;
-	reflectionR = 0;
-	reflectionL = 0;
 
 }
 
@@ -47,7 +43,7 @@ void Players::update() {
 		x += 0.02f;
 		character.setTextureRect(IntRect(50 * (int)(x), 60, 50, 60));
 	}
-	if (velocity_x < 0)
+	if (velocity_x < 0 )
 	{
 		character.setScale(-2.4, 2.4);
 		x += 0.02f;
@@ -83,80 +79,26 @@ void Players::update() {
 }
 
 void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump) {
-
-	if (character.getGlobalBounds().left <= background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width)
-	{
-		NegCnt = 1;
-		PosCnt += 0.018;
+	if (Keyboard::isKeyPressed(right)) {
+		velocity_x += Motion_Velocity * dt * incspeed;
 		validL = 0;
 	}
-
-	else if (character.getGlobalBounds().left + character.getGlobalBounds().width >= background.wallsRight[0].getGlobalBounds().left)
-	{
-		PosCnt = 1;
-		NegCnt += 0.018;
+	else if (Keyboard::isKeyPressed(left) ) {
+		velocity_x -= Motion_Velocity * dt * incspeed;
 		validR = 0;
 	}
-	else
-	{
-		validL = validR =  1;
+	if (velocity_x > 0.f && validL){
+		velocity_x -= Motion_Velocity * dt * incspeed + 0.2;
+		if(velocity_x < 0.f)
+			velocity_x = 0;
 	}
-
-
-
-
-	if (reflectionL <= 0 && reflectionR <= 0) {
-		if (Keyboard::isKeyPressed(right)&&validR) {
-			if (pree2 && !pree) {
-				//clockk2.restart();
-				//dt2 = 0;
-			}
-			PosCnt += 0.018;
-			NegCnt = 1;
-			velocity_x = Motion_Velocity * dt * incspeed * PosCnt;
-			pree = true;
-			pree2 = false;
-		}
-		if (Keyboard::isKeyPressed(left)&& validL) {
-			if (pree && !pree2) {
-				//clockk2.restart();
-				//dt2 = 0;
-			}
-			NegCnt += 0.018;
-			PosCnt = 1;
-			velocity_x = -Motion_Velocity * dt * incspeed * NegCnt;
-			pree2 = true;
-			pree = false;
-		}
-		if (velocity_x == 0) {
-			if (NegCnt > 1) {
-				NegCnt -= 0.018;
-			}
-			if (PosCnt > 1) {
-				PosCnt -= 0.018;
-			}
-		}
-		if (velocity_x == 0 && velocity_y == 0) {
-			//clockk2.restart();
-			//dt2 = 0;
-			pree = false;
-			pree2 = false;
-			reflectionR = 0;
-			reflectionL = 0;
-		}
+	else if (velocity_x < 0.f && validR){
+		velocity_x += Motion_Velocity * dt * incspeed + 0.2;
+		if (velocity_x > 0.f)
+			velocity_x = 0;
 	}
-	else {
-		if (reflectionL > 0) {
-			velocity_x = reflectionL;
-			reflectionL--;
-		}
-		if (reflectionR > 0) {
-			velocity_x = -reflectionR;
-			reflectionR--;
-		}
-		pree = false;
-		pree2 = false;
-	}
+	validL = validR = 1;
+
 
 	if (velocity_y > 0 || !check_on_ground) {
 		character.setTextureRect(IntRect(50 * 3, 60 * 2, 50, 60));
@@ -169,24 +111,32 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 	}
 	if (Keyboard::isKeyPressed(jump) && check_on_ground) {
 		velocity_y = -jumpVelocity - addsuperjump;
-		float num = max(PosCnt, NegCnt);
-		if (num > 1.75f) {
-			velocity_y *= num / 1.75f;
-		}
-		//cout << velocity_y << " " << dt << endl;
+		if (abs(velocity_x) > 0)
+			velocity_y -= abs(velocity_x)*1.3f - 0.9f;
 		check_on_ground = false;
 		so4.setBuffer(buff);
 		so4.play();
-		//cout << dt << endl;
 	}
 	if (character.getPosition().x > background.wallsRight[0].getPosition().x - background.Walls_Width)
 	{
 		character.setPosition(background.wallsRight[0].getPosition().x - background.Walls_Width - 5, character.getPosition().y);
-		reflectionR = abs(velocity_x) - 2;
 	}
 	if (character.getPosition().x < background.wallsLeft[0].getPosition().x + background.Walls_Width)
 	{
 		character.setPosition(background.wallsLeft[0].getPosition().x + background.Walls_Width + 5, character.getPosition().y);
-		reflectionL = abs(velocity_x) - 2;
 	}
+	if (character.getGlobalBounds().left <= background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width && j == 0)
+	{
+		velocity_x = -velocity_x / 2.5f;
+		j = 1;
+	}
+	else if (character.getGlobalBounds().left + character.getGlobalBounds().width >= background.wallsRight[0].getGlobalBounds().left && j == 0)
+	{
+		velocity_x = -velocity_x / 2.5f;
+		j = 1;
+	}
+	if(j)
+		j += 0.02;
+	if (j >= 3)
+		j = 0;
 }

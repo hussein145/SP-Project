@@ -88,18 +88,25 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 	{
 		NegCnt = 1;
 		PosCnt += 0.018;
+		validL = 0;
 	}
-	else if (character.getGlobalBounds().left+ character.getGlobalBounds().width >= background.wallsRight[0].getGlobalBounds().left )
+
+	else if (character.getGlobalBounds().left + character.getGlobalBounds().width >= background.wallsRight[0].getGlobalBounds().left)
 	{
 		PosCnt = 1;
 		NegCnt += 0.018;
+		validR = 0;
+	}
+	else
+	{
+		validL = validR =  1;
 	}
 
 
 
 
 	if (reflectionL <= 0 && reflectionR <= 0) {
-		if (Keyboard::isKeyPressed(right)) {
+		if (Keyboard::isKeyPressed(right)&&validR) {
 			if (pree2 && !pree) {
 				//clockk2.restart();
 				//dt2 = 0;
@@ -110,7 +117,7 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 			pree = true;
 			pree2 = false;
 		}
-		if (Keyboard::isKeyPressed(left)) {
+		if (Keyboard::isKeyPressed(left)&& validL) {
 			if (pree && !pree2) {
 				//clockk2.restart();
 				//dt2 = 0;

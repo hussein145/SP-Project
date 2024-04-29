@@ -323,7 +323,7 @@ void Gameplay()
 		}
 		//cout << dt << endl;
 		player1.Players_Motion(buff, Keyboard::A, Keyboard::D, Keyboard::Space);
-		player2.Players_Motion(buff, Keyboard::Left, Keyboard::Right, Keyboard::Enter);
+		player2.Players_Motion(buff, Keyboard::Left, Keyboard::Right, Keyboard::Numpad0);
 		player1.update();
 		player2.update();
 

@@ -68,13 +68,16 @@ void Players::update() {
 		character.setTextureRect(IntRect(0, 60 * 2, 50, 60));
 	}
 	if (Stairs.stairs[curr_colission].getPosition().x + (Stairs.stairs[curr_colission].getSize().x) / 2 <= character.getPosition().x && check_on_ground) {
-		character.setTextureRect(IntRect(50, 60 * 3, 50, 60));
+		character.setTextureRect(IntRect(50 * int(t), 60 * 3, 50, 60));
+		t += 0.02f;
 	}
 	if (Stairs.stairs[curr_colission].getPosition().x - (Stairs.stairs[curr_colission].getSize().x) / 2 >= character.getPosition().x && check_on_ground) {
 		character.setScale(-2.4, 2.4);
-		character.setTextureRect(IntRect(50, 60 * 3, 50, 60));
-
+		character.setTextureRect(IntRect(50*int(t), 60 * 3, 50, 60));
+		t += 0.02f;
 	}
+	if (t >= 2)
+		t = 0;
 	if (x > 3.9)
 		x = 0;
 }

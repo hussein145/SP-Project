@@ -12,6 +12,7 @@ struct Players
 	float PosCnt = 1;
 	float NegCnt = 1;
 	float x;
+	float t = 0.f;
 	bool check_on_ground = 1;
 	int curr_colission = 0;
 	const float gravity = 0.2f;

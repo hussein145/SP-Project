@@ -162,7 +162,7 @@ void reset()
 	Power.skip = 0;
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
-void DRAW(RenderWindow& window)
+void DRAW()
 {
 	for (int i = 0; i < 100; i++)
 	{
@@ -219,6 +219,7 @@ void collisions(Players& player)
 }
 void Gameplay()
 {
+
 	SoundBuffer buff;
 	buff.loadFromFile("Assets//Sounds//jump.ogg");
 
@@ -297,7 +298,7 @@ void Gameplay()
 				TimeOfMove.restart();
 			}
 			Power.checkdrop(TimeOfMove, StartMoving, StartReturning);
-			if(player1.droptype != 0)
+			if (player1.droptype != 0)
 				Power.resetPowerups();
 		}
 		Map.update();
@@ -326,7 +327,7 @@ void Gameplay()
 		window.clear();
 		/*====================================================DRAW=================================*/
 		window.setView(player1_View);
-		DRAW(window);
+		DRAW();
 		if (GameMode == 2) {
 			window.draw(player2.character);
 		}
@@ -349,7 +350,7 @@ void Gameplay()
 		if (GameMode == 2)
 		{
 			window.setView(player2_View);
-			DRAW(window);
+			DRAW();
 			window.draw(player1.character);
 			window.draw(player2.character);
 

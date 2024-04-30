@@ -12,6 +12,7 @@ extern Clock clockk;
 extern float dt;
 extern Walls_And_Background background;
 extern STAIRS Stairs;
+extern int GameMode;
 
 void Players::inti(Texture& texture) {
 	character.setTexture(texture);
@@ -79,6 +80,11 @@ void Players::update() {
 }
 
 void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump) {
+	if (GameMode == 2)
+		Motion_Velocity = 12;
+	else
+		Motion_Velocity = 6;
+	/*============================================================*/
 	if (Keyboard::isKeyPressed(right)) {
 		velocity_x += Motion_Velocity * dt * incspeed;
 		validL = 0;
@@ -87,6 +93,7 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		velocity_x -= Motion_Velocity * dt * incspeed;
 		validR = 0;
 	}
+	/*============================================================*/
 	if (velocity_x > 0.f && validL){
 		velocity_x -= Motion_Velocity * dt * incspeed + 0.2;
 		if(velocity_x < 0.f)
@@ -98,45 +105,52 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 			velocity_x = 0;
 	}
 	validL = validR = 1;
-
-
+	/*================================================================*/
 	if (velocity_y > 0 || !check_on_ground) {
 		character.setTextureRect(IntRect(50 * 3, 60 * 2, 50, 60));
+	}
+	if (Keyboard::isKeyPressed(jump) && check_on_ground) {
+		velocity_y = -jumpVelocity - addsuperjump;
+		if (GameMode == 2)
+		{
+			if (abs(velocity_x) > 7.5f)
+				velocity_y *= abs(velocity_x)/7.5f;
+			jump_height = velocity_y;
+		}
+		else
+		{
+			if (abs(velocity_x) > 4.f)
+				velocity_y *= abs(velocity_x)/4.f;
+			jump_height = velocity_y;
+		}
+		check_on_ground = false;
+		so4.setBuffer(buff);
+		so4.play();
 	}
 	if (check_on_ground) {
 		velocity_y = 0;
 	}
 	else {
-		velocity_y += gravity;
+		velocity_y += (gravity)*dt;
 	}
-	if (Keyboard::isKeyPressed(jump) && check_on_ground) {
-		velocity_y = -jumpVelocity - addsuperjump;
-		if (abs(velocity_x) > 0)
-			velocity_y -= abs(velocity_x)*1.3f - 0.9f;
-		check_on_ground = false;
-		so4.setBuffer(buff);
-		so4.play();
+	/*========================================================================*/
+	if (character.getPosition().x > background.wallsRight[0].getPosition().x - background.Walls_Width){
+		character.setPosition(background.wallsRight[0].getPosition().x - background.Walls_Width - 10, character.getPosition().y);
 	}
-	if (character.getPosition().x > background.wallsRight[0].getPosition().x - background.Walls_Width)
-	{
-		character.setPosition(background.wallsRight[0].getPosition().x - background.Walls_Width - 5, character.getPosition().y);
+	if (character.getPosition().x < background.wallsLeft[0].getPosition().x + background.Walls_Width){
+		character.setPosition(background.wallsLeft[0].getPosition().x + background.Walls_Width + 10, character.getPosition().y);
 	}
-	if (character.getPosition().x < background.wallsLeft[0].getPosition().x + background.Walls_Width)
-	{
-		character.setPosition(background.wallsLeft[0].getPosition().x + background.Walls_Width + 5, character.getPosition().y);
-	}
-	if (character.getGlobalBounds().left + 10 <= background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width && j == 0)
-	{
+	if (character.getGlobalBounds().left + 10 <= background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width && j == 0){
 		velocity_x = -velocity_x / 1.5f;
 		j = 1;
 	}
 	else if (character.getGlobalBounds().left + character.getGlobalBounds().width - 10 >= background.wallsRight[0].getGlobalBounds().left && j == 0)
 	{
+		
 		velocity_x = -velocity_x / 1.5f;
 		j = 1;
 	}
-	if(j)
-		j += 0.02;
-	if (j >= 3)
-		j = 0;
+	if (j) {j += 0.02;}
+
+	if (j >= 3) { j = 0; }
 }

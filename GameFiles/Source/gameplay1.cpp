@@ -45,7 +45,7 @@ int strCnt = 0;
 
 struct MAP
 {
-	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y, view_velocity, mapspeed = 1, addmapspeed = 0;
+	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y, view_velocity;
 	//float Walls_velocity_x, Stairs_velocity_x;
 	bool move = 0;
 	int m = 1;
@@ -79,23 +79,7 @@ struct MAP
 				Stairs.stairs[i].move(0, Stairs_velocity_y * dt);
 			}
 			player2_View.move(0, -view_velocity * dt);
-			player1_View.move(0, -view_velocity * dt * mapspeed);
-
-			if (player1.droptype == 3)
-			{
-				mapspeed = 2;
-				addmapspeed = 7;
-			}
-			if (addmapspeed <= 0)
-			{
-				mapspeed = 1;
-				addmapspeed = 0;
-			}
-			else
-			{
-				addmapspeed -= 0.01;
-				player1.droptype = -1;
-			}
+			player1_View.move(0, -view_velocity * dt);
 		}
 	}
 };
@@ -228,6 +212,7 @@ void Gameplay()
 	// powerups
 	dropBag = new PowerUps[Stairs.stairsNum];
 	Power.setDrops();
+	float mapspeed = 1, addmapspeed = 0;
 
 	//player
 	Texture tex1, tex2;
@@ -298,6 +283,23 @@ void Gameplay()
 				TimeOfMove.restart();
 			}
 			Power.checkdrop(TimeOfMove, StartMoving, StartReturning);
+
+			if (player1.droptype == 3)
+			{
+				mapspeed = 2;
+				addmapspeed = 7;
+			}
+			if (addmapspeed <= 0)
+			{
+				mapspeed = 1;
+				addmapspeed = 0;
+			}
+			else
+			{
+				addmapspeed -= 0.01;
+				player1.droptype = -1;
+			}
+
 			if (player1.droptype != 0)
 				Power.resetPowerups();
 		}
@@ -309,7 +311,7 @@ void Gameplay()
 		Map.Backgrond_Velocity_y = 20.0f;
 		Map.Walls_velocity_y = 120.0f;
 		Map.Stairs_velocity_y = 50.0f;
-		Map.view_velocity = 80.0;
+		Map.view_velocity = 80.0 * mapspeed;
 
 		//freeze game
 		if (player1.character.getPosition().y > player1_View.getCenter().y + 550

@@ -16,7 +16,7 @@ extern int GameMode;
 
 void Players::inti(Texture& texture) {
 	character.setTexture(texture);
-	character.setPosition(500, 850);
+	character.setPosition(500, Stairs.stairs[0].getPosition().y - 30);
 	character.setTextureRect(IntRect(0, 0, 50, 60));
 	character.setOrigin(25, 30);
 	character.setScale(2.4, 2.4);

@@ -214,6 +214,12 @@ void Gameplay()
 	Power.setDrops();
 	float mapspeed = 1, addmapspeed = 0;
 
+	MAP Map;
+	CameraView view;
+
+	//map insilization
+	Map.intilization();
+
 	//player
 	Texture tex1, tex2;
 	tex1.loadFromFile("Assets/Textures/icytower1.png");
@@ -222,11 +228,6 @@ void Gameplay()
 	player2.inti(tex2);
 	//music(k);
 	//Map
-	MAP Map;
-	CameraView view;
-
-	//map insilization
-	Map.intilization();
 
 	//view insilization
 	view.view_insilization();

@@ -19,7 +19,6 @@ using namespace std;
 //int select = 0;
 //PauseMenu pausemenu;
 //Menu Pause1;
-extern PowerUps* dropBag;
 Menu menu;
 Walls_And_Background background;
 STAIRS Stairs;
@@ -43,7 +42,7 @@ void Intilize_Numbers()
 	}
 	else {
 		Stairs.stairsNum = 50;
-		background.bgNums = 4;
+		background.bgNums = 20;
 	}
 }
 bool END = 1;
@@ -54,7 +53,6 @@ struct MAP
 	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y, view_velocity;
 	//float Walls_velocity_x, Stairs_velocity_x;
 	bool move = 0;
-	int m = 1;
 	void intilization()
 	{
 		Stairs.intiliztion1(GameMode);
@@ -95,7 +93,7 @@ void Set_ObjectsOnStairs()
 	{
 		Stairs.Strs10[i].setPosition(Stairs.stairs[i].getPosition().x, Stairs.stairs[i].getPosition().y + 30);
 		Stairs.strTxt[i].setPosition(Stairs.stairs[i].getPosition().x, Stairs.stairs[i].getPosition().y + 30);
-		dropBag[i].dropShape.setPosition(Stairs.stairs[i].getPosition().x, Stairs.stairs[i].getPosition().y - 30);
+		Power.dropBag[i].dropShape.setPosition(Stairs.stairs[i].getPosition().x, Stairs.stairs[i].getPosition().y - 30);
 	}
 }
 struct CameraView
@@ -139,8 +137,8 @@ void reset()
 
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
-	delete[] dropBag;
-	dropBag = nullptr;
+	delete[] Power.dropBag;
+	Power.dropBag = nullptr;
 
 	delete[] Stairs.stairs;
 	Stairs.stairs = nullptr;
@@ -214,7 +212,7 @@ void DRAW()
 		window.draw(Stairs.strTxt[i]);
 		if (GameMode == 3)
 		{
-			window.draw(dropBag[i].dropShape);
+			window.draw(Power.dropBag[i].dropShape);
 		}
 	}
 	for (int i = 0; i < background.bgNums; i++)
@@ -275,6 +273,8 @@ void Gameplay()
 	background.wallsLeft = new RectangleShape[background.bgNums];
 	background.wallsRight = new RectangleShape[background.bgNums];
 
+	Power.dropBag = new PowerUps[Stairs.stairsNum];
+
 	SoundBuffer buff;
 	buff.loadFromFile("Assets//Sounds//jump.ogg");
 
@@ -283,16 +283,16 @@ void Gameplay()
 
 	float mapspeed = 1, addmapspeed = 0;
 
-	dropBag = new PowerUps[Stairs.stairsNum];
 
 	MAP Map;
 	CameraView view;
 
+	// powerups
+	Power.setDrops();
+
 	//map insilization
 	Map.intilization();
 
-	// powerups
-	Power.setDrops();
 
 	//player
 	Texture tex1, tex2;

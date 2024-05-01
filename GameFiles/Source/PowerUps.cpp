@@ -18,7 +18,7 @@ extern Walls_And_Background background;
 extern GameClock gameclock;
 extern float dt;
 
-
+PowerUps* dropBag = new PowerUps[100];//stairsNum
 //PowerUps Power;
 Clock addtimer;
 void PowerUps::setDrops()
@@ -27,7 +27,8 @@ void PowerUps::setDrops()
 	DropsTex[1].loadFromFile("Assets//Textures//speed.png");
 	DropsTex[2].loadFromFile("Assets//Textures//superjump.png");
 	DropsTex[3].loadFromFile("Assets//Textures//danger.png");
-	for (size_t i = 0; i < 4; i++)
+	DropsTex[4].loadFromFile("Assets//Textures//rand.png");
+	for (size_t i = 0; i < 5; i++)
 	{
 		Drops[i].setTexture(DropsTex[i]);
 		Drops[i].setOrigin(Drops[i].getScale().x / 2, Drops[i].getScale().y / 2);
@@ -36,6 +37,7 @@ void PowerUps::setDrops()
 	Drops[1].setScale(0.15, 0.15);
 	Drops[2].setScale(0.15, 0.15);
 	Drops[3].setScale(0.15, 0.15);
+	Drops[4].setScale(0.15, 0.15);
 }
 void PowerUps::generateDrop(Vector2f stair_position, bool check)
 {
@@ -48,7 +50,7 @@ void PowerUps::generateDrop(Vector2f stair_position, bool check)
 	int x = rand() % 5 + 2;
 	if (timee >= x)
 	{
-		int indexDrop = rand() % 4;
+		int indexDrop = rand() % 5;
 		//PowerUps Powerup;
 		Power.dropShape = Drops[indexDrop];
 		Power.dropShape.setPosition(stair_position.x, stair_position.y - 30);
@@ -83,13 +85,10 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 					Stairs.stairs[i].move(-velocity_x * dt, 0);
 				else if (Stairs.stairs[i].getPosition().x < 960)
 					Stairs.stairs[i].move(velocity_x * dt, 0);
-			}
-			for (int i = 0; i < background.bgNums; i++)
-			{
+
 				background.wallsLeft[i].move(velocity_x * dt, 0);
 				background.wallsRight[i].move(-velocity_x * dt, 0);
 			}
-			
 			gameclock.cl.move(velocity_x * dt, 0);
 			gameclock.cl2.move(velocity_x * dt, 0);
 		}
@@ -123,6 +122,30 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 		player1.addspeed = 7;
 		player1.incspeed = 1.5;
 	}
+	else if (player1.droptype == 4)
+	{
+		rando = abs(rand() % 2);
+		if (rando)
+		{
+			stopsmall = 7;
+			for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
+			{
+				if (currstair % 100 != 0 || currstair % 5 != 0) {
+					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
+				}
+			}
+		}
+		else
+		{
+			stopbig = 7;
+			for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
+			{
+				if (currstair % 100 != 0 || currstair % 5 != 0) {
+					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() + Vector2f(50, 0));
+				}
+			}
+		}
+	}
 }
 void PowerUps::resetPowerups()
 {
@@ -140,6 +163,32 @@ void PowerUps::resetPowerups()
 	}
 	else {
 		player1.addsuperjump -= 0.005;
+		player1.droptype = -1;
+	}
+	if (stopsmall < 0) {
+		stopsmall = 0;
+		for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
+		{
+			if (currstair % 100 != 0 || currstair % 5 != 0)
+				Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() + Vector2f(50, 0));
+		}
+	}
+	else {
+		if (stopsmall != 0)
+			stopsmall -= 0.01;
+		player1.droptype = -1;
+	}
+	if (stopbig < 0) {
+		stopbig = 0;
+		for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
+		{
+			if (currstair % 100 != 0 || currstair % 5 != 0)
+				Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
+		}
+	}
+	else {
+		if (stopbig != 0)
+			stopbig -= 0.01;
 		player1.droptype = -1;
 	}
 }

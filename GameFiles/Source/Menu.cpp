@@ -56,6 +56,16 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 	sound.LoadMusic();
 	sound.music(0);
 	men1.font.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
+	enternameTX.loadFromFile("Assets/Textures/entername.png");
+	enternameSP.setTexture(enternameTX);
+	enternameSP.setPosition(500, 450);
+	enternameSP.setScale(2, 2);
+	playernamefont.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
+
+	playerNameText.setFont(playernamefont);
+	playerNameText.setCharacterSize(24);
+	playerNameText.setFillColor(sf::Color::Black);
+	playerNameText.setPosition(570, 690);
 
 	if (resusme) men1.mainmenu[0 + resusme].setFillColor(Color::Black);
 	else   men1.mainmenu[0 + resusme].setFillColor(Color{ 255,204,0 });
@@ -113,54 +123,90 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 			{
 				if (event.type == Event::Closed)
 					window.close();
-				if (event.key.code == Keyboard::Escape && !pressed && men1.selected != 5 + resusme)
-				{
-					sound.change_option_Sound();
-					men1.mainmenu[men1.selected].setFillColor(Color::Black);
-					men1.selected = 5 + resusme;
-					men1.mainmenu[5 + resusme].setFillColor(Color{ 255,204,0 });
-					men1.hand.setPosition(1140, 890 + shift);
-					pressed = true;
-				}
-
-				if (event.key.code == Keyboard::Escape && !pressed && men1.selected == 5 + resusme)
-				{
-					window.close();
-				}
-				if (!Keyboard::isKeyPressed(Keyboard::Escape))
-				{
-					pressed = false;
-				}
 				if (event.type == Event::KeyPressed)
-				{
-					if (event.key.code == Keyboard::Down)
-					{
-						sound.change_option_Sound();
 
-						men1.MoveDown(men1.selected, men1.choises);
-					}
-					if (event.key.code == Keyboard::Up)
+				{
+					if (event.key.code >= Keyboard::A && event.key.code <= Keyboard::Z)
 					{
-						sound.change_option_Sound();
-						//so.play();
-						men1.MoveUp(men1.selected, men1.choises);
+						playername.push_back('A' + event.key.code);
+
 					}
+					else if (event.key.code == Keyboard::BackSpace)
+					{
+						playername.pop_back();
+					}
+					else if (event.key.code == Keyboard::Space)
+					{
+						playername.push_back(' ');
+					}
+
+
 					if (event.key.code == Keyboard::Enter)
 					{
-						sound.select_option_Sound();
-						if (men1.selected == 5 + resusme)
-							pageNumber = -1;
-						if (men1.selected == 0 + resusme)
+						if (!boolenter)
 						{
-							Play_menu(window, GameMode);
-						}
-						if (men1.selected == 4 + resusme)
-							options_menu(window);
-						if (men1.selected == 1 + resusme)
-							instructions(window);
-					}
-				}
 
+							enternameSP.setPosition(-1000, -1000);
+							playerNameText.setPosition(-1000, -1000);
+							infile = 1;
+							boolenter = 1;
+
+						}
+					}
+
+				}
+				playerNameText.setString(playername);
+				if(infile)
+				{
+					if (event.key.code == Keyboard::Escape && !pressed && men1.selected != 5 + resusme)
+					{
+						sound.change_option_Sound();
+						men1.mainmenu[men1.selected].setFillColor(Color::Black);
+						men1.selected = 5 + resusme;
+						men1.mainmenu[5 + resusme].setFillColor(Color{ 255,204,0 });
+						men1.hand.setPosition(1140, 890 + shift);
+						pressed = true;
+					}
+
+					if (event.key.code == Keyboard::Escape && !pressed && men1.selected == 5 + resusme)
+					{
+						window.close();
+					}
+					if (!Keyboard::isKeyPressed(Keyboard::Escape))
+					{
+						pressed = false;
+					}
+					if (event.type == Event::KeyPressed)
+					{
+						if (event.key.code == Keyboard::Down)
+						{
+							sound.change_option_Sound();
+
+							men1.MoveDown(men1.selected, men1.choises);
+						}
+						if (event.key.code == Keyboard::Up)
+						{
+							sound.change_option_Sound();
+							//so.play();
+							men1.MoveUp(men1.selected, men1.choises);
+						}
+						if (event.key.code == Keyboard::Enter)
+						{
+							sound.select_option_Sound();
+							if (men1.selected == 5 + resusme)
+								pageNumber = -1;
+							if (men1.selected == 0 + resusme)
+							{
+								Play_menu(window, GameMode);
+							}
+							if (men1.selected == 4 + resusme)
+								options_menu(window);
+							if (men1.selected == 1 + resusme)
+								instructions(window);
+						}
+					}
+
+				}
 			}
 		}
 		menu_UI.FaceMotion(window);
@@ -179,6 +225,8 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 			window.draw(men1.mainmenu[i]);
 		}
 		window.draw(men1.hand);
+		window.draw(enternameSP);
+		window.draw(playerNameText);
 		window.display();
 	}
 }
@@ -258,6 +306,7 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 			window.draw(menu2.mainmenu[i]);
 		}
 		window.draw(menu2.hand);
+		
 		window.display();
 	}
 }

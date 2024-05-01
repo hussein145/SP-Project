@@ -19,7 +19,6 @@ extern GameClock gameclock;
 extern float dt;
 
 
-PowerUps* dropBag = new PowerUps[100];//stairsNum
 //PowerUps Power;
 Clock addtimer;
 void PowerUps::setDrops()
@@ -84,10 +83,13 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 					Stairs.stairs[i].move(-velocity_x * dt, 0);
 				else if (Stairs.stairs[i].getPosition().x < 960)
 					Stairs.stairs[i].move(velocity_x * dt, 0);
-
+			}
+			for (int i = 0; i < background.bgNums; i++)
+			{
 				background.wallsLeft[i].move(velocity_x * dt, 0);
 				background.wallsRight[i].move(-velocity_x * dt, 0);
 			}
+			
 			gameclock.cl.move(velocity_x * dt, 0);
 			gameclock.cl2.move(velocity_x * dt, 0);
 		}

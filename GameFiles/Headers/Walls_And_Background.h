@@ -1,12 +1,13 @@
 #pragma once
-//#define N 500
 struct Walls_And_Background
 {
-	int bgNums = 100;
+	int x;
+	int bgNums;
 	Texture backGround, wallTexture;
 
-	RectangleShape bg[500];
-	RectangleShape wallsLeft[500], wallsRight[500];
+	RectangleShape* bg;
+	RectangleShape* wallsLeft;
+	RectangleShape *wallsRight;
 
 	int Curr_Background = 0, Curr_walls = 0;
 	int update_Background = 0, update_wall_index = 0, Difference_Between_bg = 0;

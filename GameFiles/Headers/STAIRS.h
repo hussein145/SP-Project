@@ -5,11 +5,13 @@ struct STAIRS
 	Texture Block_texture;
 	Font Gfont;
 
-	int stairsNum = 100;
+	int x;
+	int stairsNum;
 	int Number_Of_Stair = 0;
-	RectangleShape stairs[500];
-	RectangleShape Strs10[500];
-	Text strTxt[500];
+	RectangleShape* stairs;
+	RectangleShape* Strs10;
+	Text* strTxt;
+
 	Texture stairTexture[3], floorTexture[3];
 
 	//positions

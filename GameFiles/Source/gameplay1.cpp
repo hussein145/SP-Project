@@ -37,8 +37,14 @@ View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 void Intilize_Numbers()
 {
-	/*if (GameMode == 2) stairsNum = 200;
-	else  stairsNum = 100;*/
+	if (GameMode == 2) {
+		Stairs.stairsNum = 200;
+		background.bgNums = 40;
+	}
+	else {
+		Stairs.stairsNum = 50;
+		background.bgNums = 4;
+	}
 }
 bool END = 1;
 int strCnt = 0;
@@ -51,9 +57,9 @@ struct MAP
 	int m = 1;
 	void intilization()
 	{
-		gameclock.setclock();
-		background.intiliztion(GameMode, player1_View, player2_View);
 		Stairs.intiliztion1(GameMode);
+		background.intiliztion(GameMode, player1_View, player2_View);
+		gameclock.setclock();
 	}
 	void update()
 	{
@@ -68,13 +74,13 @@ struct MAP
 		{
 			gameclock.update_clock();
 
-			for (int i = 0; i < 200; i++)
+			for (int i = 0; i < background.bgNums; i++)
 			{
 				background.bg[i].move(0, Backgrond_Velocity_y * dt);
 				background.wallsRight[i].move(0, Walls_velocity_y * dt);
 				background.wallsLeft[i].move(0, Walls_velocity_y * dt);
 			}
-			for (int i = 0; i <= Stairs.stairsNum; i++)
+			for (int i = 0; i < Stairs.stairsNum; i++)
 			{
 				Stairs.stairs[i].move(0, Stairs_velocity_y * dt);
 			}
@@ -135,20 +141,68 @@ void reset()
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
 	delete[] dropBag;
 	dropBag = nullptr;
-	RectangleShape clear10;
-	clear10.setSize(Vector2f(0, 0));
-	fill(Stairs.Strs10, Stairs.Strs10 + strCnt, clear10);
-	fill(begin(Stairs.stairs), end(Stairs.stairs), clear10);
-	for (int i = 0; i < 200; i++) {
-		Stairs.strTxt[i].setString("");
-	}
+
+	delete[] Stairs.stairs;
+	Stairs.stairs = nullptr;
+
+	delete[] Stairs.Strs10;
+	Stairs.Strs10 = nullptr;
+
+	delete[] Stairs.strTxt;
+	Stairs.strTxt = nullptr;
+
+	delete[] background.bg;
+	background.bg = nullptr;
+
+	delete[] background.wallsLeft, background.wallsRight;
+	background.wallsLeft = background.wallsRight = nullptr;
+
 	player1.droptype = -1;
 	Power.skip = 0;
 }
 //---------------------------------------------<<GamePlay Main function>>--------------------------------------------//
+void CountScore(Players& player, int i)
+{
+	if (player.curr_colission > i) {
+		if ((player.curr_colission - i) <= 9) { // Fall from stair
+			player.Score -= player.curr_colission - i;
+			player.cnt = 0;
+		}
+		else { // Jump and loop repeat itself
+			player.cnt = (Stairs.stairsNum - player.curr_colission) + i;
+			player.Score += (Stairs.stairsNum - player.curr_colission) + i;
+		}
+	}
+	else { // i > curr_colission (Normal Condition)
+		player.cnt = (i - player.curr_colission);
+		player.Score += (i - player.curr_colission);
+	}
+	player.curr_colission = i;
+}
+void collisions(Players& player)
+{
+	player.check_on_ground = false;
+	if (player.velocity_y >= 0) {
+		for (int i = 0; i < Stairs.stairsNum; i++)
+		{
+			if (player.character.getGlobalBounds().intersects(Stairs.stairs[i].getGlobalBounds()))
+			{
+				if (player.character.getPosition().y + 25 <= Stairs.stairs[i].getPosition().y)
+				{
+					player.character.setPosition(player.character.getPosition().x, Stairs.stairs[i].getPosition().y - 60);
+					player.check_on_ground = true;
+					CountScore(player, i);
+					break;
+				}
+			}
+			else
+				player.cnt = 0;
+		}
+	}
+}
 void DRAW()
 {
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < background.bgNums; i++)
 	{
 		window.draw(background.bg[i]);
 	}
@@ -169,56 +223,76 @@ void DRAW()
 		window.draw(background.wallsRight[i]);
 	}
 }
-
-void collisions(Players& player)
+void DRAW_View1()
 {
-	player.check_on_ground = false;
-	if (player.velocity_y >= 0) {
-		for (int i = 0; i < Stairs.stairsNum; i++)
-		{
-			if (player.character.getGlobalBounds().intersects(Stairs.stairs[i].getGlobalBounds()))
-			{
-				if (player.character.getPosition().y + 25 <= Stairs.stairs[i].getPosition().y)
-				{
-					player.character.setPosition(player.character.getPosition().x, Stairs.stairs[i].getPosition().y - 60);
-					player.check_on_ground = true;
-
-					if (player.curr_colission > i) {
-						if ((player.curr_colission - i) <= 9) { // Fall from stair
-							player.Score -= player.curr_colission - i;
-						}
-						else { // Jump and loop repeat itself
-							player.Score += (Stairs.stairsNum - player.curr_colission) + i;
-						}
-					}
-					else { // i > curr_colission (Normal Condition)
-						player.Score += (i - player.curr_colission);
-					}
-					player.curr_colission = i;
-					break;
-				}
-			}
-		}
+	if (GameMode == 2) {
+		window.draw(player2.character);
 	}
+	window.draw(player1.character);
+
+	window.setView(window.getDefaultView());
+	//set position of clock then draw it
+	/////////
+	if (GameMode == 2) {
+		gameclock.cl.setScale(1, 1);
+		gameclock.cl2.setScale(1, 1);
+		gameclock.cl.setPosition(0, 118);
+		gameclock.cl2.setPosition(40, 180);
+		//star.setPosition(20, 400);
+	}
+	window.draw(gameclock.cl);
+	window.draw(gameclock.cl2);
+	window.draw(player1.score);
+	//window.draw(star);
+	//star.setPosition(250, 550);
+	//window.draw(player1.compo);
+}
+void DRAW_View2()
+{
+	window.draw(player1.character);
+	window.draw(player2.character);
+
+	window.setView(window.getDefaultView());
+	//set position of clock then draw it
+	/////////
+	gameclock.cl.setPosition(950, 118);
+	gameclock.cl2.setPosition(990, 180);
+	window.draw(gameclock.cl);
+	window.draw(gameclock.cl2);
+	player2.score.setPosition(980, 990);
+	window.draw(player2.score);
+	//window.draw(star);
+	//window.draw(player2.compo);
 }
 void Gameplay()
 {
+	Intilize_Numbers();
+	Stairs.stairs = new RectangleShape[Stairs.stairsNum];
+	Stairs.Strs10 = new RectangleShape[Stairs.stairsNum];
+	Stairs.strTxt = new Text[Stairs.stairsNum];
+
+	background.bg = new RectangleShape[background.bgNums];
+	background.wallsLeft = new RectangleShape[background.bgNums];
+	background.wallsRight = new RectangleShape[background.bgNums];
 
 	SoundBuffer buff;
 	buff.loadFromFile("Assets//Sounds//jump.ogg");
 
 	sound.music(1);
 	Texture GameTexture;
-	// powerups
-	dropBag = new PowerUps[Stairs.stairsNum];
-	Power.setDrops();
+
 	float mapspeed = 1, addmapspeed = 0;
+
+	dropBag = new PowerUps[Stairs.stairsNum];
 
 	MAP Map;
 	CameraView view;
 
 	//map insilization
 	Map.intilization();
+
+	// powerups
+	Power.setDrops();
 
 	//player
 	Texture tex1, tex2;
@@ -227,7 +301,10 @@ void Gameplay()
 	player1.inti(tex1);
 	player2.inti(tex2);
 	//music(k);
-	//Map
+	Sprite star;
+	Texture star_tex;
+	star_tex.loadFromFile("Assets/Textures/Star.png");
+	star.setTexture(star_tex);
 
 	//view insilization
 	view.view_insilization();
@@ -235,6 +312,7 @@ void Gameplay()
 	//Time TimeOfMove;
 	bool StartMoving = 0;
 	bool StartReturning = 0;
+	int x = 0, y = 0;
 	while (window.isOpen())
 	{
 		/*if (Mouse::isButtonPressed(Mouse::Left))
@@ -273,6 +351,29 @@ void Gameplay()
 		collisions(player2);
 		player1.score.setString("Score: " + to_string(player1.Score * 10));
 		player2.score.setString("Score: " + to_string(player2.Score * 10));
+		if (player1.cnt > 1 || player1.cnt == 0)
+		{
+			
+			x += player1.cnt;
+			player1.compo_cnt = max(x, player1.compo_cnt);
+			player1.compo.setString(to_string(x));
+		}
+		else
+		{
+			x = 0;
+			
+		}
+
+		if (player2.cnt > 1 || player2.cnt == 0)
+		{
+			y += player2.cnt;
+			player2.compo_cnt = max(y, player2.compo_cnt);
+			player2.compo.setString(to_string(y));
+		}
+		else
+		{
+			y = 0;
+		}
 		Set_ObjectsOnStairs();
 
 		if (GameMode == 3)
@@ -327,47 +428,18 @@ void Gameplay()
 		player1.update();
 		player2.update();
 
-		window.clear();
 		/*====================================================DRAW=================================*/
+		window.clear();
 		window.setView(player1_View);
 		DRAW();
-		if (GameMode == 2) {
-			window.draw(player2.character);
-		}
-		window.draw(player1.character);
-
-		window.setView(window.getDefaultView());
-		//set position of clock then draw it
-		/////////
-		if (GameMode == 2) {
-			gameclock.cl.setScale(1, 1);
-			gameclock.cl2.setScale(1, 1);
-			gameclock.cl.setPosition(0, 118);
-			gameclock.cl2.setPosition(40, 180);
-		}
-		window.draw(gameclock.cl);
-		window.draw(gameclock.cl2);
-		window.draw(player1.score);
-
+		DRAW_View1();
 		//------------------------------------------------------
 		if (GameMode == 2)
 		{
 			window.setView(player2_View);
 			DRAW();
-			window.draw(player1.character);
-			window.draw(player2.character);
-
-			window.setView(window.getDefaultView());
-			//set position of clock then draw it
-			/////////
-			gameclock.cl.setPosition(950, 118);
-			gameclock.cl2.setPosition(990, 180);
-			window.draw(gameclock.cl);
-			window.draw(gameclock.cl2);
-			player2.score.setPosition(980, 990);
-			window.draw(player2.score);
+			DRAW_View2();
 		}
-		//cout << dt << endl;
 		window.display();
 	}
 }

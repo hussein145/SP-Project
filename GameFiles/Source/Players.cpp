@@ -139,14 +139,14 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		velocity_y += (gravity)*dt;
 	}
 	/*========================================================================*/
-	if (character.getGlobalBounds().left + 49.99 <= background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width && j == 0){
-		character.setPosition(background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width + 12, character.getPosition().y);
+	if (character.getPosition().x-5 <= background.wallsLeft[0].getPosition().x + background.Walls_Width && j == 0) {
+		character.setPosition(background.wallsLeft[0].getPosition().x + background.Walls_Width + 12, character.getPosition().y);
 		velocity_x = -velocity_x / 1.5f;
 		//j = 1;
 	}
-	else if (character.getGlobalBounds().left + character.getGlobalBounds().width - 49.99 >= background.wallsRight[0].getGlobalBounds().left && j == 0)
+	else if (character.getPosition().x+5 >= background.wallsRight[0].getPosition().x - background.Walls_Width && j == 0)
 	{
-		character.setPosition(background.wallsRight[0].getGlobalBounds().left - 12 , character.getPosition().y);
+		character.setPosition(background.wallsRight[0].getPosition().x - background.Walls_Width - 12, character.getPosition().y);
 		velocity_x = -velocity_x / 1.5f;
 		//j = 1;
 	}

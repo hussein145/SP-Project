@@ -1,6 +1,7 @@
 #pragma once
 struct PowerUps
 {
+	PowerUps* dropBag;
 	Sprite dropShape;		   // random powerup
 	//RectangleShape blockShape; // random block
 	int type;				   // drop type

@@ -9,7 +9,7 @@ using namespace sf;
 
 
 
-void Walls_And_Background::intiliztion(int GameMode, View &player1_View, View &player2_View)
+void Walls_And_Background::intiliztion(int GameMode, View& player1_View, View& player2_View)
 {
 	backGround.loadFromFile("Assets/Textures/BackGround game1.png");
 	wallTexture.loadFromFile("Assets/Textures/wall1.png");
@@ -43,7 +43,7 @@ void Walls_And_Background::intiliztion(int GameMode, View &player1_View, View &p
 	}
 	Curr_Background--;
 }
-void  Walls_And_Background::updateBackground_And_Walls(int GameMode, View& player1_View, View &player2_View)
+void  Walls_And_Background::updateBackground_And_Walls(int GameMode, View& player1_View, View& player2_View)
 {
 	if (GameMode == 2) // 2player
 	{

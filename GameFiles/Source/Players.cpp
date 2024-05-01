@@ -20,10 +20,15 @@ void Players::inti(Texture& texture) {
 	character.setTextureRect(IntRect(0, 0, 50, 60));
 	character.setOrigin(25, 30);
 	character.setScale(2.4, 2.4);
+
 	score_Tex.loadFromFile("Assets//Fonts//BrownieStencil-8O8MJ.ttf");
+
 	score.setFont(score_Tex);
 	score.setCharacterSize(50);
 	score.setPosition(240, 1000);
+	compo.setFont(score_Tex);
+	compo.setCharacterSize(50);
+	compo.setPosition(240, 400);
 
 	velocity_x = 0;
 	velocity_y = 0;
@@ -115,13 +120,13 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		{
 			if (abs(velocity_x) > 7.5f)
 				velocity_y *= abs(velocity_x)/7.5f;
-			jump_height = velocity_y;
+			//jump_height = velocity_y;
 		}
 		else
 		{
 			if (abs(velocity_x) > 4.f)
 				velocity_y *= abs(velocity_x)/4.f;
-			jump_height = velocity_y;
+			//jump_height = velocity_y;
 		}
 		check_on_ground = false;
 		so4.setBuffer(buff);
@@ -134,23 +139,18 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		velocity_y += (gravity)*dt;
 	}
 	/*========================================================================*/
-	if (character.getPosition().x > background.wallsRight[0].getPosition().x - background.Walls_Width){
-		character.setPosition(background.wallsRight[0].getPosition().x - background.Walls_Width - 10, character.getPosition().y);
-	}
-	if (character.getPosition().x < background.wallsLeft[0].getPosition().x + background.Walls_Width){
-		character.setPosition(background.wallsLeft[0].getPosition().x + background.Walls_Width + 10, character.getPosition().y);
-	}
-	if (character.getGlobalBounds().left + 10 <= background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width && j == 0){
+	if (character.getGlobalBounds().left + 49.99 <= background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width && j == 0){
+		character.setPosition(background.wallsLeft[0].getGlobalBounds().left + background.wallsLeft[0].getGlobalBounds().width + 12, character.getPosition().y);
 		velocity_x = -velocity_x / 1.5f;
-		j = 1;
+		//j = 1;
 	}
-	else if (character.getGlobalBounds().left + character.getGlobalBounds().width - 10 >= background.wallsRight[0].getGlobalBounds().left && j == 0)
+	else if (character.getGlobalBounds().left + character.getGlobalBounds().width - 49.99 >= background.wallsRight[0].getGlobalBounds().left && j == 0)
 	{
-		
+		character.setPosition(background.wallsRight[0].getGlobalBounds().left - 12 , character.getPosition().y);
 		velocity_x = -velocity_x / 1.5f;
-		j = 1;
+		//j = 1;
 	}
-	if (j) {j += 0.02;}
+	/*if (j) {j += 0.02;}
 
-	if (j >= 3) { j = 0; }
+	if (j >= 3) { j = 0; }*/
 }

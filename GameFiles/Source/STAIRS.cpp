@@ -77,8 +77,8 @@ void STAIRS::intiliztion1(int GameMode) {
 			FloorTextures();
 			stairs[currstair].setSize(Vector2f(floor_width, 50));
 			stairs[currstair].setOrigin(floor_width / 2, 0);
-			if(currstair)
-			stairs[currstair].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width / 2, stairs[currstair-1].getPosition().y - heightBetweenStair));
+			if (currstair)
+				stairs[currstair].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width / 2, stairs[currstair - 1].getPosition().y - heightBetweenStair));
 		}
 		else
 		{
@@ -105,7 +105,7 @@ void STAIRS::intiliztion1(int GameMode) {
 	}
 	currstair--;
 }
-void STAIRS::updateStairs(int GameMode, View &player1_View, View &player2_View) {
+void STAIRS::updateStairs(int GameMode, View& player1_View, View& player2_View) {
 	RightLimit = ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width) - stairs[updatestair].getSize().x - (1920 - ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width));
 	bool player2_Notexist = 1;
 	if (GameMode == 2)

@@ -391,12 +391,12 @@ void Gameplay()
 				mapspeed = 2;
 				addmapspeed = 7;
 			}
-			if (addmapspeed <= 0)
+			if (addmapspeed <= 0 && player1.droptype == 3)
 			{
 				mapspeed = 1;
 				addmapspeed = 0;
 			}
-			else
+			else if(player1.droptype == 3)
 			{
 				addmapspeed -= 0.01;
 				player1.droptype = -1;

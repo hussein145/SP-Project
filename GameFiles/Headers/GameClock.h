@@ -19,7 +19,7 @@ struct GameClock
 	bool f = 0;
 	void setclock();
 	//void setclock2();
-	void update_clock(float& view_velocity);
+	void update_clock(float& view_velocity, bool move);
 	float save_view_velocity;
 };
 

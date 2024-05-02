@@ -164,7 +164,7 @@ void CountScore(Players& player, int i)
 	if (player.curr_colission > i) {
 		if ((player.curr_colission - i) <= 9) { // Fall from stair
 			player.Score -= player.curr_colission - i;
-			player.cnt = 0;
+			player.cnt = 1;
 		}
 		else { // Jump and loop repeat itself
 			player.cnt = (Stairs.stairsNum - player.curr_colission) + i;
@@ -193,8 +193,6 @@ void collisions(Players& player)
 					break;
 				}
 			}
-			else
-				player.cnt = 0;
 		}
 	}
 }
@@ -243,7 +241,7 @@ void DRAW_View1()
 	window.draw(player1.score);
 	//window.draw(star);
 	//star.setPosition(250, 550);
-	//window.draw(player1.compo);
+	window.draw(player1.compo);
 }
 void DRAW_View2()
 {
@@ -260,7 +258,7 @@ void DRAW_View2()
 	player2.score.setPosition(980, 990);
 	window.draw(player2.score);
 	//window.draw(star);
-	//window.draw(player2.compo);
+	window.draw(player2.compo);
 }
 void Gameplay()
 {
@@ -283,7 +281,6 @@ void Gameplay()
 
 	float mapspeed = 0, addmapspeed = 0;
 
-
 	MAP Map;
 	CameraView view;
 
@@ -292,7 +289,6 @@ void Gameplay()
 
 	//map insilization
 	Map.intilization();
-
 
 	//player
 	Texture tex1, tex2;
@@ -335,10 +331,11 @@ void Gameplay()
 			{
 				//pausedtime += TimeOfMove.getElapsedTime();
 				//TimeOfMove.restart();
-				Map.Backgrond_Velocity_y = Map.Walls_velocity_y = Map.Stairs_velocity_y = Map.view_velocity = Power.PowerUP_veolcity = 0.f;
+
 				GameTexture.create(1920, 1080);
 				GameTexture.update(window);
 				menu.Pause(window, GameTexture);
+				clockk.restart();
 				//TimeOfMove.restart();
 				if (menu.exit)
 				{
@@ -349,25 +346,22 @@ void Gameplay()
 				}
 			}
 		}
-		//dt = clockk.getElapsedTime().asSeconds()
 		dt = clockk.restart().asSeconds();
 		dt2 = clockk2.restart().asSeconds();
 		collisions(player1);
 		collisions(player2);
 		player1.score.setString("Score: " + to_string(player1.Score * 10));
 		player2.score.setString("Score: " + to_string(player2.Score * 10));
-		if (player1.cnt > 1 || player1.cnt == 0)
+		if (player1.cnt != 1)
 		{
-			
 			x += player1.cnt;
+			player1.cnt = 0;
 			player1.compo_cnt = max(x, player1.compo_cnt);
-			player1.compo.setString(to_string(x));
 		}
-		else
-		{
+		else{
 			x = 0;
-			
 		}
+		player1.compo.setString(to_string(x));
 
 		if (player2.cnt > 1 || player2.cnt == 0)
 		{
@@ -375,8 +369,7 @@ void Gameplay()
 			player2.compo_cnt = max(y, player2.compo_cnt);
 			player2.compo.setString(to_string(y));
 		}
-		else
-		{
+		else{
 			y = 0;
 		}
 		Set_ObjectsOnStairs();
@@ -419,7 +412,7 @@ void Gameplay()
 		//map Motion
 		Map.Map_Motion();
 		
-
+		cout << player1.compo_cnt << endl;
 		//freeze game
 		if (player1.character.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540))

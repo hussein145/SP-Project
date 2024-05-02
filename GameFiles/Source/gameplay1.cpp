@@ -70,7 +70,7 @@ struct MAP
 			move = 1;
 		if (move)
 		{
-			gameclock.update_clock();
+			gameclock.update_clock(view_velocity);
 
 			for (int i = 0; i < background.bgNums; i++)
 			{
@@ -281,7 +281,7 @@ void Gameplay()
 	sound.music(1);
 	Texture GameTexture;
 
-	float mapspeed = 1, addmapspeed = 0;
+	float mapspeed = 0, addmapspeed = 0;
 
 
 	MAP Map;
@@ -313,6 +313,11 @@ void Gameplay()
 	bool StartMoving = 0;
 	bool StartReturning = 0;
 	int x = 0, y = 0;
+
+	Map.Backgrond_Velocity_y = 20.0f;
+	Map.Walls_velocity_y = 120.0f;
+	Map.Stairs_velocity_y = 50.0f;
+	Map.view_velocity = 80.0f;
 	while (window.isOpen())
 	{
 		/*if (Mouse::isButtonPressed(Mouse::Left))
@@ -388,19 +393,22 @@ void Gameplay()
 
 			if (player1.droptype == 3)
 			{
-				mapspeed = 2;
+				mapspeed = 100.f;
 				addmapspeed = 7;
-			}
-			if (addmapspeed <= 0 && player1.droptype == 3)
-			{
-				mapspeed = 1;
-				addmapspeed = 0;
-			}
-			else if(player1.droptype == 3)
-			{
-				addmapspeed -= 0.01;
+				Map.view_velocity += mapspeed;
 				player1.droptype = -1;
 			}
+			if (addmapspeed <= 0)
+			{
+				Map.view_velocity -= mapspeed;
+				mapspeed = 0;
+				addmapspeed = 0;
+			}
+			else
+			{
+				addmapspeed -= 0.01;
+			}
+			
 
 			if (player1.droptype != 0)
 				Power.resetPowerups();
@@ -410,10 +418,7 @@ void Gameplay()
 
 		//map Motion
 		Map.Map_Motion();
-		Map.Backgrond_Velocity_y = 20.0f;
-		Map.Walls_velocity_y = 120.0f;
-		Map.Stairs_velocity_y = 50.0f;
-		Map.view_velocity = 80.0 * mapspeed;
+		
 
 		//freeze game
 		if (player1.character.getPosition().y > player1_View.getCenter().y + 550

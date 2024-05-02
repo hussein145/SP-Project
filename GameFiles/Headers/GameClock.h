@@ -9,10 +9,12 @@ struct GameClock
 	float velocity_clo2 = 0;
 
 	float l = 0;
+	float acceleration = 0;
 	Texture herry;
 	Sprite herry2;
 	bool f = 0;
 	void setclock();
-	void update_clock();
+	//void setclock2();
+	void update_clock(float& view_velocity);
 };
 

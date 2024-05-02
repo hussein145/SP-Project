@@ -27,10 +27,6 @@ void Players::inti(Texture& texture) {
 	score.setCharacterSize(50);
 	score.setPosition(240, 1000);
 	compo.setFont(score_Tex);
-	if(GameMode == 2)
-		compo.setCharacterSize(30);
-	else
-		compo.setCharacterSize(50);
 	compo.setPosition(300, 580);
 
 	velocity_x = 0;
@@ -41,6 +37,10 @@ void Players::inti(Texture& texture) {
 }
 
 void Players::update() {
+	if(GameMode == 2)
+		compo.setCharacterSize(30);
+	else
+		compo.setCharacterSize(50);
 	character.move(velocity_x, velocity_y);
 	if (velocity_x == 0 && velocity_y == 0) {
 		x += 0.02f;

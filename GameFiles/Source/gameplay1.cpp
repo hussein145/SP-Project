@@ -349,14 +349,20 @@ void Gameplay()
 				window.close();
 			if (END ? (Play.key.code == Keyboard::Escape && !pressed) : (Play.type == Event::KeyPressed && !pressed))  //&& !menu.pressed
 			{
-				pressed = true;
-				//pausedtime += TimeOfMove.getElapsedTime();
-				//TimeOfMove.restart();
-				Map.Backgrond_Velocity_y = Map.Walls_velocity_y = Map.Stairs_velocity_y = Map.view_velocity = Power.PowerUP_veolcity = 0.f;
+				pressed = true;		
 				GameTexture.create(1920, 1080);
 				GameTexture.update(window);
 				menu.Pause(window, GameTexture);
+				clockk.restart();
 				//TimeOfMove.restart();
+				if (menu.exit)
+				{
+					menu.exit = 0;
+					sound.music(0);
+					reset();
+					return;
+				}
+
 				if (menu.exit)
 				{
 					menu.exit = 0;

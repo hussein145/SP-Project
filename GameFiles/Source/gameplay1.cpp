@@ -234,13 +234,14 @@ void DRAW_View1()
 		gameclock.cl2.setScale(1, 1);
 		gameclock.cl.setPosition(0, 118);
 		gameclock.cl2.setPosition(40, 180);
-		//star.setPosition(20, 400);
+		gameclock.star.setPosition(5, 350);
+		player1.compo.setPosition(35, 360);
 	}
 	window.draw(gameclock.cl);
 	window.draw(gameclock.cl2);
 	window.draw(player1.score);
-	//window.draw(star);
-	//star.setPosition(250, 550);
+	window.draw(gameclock.star);
+	gameclock.star.setPosition(230, 550);
 	window.draw(player1.compo);
 }
 void DRAW_View2()
@@ -257,7 +258,9 @@ void DRAW_View2()
 	window.draw(gameclock.cl2);
 	player2.score.setPosition(980, 990);
 	window.draw(player2.score);
-	//window.draw(star);
+	gameclock.star.setPosition(950, 350);
+	window.draw(gameclock.star);
+	player2.compo.setPosition(980, 360);
 	window.draw(player2.compo);
 }
 void Gameplay()
@@ -297,10 +300,8 @@ void Gameplay()
 	player1.inti(tex1);
 	player2.inti(tex2);
 	//music(k);
-	Sprite star;
-	Texture star_tex;
-	star_tex.loadFromFile("Assets/Textures/Star.png");
-	star.setTexture(star_tex);
+	
+	
 
 	//view insilization
 	view.view_insilization();

@@ -47,7 +47,7 @@ void Intilize_Numbers()
 }
 bool END = 1;
 int strCnt = 0;
-
+extern bool pressed;
 struct MAP
 {
 	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y, view_velocity;
@@ -294,14 +294,33 @@ void Gameplay()
 	Map.intilization();
 
 	//player
+	extern int PLayer1;
+	extern int PLayer2;
+
 	Texture tex1, tex2;
 	tex1.loadFromFile("Assets/Textures/icytower1.png");
 	tex2.loadFromFile("Assets/Textures/icytower2.png");
-	player1.inti(tex1);
-	player2.inti(tex2);
+	if (PLayer1 == 0)
+		player1.inti(tex1);
+	else if (PLayer1 == 1)
+		player1.inti(tex2);
+
+
+	if (PLayer2 == 0)
+		player2.inti(tex2);
+	else if (PLayer2 == 1)
+		player2.inti(tex2);
+
+
+	RectangleShape power(Vector2f(35, 203));
+	power.setFillColor({ 180,3,3 });
+	power.setOrigin(0, power.getSize().y);
+	power.setPosition(295, 558);
+	float resize = 0;
+
 	//music(k);
-	
-	
+
+
 
 	//view insilization
 	view.view_insilization();
@@ -309,7 +328,7 @@ void Gameplay()
 	//Time TimeOfMove;
 	bool StartMoving = 0;
 	bool StartReturning = 0;
-	int x = 0, y = 0;
+	int x = 0, y = 0,ppp=0;
 
 	Map.Backgrond_Velocity_y = 20.0f;
 	Map.Walls_velocity_y = 120.0f;
@@ -328,15 +347,15 @@ void Gameplay()
 		{
 			if (Play.type == Event::Closed)
 				window.close();
-			if (Play.key.code == Keyboard::Escape)  //&& !menu.pressed
+			if (END ? (Play.key.code == Keyboard::Escape && !pressed) : (Play.type == Event::KeyPressed && !pressed))  //&& !menu.pressed
 			{
+				pressed = true;
 				//pausedtime += TimeOfMove.getElapsedTime();
 				//TimeOfMove.restart();
-
+				Map.Backgrond_Velocity_y = Map.Walls_velocity_y = Map.Stairs_velocity_y = Map.view_velocity = Power.PowerUP_veolcity = 0.f;
 				GameTexture.create(1920, 1080);
 				GameTexture.update(window);
 				menu.Pause(window, GameTexture);
-				clockk.restart();
 				//TimeOfMove.restart();
 				if (menu.exit)
 				{
@@ -346,7 +365,29 @@ void Gameplay()
 					return;
 				}
 			}
+			if (!Keyboard::isKeyPressed(Keyboard::Escape))
+			{
+				pressed = false;
+			}
 		}
+		if (x > 0 && x != ppp)
+			resize = 203;
+		else if (x == 0)
+		{
+			resize = 0; ppp = 0;
+		}
+
+		if (resize > 0)
+		{
+			power.setOrigin(0, power.getSize().y);
+			power.setSize({ 35.f, resize });
+			resize -= .5;
+		}
+		else
+			power.setSize({ 0,0 });
+
+		ppp = x;
+
 		dt = clockk.restart().asSeconds();
 		dt2 = clockk2.restart().asSeconds();
 		collisions(player1);
@@ -431,6 +472,7 @@ void Gameplay()
 		window.setView(player1_View);
 		DRAW();
 		DRAW_View1();
+		window.draw(power);
 		//------------------------------------------------------
 		if (GameMode == 2)
 		{

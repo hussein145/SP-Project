@@ -27,6 +27,13 @@ void GameClock::setclock()
 	clo2.loadFromFile("Assets/Textures/clock 1.png");
 	cl2.setTexture(clo2);
 
+	star_tex.loadFromFile("Assets/Textures/Star.png");
+	star.setTexture(star_tex);
+	if (GameMode == 2)
+		star.setScale(1, 1);
+	else
+		star.setScale(2, 2);
+
 	cl2.setOrigin(9.5, 30);
 	cl2.setRotation(int(0));
 	if (GameMode == 2) {
@@ -49,6 +56,7 @@ void GameClock::update_clock(float &view_velocity)
 
 	herry2.move(0, -550 * dt);
 	int end = int(l);
+		save_view_velocity = view_velocity;
 	if (end % 360 != 0) {
 
 		f = true;

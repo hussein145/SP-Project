@@ -68,10 +68,10 @@ struct MAP
 	{
 		if (player1.character.getPosition().y < 100 || player2.character.getPosition().y < 100)
 			move = 1;
+
+		gameclock.update_clock(view_velocity, move);
 		if (move)
 		{
-			gameclock.update_clock(view_velocity);
-
 			for (int i = 0; i < background.bgNums; i++)
 			{
 				background.bg[i].move(0, Backgrond_Velocity_y * dt);
@@ -328,7 +328,7 @@ void Gameplay()
 	//Time TimeOfMove;
 	bool StartMoving = 0;
 	bool StartReturning = 0;
-	int x = 0, y = 0,ppp=0;
+	int x = 0, y = 0, ppp = 0;
 
 	Map.Backgrond_Velocity_y = 20.0f;
 	Map.Walls_velocity_y = 120.0f;
@@ -349,7 +349,7 @@ void Gameplay()
 				window.close();
 			if (END ? (Play.key.code == Keyboard::Escape && !pressed) : (Play.type == Event::KeyPressed && !pressed))  //&& !menu.pressed
 			{
-				pressed = true;		
+				pressed = true;
 				GameTexture.create(1920, 1080);
 				GameTexture.update(window);
 				menu.Pause(window, GameTexture);
@@ -464,7 +464,7 @@ void Gameplay()
 		if (player1.character.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540))
 		{
-			Map.Backgrond_Velocity_y = Map.Walls_velocity_y = Map.Stairs_velocity_y = Map.view_velocity = Power.PowerUP_veolcity = 0;
+			Map.move = 0;
 			END = 0;
 		}
 		//cout << dt << endl;

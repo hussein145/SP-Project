@@ -26,6 +26,7 @@ void GameClock::setclock()
 
 	clo2.loadFromFile("Assets/Textures/clock 1.png");
 	cl2.setTexture(clo2);
+
 	cl2.setOrigin(9.5, 30);
 	cl2.setRotation(int(0));
 	if (GameMode == 2) {
@@ -41,9 +42,9 @@ void GameClock::setclock()
 		cl2.setPosition(315, 235);
 	}
 }
-void GameClock::update_clock()
+void GameClock::update_clock(float &view_velocity)
 {
-	l += 0.07f;
+	l += 0.07f + acceleration;
 	cl2.setRotation(int(l));
 
 	herry2.move(0, -550 * dt);
@@ -56,5 +57,7 @@ void GameClock::update_clock()
 	if (end % 360 == 0 && f == true) {
 		herry2.setPosition(650, player1_View.getCenter().y + 540);
 		herry2.setScale(2.5, 2.5);
+		view_velocity += 5;
+		acceleration += 0.02;
 	}
 }

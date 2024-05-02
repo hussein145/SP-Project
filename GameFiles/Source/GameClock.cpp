@@ -55,7 +55,7 @@ void GameClock::update_clock(float &view_velocity)
 
 	}
 	if (end % 360 == 0 && f == true) {
-		herry2.setPosition(650, player1_View.getCenter().y + 540);
+		herry2.setPosition(650, player1_View.getCenter().y + 550);
 		herry2.setScale(2.5, 2.5);
 		view_velocity += 5;
 		acceleration += 0.02;

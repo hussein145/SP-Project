@@ -29,10 +29,6 @@ void GameClock::setclock()
 
 	star_tex.loadFromFile("Assets/Textures/Star.png");
 	star.setTexture(star_tex);
-	if (GameMode == 2)
-		star.setScale(1, 1);
-	else
-		star.setScale(2, 2);
 
 	cl2.setOrigin(9.5, 30);
 	cl2.setRotation(int(0));
@@ -49,23 +45,27 @@ void GameClock::setclock()
 		cl2.setPosition(315, 235);
 	}
 }
-void GameClock::update_clock(float &view_velocity)
+void GameClock::update_clock(float &view_velocity, bool move)
 {
-	l += 0.07f + acceleration;
-	cl2.setRotation(int(l));
+	if (GameMode == 2)
+		star.setScale(1, 1);
+	else
+		star.setScale(2, 2);
 
-	herry2.move(0, -550 * dt);
+	if (move){
+		l += 0.07f + acceleration;
+		cl2.setRotation(int(l));
+		herry2.move(0, -550 * dt);
+	}
 	int end = int(l);
-		save_view_velocity = view_velocity;
 	if (end % 360 != 0) {
 
 		f = true;
-
 	}
 	if (end % 360 == 0 && f == true) {
 		herry2.setPosition(650, player1_View.getCenter().y + 550);
 		herry2.setScale(2.5, 2.5);
 		view_velocity += 5;
-		acceleration += 0.02;
+		acceleration += 0.0002;
 	}
 }

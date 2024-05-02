@@ -5,7 +5,7 @@ struct Players
 	Text score;
 	int Score = 0;
 	int cnt = 0;
-	int compo_cnt = 0;
+	int Max_Compo = 0;
 	Text compo;
 	Sprite character;
 	Texture texture;

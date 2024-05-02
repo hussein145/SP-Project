@@ -12,9 +12,14 @@ struct GameClock
 	float acceleration = 0;
 	Texture herry;
 	Sprite herry2;
+
+	Sprite star;
+	Texture star_tex;
+
 	bool f = 0;
 	void setclock();
 	//void setclock2();
 	void update_clock(float& view_velocity);
+	float save_view_velocity;
 };
 

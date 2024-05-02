@@ -27,8 +27,11 @@ void Players::inti(Texture& texture) {
 	score.setCharacterSize(50);
 	score.setPosition(240, 1000);
 	compo.setFont(score_Tex);
-	compo.setCharacterSize(50);
-	compo.setPosition(240, 400);
+	if(GameMode == 2)
+		compo.setCharacterSize(30);
+	else
+		compo.setCharacterSize(50);
+	compo.setPosition(300, 580);
 
 	velocity_x = 0;
 	velocity_y = 0;

@@ -146,6 +146,9 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 				if (currstair % 100 != 0 || currstair % 5 != 0) {
 					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() + Vector2f(50, 0));
 				}
+				if (Stairs.stairs[currstair].getGlobalBounds().intersects(background.wallsLeft->getGlobalBounds()) || Stairs.stairs[currstair].getGlobalBounds().intersects(background.wallsRight->getGlobalBounds())) {
+					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
+				}
 			}
 		}
 	}
@@ -185,8 +188,9 @@ void PowerUps::resetPowerups()
 		stopbig = 0;
 		for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
 		{
-			if (currstair % 100 != 0 || currstair % 5 != 0)
+			if (currstair % 100 != 0 || currstair % 5 != 0) {
 				Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
+			}
 		}
 	}
 	else {

@@ -356,9 +356,9 @@ void Gameplay()
 		{
 			x += player1.cnt;
 			player1.cnt = 0;
-			player1.compo_cnt = max(x, player1.compo_cnt);
+			player1.Max_Compo = max(x, player1.Max_Compo);
 		}
-		else{
+		else {
 			x = 0;
 		}
 		player1.compo.setString(to_string(x));
@@ -366,10 +366,10 @@ void Gameplay()
 		if (player2.cnt > 1 || player2.cnt == 0)
 		{
 			y += player2.cnt;
-			player2.compo_cnt = max(y, player2.compo_cnt);
+			player2.Max_Compo = max(y, player2.Max_Compo);
 			player2.compo.setString(to_string(y));
 		}
-		else{
+		else {
 			y = 0;
 		}
 		Set_ObjectsOnStairs();
@@ -401,7 +401,7 @@ void Gameplay()
 			{
 				addmapspeed -= 0.01;
 			}
-			
+
 
 			if (player1.droptype != 0)
 				Power.resetPowerups();
@@ -411,8 +411,7 @@ void Gameplay()
 
 		//map Motion
 		Map.Map_Motion();
-		
-		cout << player1.compo_cnt << endl;
+
 		//freeze game
 		if (player1.character.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540))

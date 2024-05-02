@@ -9,7 +9,6 @@ struct Menu
 	int pageNumber = 1000;
 	bool resusme = 1;
 	int shift = 60 * resusme;
-	bool pressed = false;
 	Text mainmenu[10];
 	int selected = 0;
 	Font font;

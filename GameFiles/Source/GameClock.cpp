@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include<SFML/Audio.hpp>
@@ -12,9 +11,49 @@
 using namespace std;
 using namespace sf;
 
+extern Players player1, player2;
 extern float dt;
 extern int GameMode;
 extern View player1_View;
+extern float resize, resize2;
+
+void GameClock::View1_SetClock()
+{
+	if (GameMode == 2)
+	{
+		clock.setScale(1, 1);
+		Hour_hand.setScale(1, 1);
+		clock.setPosition(0, 118);
+		Hour_hand.setPosition(clock.getPosition().x + 42, clock.getPosition().y + 60);
+		power.setPosition(clock.getPosition().x + 32, clock.getPosition().y + 220);
+		star.setPosition(clock.getPosition().x , clock.getPosition().y + 230);
+		if (player1.compo_cnt && resize)
+			star.setScale(1, 1);
+	}
+	else
+	{
+		clock.setScale(2, 2);
+		clock.setPosition(230, 118);
+		Hour_hand.setScale(1.7, 1.7);
+		power.setPosition(clock.getPosition().x + 65, clock.getPosition().y + 440);
+		star.setPosition(clock.getPosition().x, clock.getPosition().y + 450);
+		Hour_hand.setPosition(clock.getPosition().x + 85, clock.getPosition().y + 120);
+		if(player1.compo_cnt && resize)
+			star.setScale(2, 2);
+	}
+}
+
+void GameClock::View2_SetClock()
+{
+	clock.setScale(1, 1);
+	Hour_hand.setScale(1, 1);
+	clock.setPosition(960, 118);
+	Hour_hand.setPosition(clock.getPosition().x + 42, clock.getPosition().y + 60);
+	star2.setPosition(clock.getPosition().x , clock.getPosition().y + 230);
+	power2.setPosition(clock.getPosition().x + 32, clock.getPosition().y + 220);
+	if (player2.compo_cnt && resize2)
+		star2.setScale(1, 1);
+}
 
 void GameClock::setclock()
 {
@@ -22,41 +61,27 @@ void GameClock::setclock()
 	herry2.setTexture(herry);
 	herry2.setScale(0, 0);
 
-	clo.loadFromFile("Assets/Textures/clock2.png");
-	cl.setTexture(clo);
+	clock_tex.loadFromFile("Assets/Textures/clock2.png");
+	clock.setTexture(clock_tex);
 
-	clo2.loadFromFile("Assets/Textures/clock 1.png");
-	cl2.setTexture(clo2);
+	Hour_hand_tex.loadFromFile("Assets/Textures/clock 1.png");
+	Hour_hand.setTexture(Hour_hand_tex);
 
 	star_tex.loadFromFile("Assets/Textures/Star.png");
 	star.setTexture(star_tex);
 	star2.setTexture(star_tex);
 
-	cl2.setOrigin(9.5, 30);
-	cl2.setRotation(int(0));
-	if (GameMode == 2) {
-		cl.setScale(1, 1);
-		cl2.setScale(1, 1);
-		cl.setPosition(0, 118);
-		cl2.setPosition(40, 180);
-	}
-	else {
-		cl.setScale(2, 2);
-		cl2.setScale(1.7, 1.7);
-		cl.setPosition(230, 118);
-		cl2.setPosition(315, 235);
-	}
+	Hour_hand.setOrigin(9.5, 30);
+	Hour_hand.setRotation(int(0));
+
+	power.setFillColor({ 180,3,3 });
+	power2.setFillColor({ 180,3,3 });
 }
 void GameClock::update_clock(float& view_velocity, bool move)
 {
-	if (GameMode == 2)
-		star.setScale(1, 1);
-	else
-		star.setScale(2, 2);
-	star2.setScale(1, 1);
 	if (move) {
 		l += 0.07f ;
-		cl2.setRotation(int(l));
+		Hour_hand.setRotation(int(l));
 		herry2.move(0, -550 * dt);
 	}
 	int end = int(l);

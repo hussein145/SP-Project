@@ -262,7 +262,6 @@ void DRAW_View1()
 	window.draw(gameclock.star);
 
 	if (GameMode == 2) {
-		player1.compo.setPosition(35, 360);
 		player1.score.setPosition(30, 990);
 	}
 	window.draw(player1.score);
@@ -283,7 +282,6 @@ void DRAW_View2()
 
 	player2.score.setPosition(980, 990);
 	window.draw(player2.score);
-	player2.compo.setPosition(980, 360);
 	window.draw(player2.compo);
 }
 

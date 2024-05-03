@@ -33,11 +33,15 @@ void GameClock::View1_SetClock()
 	else
 	{
 		clock.setScale(2, 2);
-		clock.setPosition(230, 118);
 		Hour_hand.setScale(1.7, 1.7);
+		if (enter) {
+			clock.setPosition(230, 118);
+			enter = 0;
+		}
 		power.setPosition(clock.getPosition().x + 65, clock.getPosition().y + 440);
 		star.setPosition(clock.getPosition().x, clock.getPosition().y + 450);
 		Hour_hand.setPosition(clock.getPosition().x + 85, clock.getPosition().y + 120);
+
 		if(player1.compo_cnt && resize)
 			star.setScale(2, 2);
 	}
@@ -45,6 +49,7 @@ void GameClock::View1_SetClock()
 
 void GameClock::View2_SetClock()
 {
+	enter = 1;
 	clock.setScale(1, 1);
 	Hour_hand.setScale(1, 1);
 	clock.setPosition(960, 118);

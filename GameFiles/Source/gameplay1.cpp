@@ -225,8 +225,9 @@ void DRAW_View1()
 		window.draw(player2.character);
 	}
 	window.draw(player1.character);
-
 	window.setView(window.getDefaultView());
+	gameclock.power.setFillColor({ 180,3,3 });
+	gameclock.power.setPosition(295, 558);
 	//set position of clock then draw it
 	/////////
 	if (GameMode == 2) {
@@ -236,16 +237,20 @@ void DRAW_View1()
 		gameclock.cl2.setPosition(40, 180);
 		gameclock.star.setPosition(5, 350);
 		player1.compo.setPosition(35, 360);
+		player1.score.setPosition(30, 990);
+		gameclock.power.setPosition(32.5, 338);
 	}
 	window.draw(gameclock.cl);
 	window.draw(gameclock.cl2);
 	window.draw(player1.score);
+	window.draw(gameclock.power);
 	window.draw(gameclock.star);
 	gameclock.star.setPosition(230, 550);
 	window.draw(player1.compo);
 }
 void DRAW_View2()
 {
+	gameclock.power2.setFillColor({ 180,3,3 });
 	window.draw(player1.character);
 	window.draw(player2.character);
 
@@ -258,8 +263,10 @@ void DRAW_View2()
 	window.draw(gameclock.cl2);
 	player2.score.setPosition(980, 990);
 	window.draw(player2.score);
-	gameclock.star.setPosition(950, 350);
-	window.draw(gameclock.star);
+	gameclock.power2.setPosition(982, 338);
+	window.draw(gameclock.power2);
+	window.draw(gameclock.star2);
+	gameclock.star2.setPosition(950, 350);
 	player2.compo.setPosition(980, 360);
 	window.draw(player2.compo);
 }
@@ -311,12 +318,7 @@ void Gameplay()
 	else if (PLayer2 == 1)
 		player2.inti(tex2);
 
-
-	RectangleShape power(Vector2f(35, 203));
-	power.setFillColor({ 180,3,3 });
-	power.setOrigin(0, power.getSize().y);
-	power.setPosition(295, 558);
-	float resize = 0;
+	float resize = 0, resize2 = 0;
 
 	//music(k);
 
@@ -328,7 +330,7 @@ void Gameplay()
 	//Time TimeOfMove;
 	bool StartMoving = 0;
 	bool StartReturning = 0;
-	int x = 0, y = 0, ppp = 0;
+	int x = 0, y = 0, disapp = 0,disapp2;
 
 	Map.Backgrond_Velocity_y = 20.0f;
 	Map.Walls_velocity_y = 120.0f;
@@ -376,23 +378,44 @@ void Gameplay()
 				pressed = false;
 			}
 		}
-		if (x > 0 && x != ppp)
-			resize = 203;
-		else if (x == 0)
-		{
-			resize = 0; ppp = 0;
-		}
+		
+			if (x > 0 && x != disapp)
+				resize = GameMode == 2 ?103: 203;
+			else if (x == 0)
+			{
+				resize = 0; disapp = 0;
+			}
 
-		if (resize > 0)
-		{
-			power.setOrigin(0, power.getSize().y);
-			power.setSize({ 35.f, resize });
-			resize -= .5;
-		}
-		else
-			power.setSize({ 0,0 });
+			if (resize > 0)
+			{
+				gameclock.power.setOrigin(0, gameclock.power.getSize().y);
+				gameclock.power.setSize({ GameMode==2? 18.f: 35.f, resize });
+				resize -= GameMode == 2 ? .25 : .5;
+			}
+			else
+				gameclock.power.setSize({ 0,0 });
 
-		ppp = x;
+			disapp = x;
+		
+			//-------------------------------------------------------------------------------
+
+			if (y > 0 && y != disapp2)
+				resize2 = 103;
+			else if (y == 0)
+			{
+				resize2 = 0; disapp2 = 0;
+			}
+
+			if (resize2 > 0)
+			{
+				gameclock.power2.setOrigin(0, gameclock.power2.getSize().y);
+				gameclock.power2.setSize({ 18.f, resize2 });
+				resize2 -= .25;
+			}
+			else
+				gameclock.power2.setSize({ 0,0 });
+
+			disapp2 = y;
 
 		dt = clockk.restart().asSeconds();
 		dt2 = clockk2.restart().asSeconds();
@@ -472,13 +495,21 @@ void Gameplay()
 		player2.Players_Motion(buff, Keyboard::Left, Keyboard::Right, Keyboard::Numpad0);
 		player1.update();
 		player2.update();
-
+		if (x == 0||resize==0)
+		{
+			gameclock.star.setScale(0, 0);
+			player1.compo.setCharacterSize(0);
+		}
+		if (y == 0 || resize2 == 0)
+		{
+			gameclock.star2.setScale(0, 0);
+			player2.compo.setCharacterSize(0);
+		}
 		/*====================================================DRAW=================================*/
 		window.clear();
 		window.setView(player1_View);
 		DRAW();
 		DRAW_View1();
-		window.draw(power);
 		//------------------------------------------------------
 		if (GameMode == 2)
 		{

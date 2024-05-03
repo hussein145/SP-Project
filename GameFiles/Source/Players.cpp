@@ -37,7 +37,7 @@ void Players::inti(Texture& texture) {
 }
 
 void Players::update() {
-	if(GameMode == 2)
+	if (GameMode == 2)
 		compo.setCharacterSize(30);
 	else
 		compo.setCharacterSize(50);
@@ -52,7 +52,7 @@ void Players::update() {
 		x += 0.02f;
 		character.setTextureRect(IntRect(50 * (int)(x), 60, 50, 60));
 	}
-	if (velocity_x < 0 )
+	if (velocity_x < 0)
 	{
 		character.setScale(-2.4, 2.4);
 		x += 0.02f;
@@ -78,7 +78,7 @@ void Players::update() {
 	}
 	if (Stairs.stairs[curr_colission].getPosition().x - (Stairs.stairs[curr_colission].getSize().x) / 2 >= character.getPosition().x && check_on_ground) {
 		character.setScale(-2.4, 2.4);
-		character.setTextureRect(IntRect(50*int(t), 60 * 3, 50, 60));
+		character.setTextureRect(IntRect(50 * int(t), 60 * 3, 50, 60));
 		t += 0.02f;
 	}
 	if (t >= 2)
@@ -94,20 +94,20 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		Motion_Velocity = 6;
 	/*============================================================*/
 	if (Keyboard::isKeyPressed(right)) {
-		velocity_x += Motion_Velocity * dt * incspeed;
+		velocity_x += Motion_Velocity * dt * incspeed * 1.05;
 		validL = 0;
 	}
-	else if (Keyboard::isKeyPressed(left) ) {
-		velocity_x -= Motion_Velocity * dt * incspeed;
+	else if (Keyboard::isKeyPressed(left)) {
+		velocity_x -= Motion_Velocity * dt * incspeed * 1.05;
 		validR = 0;
 	}
 	/*============================================================*/
-	if (velocity_x > 0.f && validL){
+	if (velocity_x > 0.f && validL) {
 		velocity_x -= Motion_Velocity * dt * incspeed + 0.2;
-		if(velocity_x < 0.f)
+		if (velocity_x < 0.f)
 			velocity_x = 0;
 	}
-	else if (velocity_x < 0.f && validR){
+	else if (velocity_x < 0.f && validR) {
 		velocity_x += Motion_Velocity * dt * incspeed + 0.2;
 		if (velocity_x > 0.f)
 			velocity_x = 0;
@@ -118,17 +118,17 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		character.setTextureRect(IntRect(50 * 3, 60 * 2, 50, 60));
 	}
 	if (Keyboard::isKeyPressed(jump) && check_on_ground) {
-		velocity_y = -jumpVelocity - addsuperjump;
+		velocity_y = -jumpVelocity - addsuperjump ;
 		if (GameMode == 2)
 		{
 			if (abs(velocity_x) > 7.5f)
-				velocity_y *= abs(velocity_x)/7.5f;
+				velocity_y *= abs(velocity_x) / 7.5f;
 			//jump_height = velocity_y;
 		}
 		else
 		{
 			if (abs(velocity_x) > 4.f)
-				velocity_y *= abs(velocity_x)/4.f;
+				velocity_y *= abs(velocity_x) / 4.f;
 			//jump_height = velocity_y;
 		}
 		check_on_ground = false;
@@ -142,12 +142,12 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		velocity_y += (gravity)*dt;
 	}
 	/*========================================================================*/
-	if (character.getPosition().x-5 <= background.wallsLeft[0].getPosition().x + background.Walls_Width && j == 0) {
+	if (character.getPosition().x - 5 <= background.wallsLeft[0].getPosition().x + background.Walls_Width && j == 0) {
 		character.setPosition(background.wallsLeft[0].getPosition().x + background.Walls_Width + 12, character.getPosition().y);
 		velocity_x = -velocity_x / 1.5f;
 		//j = 1;
 	}
-	else if (character.getPosition().x+5 >= background.wallsRight[0].getPosition().x - background.Walls_Width && j == 0)
+	else if (character.getPosition().x + 5 >= background.wallsRight[0].getPosition().x - background.Walls_Width && j == 0)
 	{
 		character.setPosition(background.wallsRight[0].getPosition().x - background.Walls_Width - 12, character.getPosition().y);
 		velocity_x = -velocity_x / 1.5f;

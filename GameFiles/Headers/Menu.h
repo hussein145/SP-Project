@@ -33,5 +33,7 @@ struct Menu
 	void options_menu(RenderWindow& window);
 	void instructions(RenderWindow& window);
 	void Pause(RenderWindow& window, Texture gametexture);
+	void filetopair();
+	pair <int, string> list[6];
 	//void Menues(RenderWindow& window);
 };

@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include<SFML/Audio.hpp>
+#include <fstream>
 #include<iostream>
 #include <string.h>
 #include <vector>
@@ -34,6 +35,30 @@ Clock clockk, clockk2;
 float dt, dt2;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
+void pairtofile()
+{
+	ofstream file("high score.txt", ios::out);
+	if (file.is_open()) {
+		for (int i = 0; i < 5; i++) {
+			file << menu.list[i].first << "    " << menu.list[i].second << "\n";
+		}
+		file.close();
+	}
+	else {
+		std::cerr << "Error opening file for writing." << std::endl;
+	}
+}
+void intopair(int score)
+{
+	if (score > menu.list[4].first)
+	{
+		menu.list[4].second = menu.playername;
+		menu.list[4].first = score * 10;
+	}
+	sort(menu.list, menu.list + 5);
+	reverse(menu.list, menu.list + 5);
+}
+
 void Intilize_Numbers()
 {
 	if (GameMode == 2) {
@@ -53,6 +78,7 @@ struct MAP
 	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y, view_velocity;
 	//float Walls_velocity_x, Stairs_velocity_x;
 	bool move = 0;
+	bool enough = 1;
 	void intilization()
 	{
 		Stairs.intiliztion1(GameMode);
@@ -66,8 +92,11 @@ struct MAP
 	}
 	void Map_Motion()
 	{
-		if (player1.character.getPosition().y < 100 || player2.character.getPosition().y < 100)
+		if ((player1.character.getPosition().y < 100 || player2.character.getPosition().y < 100) && enough)
+		{
 			move = 1;
+			enough = 0;
+		}
 
 		gameclock.update_clock(view_velocity, move);
 		if (move)
@@ -132,8 +161,6 @@ void reset()
 	Stairs.currstair = Stairs.updatestair = Stairs.Number_Of_Stair = 0;
 	gameclock.l = 0;
 	gameclock.f = 0;
-	player1.Score = player1.curr_colission = 0;
-	player2.Score = player2.curr_colission = 0;
 
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
@@ -226,50 +253,41 @@ void DRAW_View1()
 	}
 	window.draw(player1.character);
 	window.setView(window.getDefaultView());
-	gameclock.power.setFillColor({ 180,3,3 });
-	gameclock.power.setPosition(295, 558);
-	//set position of clock then draw it
-	/////////
-	if (GameMode == 2) {
-		gameclock.cl.setScale(1, 1);
-		gameclock.cl2.setScale(1, 1);
-		gameclock.cl.setPosition(0, 118);
-		gameclock.cl2.setPosition(40, 180);
-		gameclock.star.setPosition(5, 350);
-		player1.compo.setPosition(35, 360);
-		player1.score.setPosition(30, 990);
-		gameclock.power.setPosition(32.5, 338);
-	}
-	window.draw(gameclock.cl);
-	window.draw(gameclock.cl2);
-	window.draw(player1.score);
+	
+
+	gameclock.View1_SetClock();
+	window.draw(gameclock.clock);
+	window.draw(gameclock.Hour_hand);
 	window.draw(gameclock.power);
 	window.draw(gameclock.star);
-	gameclock.star.setPosition(230, 550);
+
+	if (GameMode == 2) {
+		player1.compo.setPosition(35, 360);
+		player1.score.setPosition(30, 990);
+	}
+	window.draw(player1.score);
 	window.draw(player1.compo);
 }
 void DRAW_View2()
 {
-	gameclock.power2.setFillColor({ 180,3,3 });
 	window.draw(player1.character);
 	window.draw(player2.character);
 
 	window.setView(window.getDefaultView());
-	//set position of clock then draw it
-	/////////
-	gameclock.cl.setPosition(950, 118);
-	gameclock.cl2.setPosition(990, 180);
-	window.draw(gameclock.cl);
-	window.draw(gameclock.cl2);
-	player2.score.setPosition(980, 990);
-	window.draw(player2.score);
-	gameclock.power2.setPosition(982, 338);
+
+	gameclock.View2_SetClock();
+	window.draw(gameclock.clock);
+	window.draw(gameclock.Hour_hand);
 	window.draw(gameclock.power2);
 	window.draw(gameclock.star2);
-	gameclock.star2.setPosition(950, 350);
+
+	player2.score.setPosition(980, 990);
+	window.draw(player2.score);
 	player2.compo.setPosition(980, 360);
 	window.draw(player2.compo);
 }
+
+float resize = 0, resize2 = 0;
 void Gameplay()
 {
 	Intilize_Numbers();
@@ -318,7 +336,6 @@ void Gameplay()
 	else if (PLayer2 == 1)
 		player2.inti(tex2);
 
-	float resize = 0, resize2 = 0;
 
 	//music(k);
 
@@ -330,8 +347,8 @@ void Gameplay()
 	//Time TimeOfMove;
 	bool StartMoving = 0;
 	bool StartReturning = 0;
-	int x = 0, y = 0, disapp = 0,disapp2;
-
+	int disapp = 0, disapp2;
+	bool check1 = 1;
 	Map.Backgrond_Velocity_y = 20.0f;
 	Map.Walls_velocity_y = 120.0f;
 	Map.Stairs_velocity_y = 50.0f;
@@ -379,43 +396,43 @@ void Gameplay()
 			}
 		}
 		
-			if (x > 0 && x != disapp)
-				resize = GameMode == 2 ?103: 203;
-			else if (x == 0)
-			{
-				resize = 0; disapp = 0;
-			}
+		if (player1.compo_cnt > 0 && player1.compo_cnt != disapp)
+			resize = GameMode == 2 ? 103 : 203;
+		else if (player1.compo_cnt == 0)
+		{
+			resize = 0; disapp = 0;
+		}
 
-			if (resize > 0)
-			{
-				gameclock.power.setOrigin(0, gameclock.power.getSize().y);
-				gameclock.power.setSize({ GameMode==2? 18.f: 35.f, resize });
-				resize -= GameMode == 2 ? .25 : .5;
-			}
-			else
-				gameclock.power.setSize({ 0,0 });
+		if (resize > 0)
+		{
+			gameclock.power.setOrigin(0, gameclock.power.getSize().y);
+			gameclock.power.setSize({ GameMode == 2 ? 18.f : 35.f, resize });
+			resize -= GameMode == 2 ? .25 : .5;
+		}
+		else
+			gameclock.power.setSize({ 0,0 });
 
-			disapp = x;
-		
-			//-------------------------------------------------------------------------------
+		disapp = player1.compo_cnt;
 
-			if (y > 0 && y != disapp2)
-				resize2 = 103;
-			else if (y == 0)
-			{
-				resize2 = 0; disapp2 = 0;
-			}
+		//-------------------------------------------------------------------------------
 
-			if (resize2 > 0)
-			{
-				gameclock.power2.setOrigin(0, gameclock.power2.getSize().y);
-				gameclock.power2.setSize({ 18.f, resize2 });
-				resize2 -= .25;
-			}
-			else
-				gameclock.power2.setSize({ 0,0 });
+		if (player2.compo_cnt > 0 && player2.compo_cnt != disapp2)
+			resize2 = 103;
+		else if (player2.compo_cnt == 0)
+		{
+			resize2 = 0; disapp2 = 0;
+		}
 
-			disapp2 = y;
+		if (resize2 > 0)
+		{
+			gameclock.power2.setOrigin(0, gameclock.power2.getSize().y);
+			gameclock.power2.setSize({ 18.f, resize2 });
+			resize2 -= .25;
+		}
+		else
+			gameclock.power2.setSize({ 0,0 });
+
+		disapp2 = player2.compo_cnt;
 
 		dt = clockk.restart().asSeconds();
 		dt2 = clockk2.restart().asSeconds();
@@ -425,23 +442,23 @@ void Gameplay()
 		player2.score.setString("Score: " + to_string(player2.Score * 10));
 		if (player1.cnt != 1)
 		{
-			x += player1.cnt;
+			player1.compo_cnt += player1.cnt;
 			player1.cnt = 0;
-			player1.Max_Compo = max(x, player1.Max_Compo);
+			player1.Max_Compo = max(player1.compo_cnt, player1.Max_Compo);
 		}
 		else {
-			x = 0;
+			player1.compo_cnt = 0;
 		}
-		player1.compo.setString(to_string(x));
+		player1.compo.setString(to_string(player1.compo_cnt));
 
 		if (player2.cnt > 1 || player2.cnt == 0)
 		{
-			y += player2.cnt;
-			player2.Max_Compo = max(y, player2.Max_Compo);
-			player2.compo.setString(to_string(y));
+			player2.compo_cnt += player2.cnt;
+			player2.Max_Compo = max(player2.compo_cnt, player2.Max_Compo);
+			player2.compo.setString(to_string(player2.compo_cnt));
 		}
 		else {
-			y = 0;
+			player2.compo_cnt = 0;
 		}
 		Set_ObjectsOnStairs();
 
@@ -482,11 +499,14 @@ void Gameplay()
 
 		//map Motion
 		Map.Map_Motion();
-
 		//freeze game
-		if (player1.character.getPosition().y > player1_View.getCenter().y + 550
-			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540))
+		if ((player1.character.getPosition().y > player1_View.getCenter().y + 550 
+			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540)) && check1)
 		{
+			check1 = 0;
+			intopair(player1.Score);
+			pairtofile();
+
 			Map.move = 0;
 			END = 0;
 		}
@@ -495,12 +515,12 @@ void Gameplay()
 		player2.Players_Motion(buff, Keyboard::Left, Keyboard::Right, Keyboard::Numpad0);
 		player1.update();
 		player2.update();
-		if (x == 0||resize==0)
+		if (player1.compo_cnt == 0 || resize == 0)
 		{
 			gameclock.star.setScale(0, 0);
 			player1.compo.setCharacterSize(0);
 		}
-		if (y == 0 || resize2 == 0)
+		if (player2.compo_cnt == 0 || resize2 == 0)
 		{
 			gameclock.star2.setScale(0, 0);
 			player2.compo.setCharacterSize(0);

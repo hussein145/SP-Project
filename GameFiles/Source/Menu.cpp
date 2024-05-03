@@ -1,11 +1,14 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <fstream>
+
 #include"Menu.h"
 #include "menu_Bg_and_Face.h"
 #include "Walls_And_Background.h"
 #include "STAIRS.h"
 #include "Sounds.h"
+
 using namespace std;
 using namespace sf;
 int PLayer1 = 0;
@@ -117,6 +120,7 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 	men1.mainmenu[5 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 340 + shift));
 	menu_UI.back_ground(window);
 	men1.Hand_intilization();
+	filetopair();
 
 	while (window.isOpen())
 	{
@@ -377,7 +381,7 @@ void  Menu::options_menu1(RenderWindow& window)
 				sound.change_option_Sound();
 				menu5.MoveUp(menu5.selected, menu5.choises);
 			}
-			if (Keyboard::isKeyPressed(Keyboard::Escape) && menu5.selected != 2&& !pressed)
+			if (Keyboard::isKeyPressed(Keyboard::Escape) && menu5.selected != 2 && !pressed)
 			{
 				sound.change_option_Sound();
 				menu5.mainmenu[menu5.selected].setFillColor(Color::Black);
@@ -386,7 +390,7 @@ void  Menu::options_menu1(RenderWindow& window)
 				menu5.hand.setPosition(1140, 800);
 				pressed = true;
 			}
-			if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape&& !pressed))
+			if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && !pressed))
 			{
 				sound.select_option_Sound();
 				if (menu5.selected == 2) {
@@ -585,7 +589,7 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 	//if (!font.loadFromFile("arial.ttf")) {}
 	if (END)
 		Pause1.mainmenu[0 + END].setFillColor(Color::Black);
-	else  
+	else
 		Pause1.mainmenu[0 + END].setFillColor(Color{ 255,204,0 });
 
 	Pause1.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
@@ -595,16 +599,16 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 	Pause1.mainmenu[0].setCharacterSize(70);
 	Pause1.mainmenu[0].setPosition(670, 200);
 
-	Pause1.mainmenu[0+END].setFont(Pause1.font);
-	Pause1.mainmenu[0+END].setString("Play Again");
-	Pause1.mainmenu[0+END].setCharacterSize(70);
-	Pause1.mainmenu[0+END].setPosition(670, END?300:200);
+	Pause1.mainmenu[0 + END].setFont(Pause1.font);
+	Pause1.mainmenu[0 + END].setString("Play Again");
+	Pause1.mainmenu[0 + END].setCharacterSize(70);
+	Pause1.mainmenu[0 + END].setPosition(670, END ? 300 : 200);
 
-	Pause1.mainmenu[1+END].setFont(Pause1.font);
-	Pause1.mainmenu[1+END].setFillColor(sf::Color::Black);
-	Pause1.mainmenu[1+END].setString("Exit");
-	Pause1.mainmenu[1+END].setCharacterSize(70);
-	Pause1.mainmenu[1+END].setPosition(670, END?400:300);
+	Pause1.mainmenu[1 + END].setFont(Pause1.font);
+	Pause1.mainmenu[1 + END].setFillColor(sf::Color::Black);
+	Pause1.mainmenu[1 + END].setString("Exit");
+	Pause1.mainmenu[1 + END].setCharacterSize(70);
+	Pause1.mainmenu[1 + END].setPosition(670, END ? 400 : 300);
 
 	RectangleShape photo2;
 	photo2.setSize(Vector2f(1920, 1080));
@@ -619,7 +623,7 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 	Sprite pausemenu;
 	pausemenu.setTexture(txx);
 	pausemenu.setPosition(600, 150);
-	pausemenu.setScale(1.5,1.8);
+	pausemenu.setScale(1.5, 1.8);
 	Pause1.Hand_intilization();
 	Pause1.hand.setPosition(560, 200);
 	Pause1.positionOfHand = 100;
@@ -655,10 +659,10 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 					if (Pause1.selected == -1 + END) {
 						return;
 					}
-					if (Pause1.selected == 0+END) {
+					if (Pause1.selected == 0 + END) {
 
 					}
-					if (Pause1.selected == 1+END) {
+					if (Pause1.selected == 1 + END) {
 						window.setView(window.getDefaultView());
 						exit = 1;
 						return;
@@ -681,7 +685,29 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 		window.display();
 	}
 }
+	char c;
 
+	void Menu::filetopair() {
+		fstream file("high score.txt", ios::in);
+		if (file.is_open())
+		{
+			// Check if file is empty
+			if (file.peek() == std::ifstream::traits_type::eof()) {
+				// File is empty; initialize with default values
+				for (int i = 0; i < 5; i++) {
+					list[i].second = "NONE";
+					list[i].first = 0;
+				}
+			}
+			else {
+				// File is not empty; read data
+				for (int i = 0; i < 5; i++) {
+					file >> list[i].first >> list[i].second;
+				}
+			}
+			file.close();
+		}
+	}
 //void Menu::Menues(RenderWindow& window)
 //{
 //	while (window.isOpen())

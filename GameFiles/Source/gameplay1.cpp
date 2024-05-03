@@ -50,7 +50,7 @@ void pairtofile()
 }
 void intopair(int score)
 {
-	if (score > menu.list[4].first)
+	if (score*10 > menu.list[4].first)
 	{
 		menu.list[4].second = menu.playername;
 		menu.list[4].first = score * 10;

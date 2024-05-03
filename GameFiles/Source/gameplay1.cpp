@@ -351,6 +351,8 @@ void Gameplay()
 	Map.Walls_velocity_y = 120.0f;
 	Map.Stairs_velocity_y = 50.0f;
 	Map.view_velocity = 80.0f;
+
+	bool alive = true;
 	while (window.isOpen())
 	{
 		/*if (Mouse::isButtonPressed(Mouse::Left))
@@ -507,6 +509,12 @@ void Gameplay()
 
 			Map.move = 0;
 			END = 0;
+			if (alive) {
+				if (sound.so4.getStatus() == Sound::Stopped) {
+					sound.falling_sound();
+					alive = false;
+				}
+			}
 		}
 		//cout << dt << endl;
 		player1.Players_Motion(buff, Keyboard::A, Keyboard::D, Keyboard::Space);

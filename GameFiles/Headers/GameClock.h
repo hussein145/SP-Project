@@ -9,11 +9,13 @@ struct GameClock
 	float velocity_clo2 = 0;
 
 	float l = 0;
-	float acceleration = 0;
 	Texture herry;
 	Sprite herry2;
+	RectangleShape power;
+	RectangleShape power2;
 
 	Sprite star;
+	Sprite star2;
 	Texture star_tex;
 
 	bool f = 0;
@@ -22,4 +24,3 @@ struct GameClock
 	void update_clock(float& view_velocity, bool move);
 	float save_view_velocity;
 };
-

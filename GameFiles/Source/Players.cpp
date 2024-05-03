@@ -15,6 +15,13 @@ extern STAIRS Stairs;
 extern int GameMode;
 
 void Players::inti(Texture& texture) {
+
+	Score = compo_cnt = cnt = Max_Compo = curr_colission = 0;
+	j = velocity_x = velocity_y = 0;
+	int droptype = -1;
+	incspeed = superjump = 1,
+	addspeed = addsuperjump = 0;
+
 	character.setTexture(texture);
 	character.setPosition(500, Stairs.stairs[0].getPosition().y - 30);
 	character.setTextureRect(IntRect(0, 0, 50, 60));
@@ -29,8 +36,6 @@ void Players::inti(Texture& texture) {
 	compo.setFont(score_Tex);
 	compo.setPosition(300, 580);
 
-	velocity_x = 0;
-	velocity_y = 0;
 	x = 0;
 	check_on_ground = 0;
 
@@ -118,7 +123,7 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		character.setTextureRect(IntRect(50 * 3, 60 * 2, 50, 60));
 	}
 	if (Keyboard::isKeyPressed(jump) && check_on_ground) {
-		velocity_y = -jumpVelocity - addsuperjump ;
+		velocity_y = -jumpVelocity - addsuperjump;
 		if (GameMode == 2)
 		{
 			if (abs(velocity_x) > 7.5f)

@@ -1,10 +1,12 @@
 #pragma once
 struct GameClock
 {
-	Texture clo;
-	Sprite cl;
-	Texture clo2;
-	Sprite cl2;
+	Texture clock_tex;
+	Sprite clock;
+	Texture Hour_hand_tex;
+	Sprite Hour_hand;
+	bool enter = 1;
+
 	float velocity_cl = 0;
 	float velocity_clo2 = 0;
 
@@ -21,6 +23,8 @@ struct GameClock
 	bool f = 0;
 	void setclock();
 	//void setclock2();
-	void update_clock(float& view_velocity, bool move);
 	float save_view_velocity;
+	void update_clock(float& view_velocity, bool move);
+	void View1_SetClock();
+	void View2_SetClock();
 };

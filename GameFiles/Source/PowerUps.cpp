@@ -1,7 +1,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include<SFML/Audio.hpp>
-#include"Menu.h"
+//#include"Menu.h"
+#include"Header.h"
 #include "menu_Bg_and_Face.h"
 #include "Walls_And_Background.h"
 #include "STAIRS.h"
@@ -91,9 +92,9 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 				background.wallsLeft[i].move(velocity_x * dt, 0);
 				background.wallsRight[i].move(-velocity_x * dt, 0);
 			}
-			
-			gameclock.cl.move(velocity_x * dt, 0);
-			gameclock.cl2.move(velocity_x * dt, 0);
+
+			gameclock.clock.move(velocity_x * dt, 0);
+			//gameclock.cl2.move(velocity_x * dt, 0);
 		}
 		else if (timerOfMove.getElapsedTime().asSeconds() > 5 && timerOfMove.getElapsedTime().asSeconds() < 8)
 		{
@@ -146,9 +147,6 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 				if (currstair % 100 != 0 || currstair % 5 != 0) {
 					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() + Vector2f(50, 0));
 				}
-				if (Stairs.stairs[currstair].getGlobalBounds().intersects(background.wallsLeft->getGlobalBounds()) || Stairs.stairs[currstair].getGlobalBounds().intersects(background.wallsRight->getGlobalBounds())) {
-					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
-				}
 			}
 		}
 	}
@@ -188,9 +186,8 @@ void PowerUps::resetPowerups()
 		stopbig = 0;
 		for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
 		{
-			if (currstair % 100 != 0 || currstair % 5 != 0) {
+			if (currstair % 100 != 0 || currstair % 5 != 0)
 				Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
-			}
 		}
 	}
 	else {

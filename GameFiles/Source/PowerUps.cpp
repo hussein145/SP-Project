@@ -1,7 +1,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include<SFML/Audio.hpp>
+#include <SFML/Audio.hpp>
 #include"Menu.h"
+//#include "Header.h"
 #include "menu_Bg_and_Face.h"
 #include "Walls_And_Background.h"
 #include "STAIRS.h"
@@ -125,6 +126,12 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 		player1.addspeed = 7;
 		player1.incspeed = 1.5;
 	}
+	else if (player1.droptype == 3)
+	{
+		mapspeed = 2;
+		addmapspeed = 7;
+		player1.droptype = -1;
+	}
 	else if (player1.droptype == 4)
 	{
 		rando = abs(rand() % 2);
@@ -133,7 +140,7 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 			stopsmall = 7;
 			for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
 			{
-				if (currstair % 100 != 0 || currstair % 5 != 0) {
+				if (currstair % 100 != 0 || currstair % 50 != 0) {
 					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
 				}
 			}
@@ -143,8 +150,10 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 			stopbig = 7;
 			for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
 			{
-				if (currstair % 100 != 0 || currstair % 5 != 0) {
+				if (currstair % 100 != 0 || currstair % 50 != 0) {
 					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() + Vector2f(50, 0));
+					if (Stairs.stairs[currstair].getGlobalBounds().intersects(background.wallsRight->getGlobalBounds()))
+						Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
 				}
 			}
 		}
@@ -168,11 +177,20 @@ void PowerUps::resetPowerups()
 		player1.addsuperjump -= 0.005;
 		player1.droptype = -1;
 	}
+	if (addmapspeed <= 0)
+	{
+		mapspeed = 1;
+		addmapspeed = 0;
+	}
+	else
+	{
+		addmapspeed -= 0.01;
+	}
 	if (stopsmall < 0) {
 		stopsmall = 0;
 		for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
 		{
-			if (currstair % 100 != 0 || currstair % 5 != 0)
+			if (currstair % 100 != 0 || currstair % 50 != 0)
 				Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() + Vector2f(50, 0));
 		}
 	}
@@ -185,8 +203,9 @@ void PowerUps::resetPowerups()
 		stopbig = 0;
 		for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
 		{
-			if (currstair % 100 != 0 || currstair % 5 != 0)
+			if (currstair % 100 != 0 || currstair % 50 != 0) {
 				Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
+			}
 		}
 	}
 	else {

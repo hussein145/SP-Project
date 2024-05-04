@@ -112,7 +112,7 @@ struct MAP
 				Stairs.stairs[i].move(0, Stairs_velocity_y * dt);
 			}
 			player2_View.move(0, -view_velocity * dt);
-			player1_View.move(0, -view_velocity * dt);
+			player1_View.move(0, -view_velocity * dt * Power.mapspeed);
 		}
 	}
 };
@@ -305,8 +305,6 @@ void Gameplay()
 	sound.music(1);
 	Texture GameTexture;
 
-	float mapspeed = 0, addmapspeed = 0;
-
 	MAP Map;
 	CameraView view;
 
@@ -471,25 +469,6 @@ void Gameplay()
 				TimeOfMove.restart();
 			}
 			Power.checkdrop(TimeOfMove, StartMoving, StartReturning);
-
-			if (player1.droptype == 3)
-			{
-				mapspeed = 100.f;
-				addmapspeed = 7;
-				Map.view_velocity += mapspeed;
-				player1.droptype = -1;
-			}
-			if (addmapspeed <= 0)
-			{
-				Map.view_velocity -= mapspeed;
-				mapspeed = 0;
-				addmapspeed = 0;
-			}
-			else
-			{
-				addmapspeed -= 0.01;
-			}
-
 
 			if (player1.droptype != 0)
 				Power.resetPowerups();

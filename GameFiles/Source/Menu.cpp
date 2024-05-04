@@ -2,12 +2,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <fstream>
-
 #include"Menu.h"
 #include "menu_Bg_and_Face.h"
 #include "Walls_And_Background.h"
 #include "STAIRS.h"
 #include "Sounds.h"
+#include "FileSave.h"
 
 using namespace std;
 using namespace sf;
@@ -16,7 +16,11 @@ int PLayer2 = 0;
 extern bool END;
 bool pressed = false;
 extern Sounds sound;
+extern FileSave File;
+
+
 menu_Bg_and_Face menu_UI;
+Event event;
 void Gameplay();
 void Menu::Hand_intilization()
 {
@@ -63,108 +67,44 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 	sound.LoadMusic();
 	sound.music(0);
 	men1.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
-	enternameTX.loadFromFile("Assets/Textures/entername.png");
-	enternameSP.setTexture(enternameTX);
-	enternameSP.setPosition(500, 450);
-	enternameSP.setScale(2, 2);
-	playernamefont.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
 
-	playerNameText.setFont(playernamefont);
-	playerNameText.setCharacterSize(24);
-	playerNameText.setFillColor(sf::Color::Black);
-	playerNameText.setPosition(570, 690);
-
-	if (resusme) men1.mainmenu[0 + resusme].setFillColor(Color::Black);
-	else   men1.mainmenu[0 + resusme].setFillColor(Color{ 255,204,0 });
-
-	men1.choises = 6 + resusme;
-	men1.mainmenu[0].setFont(men1.font);
-	men1.mainmenu[0].setFillColor(Color{ 255,204,0 });
 	men1.mainmenu[0].setString("Resume");
-	men1.mainmenu[0].setCharacterSize(50);
-	men1.mainmenu[0].setPosition(Vector2f(1250, men1.height / 2 + 40));
-
-	men1.mainmenu[0 + resusme].setFont(men1.font);
 	men1.mainmenu[0 + resusme].setString("Play Game");
-	men1.mainmenu[0 + resusme].setCharacterSize(50);
-	men1.mainmenu[0 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 40 + shift));
-
-	men1.mainmenu[1 + resusme].setFont(men1.font);
-	men1.mainmenu[1 + resusme].setFillColor(Color::Black);
 	men1.mainmenu[1 + resusme].setString("Instructions");
-	men1.mainmenu[1 + resusme].setCharacterSize(50);
-	men1.mainmenu[1 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 100 + shift));
-
-	men1.mainmenu[2 + resusme].setFont(men1.font);
-	men1.mainmenu[2 + resusme].setFillColor(Color::Black);
 	men1.mainmenu[2 + resusme].setString("Profile");
-	men1.mainmenu[2 + resusme].setCharacterSize(50);
-	men1.mainmenu[2 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 160 + shift));
-
-	men1.mainmenu[3 + resusme].setFont(men1.font);
-	men1.mainmenu[3 + resusme].setFillColor(Color::Black);
 	men1.mainmenu[3 + resusme].setString("High Score");
-	men1.mainmenu[3 + resusme].setCharacterSize(50);
-	men1.mainmenu[3 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 220 + shift));
-
-	men1.mainmenu[4 + resusme].setFont(men1.font);
-	men1.mainmenu[4 + resusme].setFillColor(Color::Black);
 	men1.mainmenu[4 + resusme].setString("Options");
-	men1.mainmenu[4 + resusme].setCharacterSize(50);
-	men1.mainmenu[4 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 280 + shift));
-
-	men1.mainmenu[5 + resusme].setFont(men1.font);
-	men1.mainmenu[5 + resusme].setFillColor(Color::Black);
 	men1.mainmenu[5 + resusme].setString("Exit");
-	men1.mainmenu[5 + resusme].setCharacterSize(50);
-	men1.mainmenu[5 + resusme].setPosition(Vector2f(1250, men1.height / 2 + 340 + shift));
+	men1.choises = 6 + resusme;
+	x = 40;
+	for (int i = 0; i < men1.choises; i++)
+	{
+		if(!i)
+			men1.mainmenu[i].setFillColor(Color{ 255,204,0 });
+		else
+			men1.mainmenu[i].setFillColor(Color::Black);
+		men1.mainmenu[i].setFont(men1.font);
+		men1.mainmenu[i].setCharacterSize(50);
+		men1.mainmenu[i].setPosition(Vector2f(1250, men1.height / 2 + x));
+		x += 60;
+	}
+
 	menu_UI.back_ground(window);
 	men1.Hand_intilization();
-	filetopair();
+	File.EnterName();
 
 	while (window.isOpen())
 	{
 		if (pageNumber == 1000)
 		{
-			Event event;
+			
 			while (window.pollEvent(event))
 			{
 				if (event.type == Event::Closed)
 					window.close();
-				if (event.type == Event::KeyPressed)
 
-				{
-					if (event.key.code >= Keyboard::A && event.key.code <= Keyboard::Z)
-					{
-						playername.push_back('A' + event.key.code);
-
-					}
-					else if (event.key.code == Keyboard::BackSpace)
-					{
-						playername.pop_back();
-					}
-					else if (event.key.code == Keyboard::Space)
-					{
-						playername.push_back(' ');
-					}
-
-
-					if (event.key.code == Keyboard::Enter)
-					{
-						if (!boolenter)
-						{
-
-							enternameSP.setPosition(-1000, -1000);
-							playerNameText.setPosition(-1000, -1000);
-							infile = 1;
-							boolenter = 1;
-
-						}
-					}
-
-				}
-				playerNameText.setString(playername);
-				if (infile)
+				File.TypeYourName();
+				if (File.infile)
 				{
 					if (event.key.code == Keyboard::Escape && !pressed && men1.selected != 5 + resusme)
 					{
@@ -228,8 +168,8 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 			window.draw(men1.mainmenu[i]);
 		}
 		window.draw(men1.hand);
-		window.draw(enternameSP);
-		window.draw(playerNameText);
+		window.draw(File.enternameSP);
+		window.draw(File.playerNameText);
 		window.display();
 	}
 }
@@ -239,33 +179,24 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 	menu2.Hand_intilization();
 	menu2.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
 	menu2.choises = 4;
-
-	menu2.mainmenu[0].setFont(menu2.font);
+	x = 40;
+	for (int i = 0; i < menu2.choises; i++)
+	{
+		if(!i)
+			menu2.mainmenu[i].setFillColor(Color{ 255,204,0 });
+		else
+			menu2.mainmenu[i].setFillColor(Color::Black);
+		menu2.mainmenu[i].setFont(menu2.font);
+		menu2.mainmenu[i].setCharacterSize(50);
+		menu2.mainmenu[i].setPosition(Vector2f(1250, menu2.height / 2 + x));
+		x += 60;
+	}
 	menu2.mainmenu[0].setString("Single");
-	menu2.mainmenu[0].setCharacterSize(50);
-	menu2.mainmenu[0].setFillColor(Color{ 255,204,0 });
-	menu2.mainmenu[0].setPosition(Vector2f(1250, menu2.height / 2 + 40));
-
-	menu2.mainmenu[1].setFont(menu2.font);
 	menu2.mainmenu[1].setString("Multi");
-	menu2.mainmenu[1].setCharacterSize(50);
-	menu2.mainmenu[1].setFillColor(Color::Black);
-	menu2.mainmenu[1].setPosition(Vector2f(1250, menu2.height / 2 + 100));
-
-	menu2.mainmenu[2].setFont(menu2.font);
 	menu2.mainmenu[2].setString("PowerUps");
-	menu2.mainmenu[2].setCharacterSize(50);
-	menu2.mainmenu[2].setFillColor(Color::Black);
-	menu2.mainmenu[2].setPosition(Vector2f(1250, menu2.height / 2 + 160));
-
-	menu2.mainmenu[3].setFont(menu2.font);
 	menu2.mainmenu[3].setString("Back");
-	menu2.mainmenu[3].setCharacterSize(50);
-	menu2.mainmenu[3].setFillColor(Color::Black);
-	menu2.mainmenu[3].setPosition(Vector2f(1250, menu2.height / 2 + 220));
 
 	pageNumber = 500;
-
 	while (window.isOpen())
 	{
 		Event event;
@@ -341,24 +272,19 @@ void  Menu::options_menu1(RenderWindow& window)
 	menu5.positionOfHand = 110;
 	menu5.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
 	menu5.choises = 3;
-
-	menu5.mainmenu[0].setFont(menu5.font);
-	menu5.mainmenu[0].setFillColor(Color{ 255,204,0 });
+	x = 40;
+	for (int i = 0; i < menu5.choises; i++)
+	{
+		if(!i) menu5.mainmenu[i].setFillColor(Color{ 255,204,0 });
+		else   menu5.mainmenu[i].setFillColor(Color::Black);
+		menu5.mainmenu[i].setFont(menu5.font);
+		menu5.mainmenu[i].setPosition(Vector2f(1250, menu5.height / 2 + x));
+		menu5.mainmenu[i].setCharacterSize(50);
+		x += 110;
+	}
 	menu5.mainmenu[0].setString("Player1 \n Charchters <>");
-	menu5.mainmenu[0].setCharacterSize(50);
-	menu5.mainmenu[0].setPosition(Vector2f(1250, menu5.height / 2 + 40));
-
-	menu5.mainmenu[1].setFont(menu5.font);
-	menu5.mainmenu[1].setFillColor(Color::Black);
 	menu5.mainmenu[1].setString("Player2 \n Charchters <>");
-	menu5.mainmenu[1].setCharacterSize(50);
-	menu5.mainmenu[1].setPosition(Vector2f(1250, menu5.height / 2 + 150));
-
-	menu5.mainmenu[2].setFont(menu5.font);
-	menu5.mainmenu[2].setFillColor(Color::Black);
 	menu5.mainmenu[2].setString("Back");
-	menu5.mainmenu[2].setCharacterSize(50);
-	menu5.mainmenu[2].setPosition(Vector2f(1250, menu5.height / 2 + 260));
 
 	Texture pl1;
 	pl1.loadFromFile("Assets/Textures/icytower1.png");
@@ -483,25 +409,20 @@ void  Menu::options_menu(RenderWindow& window)
 	menu4.Hand_intilization();
 	menu4.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
 	menu4.choises = 3;
-
-	menu4.mainmenu[0].setFont(menu4.font);
-	menu4.mainmenu[0].setFillColor(Color{ 255,204,0 });
+	x = 40;
+	for (int i = 0; i < menu4.choises; i++)
+	{
+		if(!i) menu4.mainmenu[i].setFillColor(Color{ 255,204,0 });
+		else   menu4.mainmenu[i].setFillColor(Color::Black);
+		menu4.mainmenu[i].setFont(menu4.font);
+		menu4.mainmenu[i].setCharacterSize(50);
+		menu4.mainmenu[i].setPosition(Vector2f(1250, menu4.height / 2 + x));
+		x += 60;
+	}
 	menu4.mainmenu[0].setString("GFX Options");
-	menu4.mainmenu[0].setCharacterSize(50);
-	menu4.mainmenu[0].setPosition(Vector2f(1250, menu4.height / 2 + 40));
-
-	menu4.mainmenu[1].setFont(menu4.font);
-	menu4.mainmenu[1].setFillColor(Color::Black);
 	menu4.mainmenu[1].setString("Sound options");
-	menu4.mainmenu[1].setCharacterSize(50);
-	menu4.mainmenu[1].setPosition(Vector2f(1250, menu4.height / 2 + 100));
-
-	menu4.mainmenu[2].setFont(menu4.font);
-	menu4.mainmenu[2].setFillColor(Color::Black);
 	menu4.mainmenu[2].setString("Back");
-	menu4.mainmenu[2].setCharacterSize(50);
-	menu4.mainmenu[2].setPosition(Vector2f(1250, menu4.height / 2 + 160));
-	//hand.setPosition(1155, 600);
+	
 	while (window.isOpen())
 	{
 		Event event;
@@ -559,7 +480,6 @@ void  Menu::options_menu(RenderWindow& window)
 }
 void  Menu::instructions(RenderWindow& window)
 {
-
 	Texture instr;
 	instr.loadFromFile("Assets/Textures/instructions.png");
 	Sprite instructions;
@@ -589,30 +509,21 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 {
 	Menu Pause1;
 	Pause1.choises = END + 2;
-	//Pause1.c = 3;
-	//if (!font.loadFromFile("arial.ttf")) {}
-	if (END)
-		Pause1.mainmenu[0 + END].setFillColor(Color::Black);
-	else
-		Pause1.mainmenu[0 + END].setFillColor(Color{ 255,204,0 });
-
 	Pause1.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
-	Pause1.mainmenu[0].setFont(Pause1.font);
-	Pause1.mainmenu[0].setFillColor(Color{ 255,204,0 });
+	x = 200;
+	for (int i = 0; i < Pause1.choises; i++)
+	{
+		if(!i) Pause1.mainmenu[i].setFillColor(Color{ 255,204,0 });
+		else  Pause1.mainmenu[i].setFillColor(sf::Color::Black);
+		Pause1.mainmenu[i].setFont(Pause1.font);
+		Pause1.mainmenu[i].setCharacterSize(70);
+		Pause1.mainmenu[i].setPosition(670, x);
+		x += 100;
+
+	}
 	Pause1.mainmenu[0].setString("resume");
-	Pause1.mainmenu[0].setCharacterSize(70);
-	Pause1.mainmenu[0].setPosition(670, 200);
-
-	Pause1.mainmenu[0 + END].setFont(Pause1.font);
 	Pause1.mainmenu[0 + END].setString("Play Again");
-	Pause1.mainmenu[0 + END].setCharacterSize(70);
-	Pause1.mainmenu[0 + END].setPosition(670, END ? 300 : 200);
-
-	Pause1.mainmenu[1 + END].setFont(Pause1.font);
-	Pause1.mainmenu[1 + END].setFillColor(sf::Color::Black);
 	Pause1.mainmenu[1 + END].setString("Exit");
-	Pause1.mainmenu[1 + END].setCharacterSize(70);
-	Pause1.mainmenu[1 + END].setPosition(670, END ? 400 : 300);
 
 	RectangleShape photo2;
 	photo2.setSize(Vector2f(1920, 1080));
@@ -692,43 +603,3 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 		window.display();
 	}
 }
-
-void Menu::filetopair() {
-		fstream file("high score.txt", ios::in);
-		if (file.is_open())
-		{
-			// Check if file is empty
-			if (file.peek() == std::ifstream::traits_type::eof()) {
-				// File is empty; initialize with default values
-				for (int i = 0; i < 5; i++) {
-					list[i].second = "NONE";
-					list[i].first = 0;
-				}
-			}
-			else {
-				// File is not empty; read data
-				for (int i = 0; i < 5; i++) {
-					file >> list[i].first >> list[i].second;
-				}
-			}
-			file.close();
-		}
-	}
-//void Menu::Menues(RenderWindow& window)
-//{
-//	while (window.isOpen())
-//	{
-//		if () {
-//			Play_menu();
-//		}
-//		else if () {
-//
-//		}
-//		else if{
-//
-//		}
-//		else if () {
-//
-//		}
-//	}
-//}

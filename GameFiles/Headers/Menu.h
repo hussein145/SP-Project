@@ -17,6 +17,7 @@ struct Menu
 	int positionOfHand = 60;
 	bool infile = 0;
 	bool boolenter = 0;
+	bool play_again = 0;
 	Texture handTex;
 	RectangleShape hand;
 	Texture enternameTX;

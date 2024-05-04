@@ -68,6 +68,7 @@ void GameClock::View2_SetClock()
 
 void GameClock::setclock()
 {
+	enter = 1;
 	herry.loadFromFile("Assets\\Textures\\Hurry_Up.png");
 	herry2.setTexture(herry);
 	herry2.setScale(0, 0);

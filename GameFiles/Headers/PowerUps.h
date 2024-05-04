@@ -11,6 +11,7 @@ struct PowerUps
 	float velocity_x = 20;
 	bool skip = 0;
 	float stopsmall = 0, stopbig = 0;
+	float mapspeed = 1, addmapspeed = 0;
 	int rando;
 
 	void setDrops();

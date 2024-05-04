@@ -5,10 +5,8 @@ using namespace sf;
 struct Menu
 {
 	bool exit = 0;
-
 	int pageNumber = 1000;
-	bool resusme = 1;
-	int shift = 60 * resusme;
+	int shift = 60;
 	Text mainmenu[10];
 	int selected = 0;
 	Font font;
@@ -23,7 +21,9 @@ struct Menu
 	void MoveDown(int& selected, int choises);
 	void MoveUp(int& selected, int choises);
 	void menu1(RenderWindow& window, int& GameMode);
+	void levels(RenderWindow& window);
 	void Play_menu(RenderWindow& window, int& GameMode);
+	void sound_options(RenderWindow& window);
 	void options_menu1(RenderWindow& window);
 	void options_menu(RenderWindow& window);
 	void instructions(RenderWindow& window);

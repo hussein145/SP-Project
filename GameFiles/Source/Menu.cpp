@@ -11,6 +11,8 @@
 
 using namespace std;
 using namespace sf;
+int P_M_Sound = 100;	//change option,effects(hurry up,.....);
+int P_M_Music = 100;	//background,game;
 int PLayer1 = 0;
 int PLayer2 = 0;
 extern bool END;
@@ -68,14 +70,14 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 	sound.music(0);
 	men1.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
 
-	men1.mainmenu[0].setString("Resume");
-	men1.mainmenu[0 + resusme].setString("Play Game");
-	men1.mainmenu[1 + resusme].setString("Instructions");
-	men1.mainmenu[2 + resusme].setString("Profile");
-	men1.mainmenu[3 + resusme].setString("High Score");
-	men1.mainmenu[4 + resusme].setString("Options");
-	men1.mainmenu[5 + resusme].setString("Exit");
-	men1.choises = 6 + resusme;
+	men1.choises = 7;
+	men1.mainmenu[0].setString("Play Game");
+	men1.mainmenu[1].setString("Instructions");
+	men1.mainmenu[2].setString("Profile");
+	men1.mainmenu[3].setString("High Score");
+	men1.mainmenu[4].setString("Options");
+	men1.mainmenu[5].setString("Credits");
+	men1.mainmenu[6].setString("Exit");
 	x = 40;
 	for (int i = 0; i < men1.choises; i++)
 	{
@@ -106,12 +108,12 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 				File.TypeYourName();
 				if (File.infile)
 				{
-					if (event.key.code == Keyboard::Escape && !pressed && men1.selected != 5 + resusme)
+					if (event.key.code == Keyboard::Escape && !pressed && men1.selected != 6)
 					{
 						sound.change_option_Sound();
 						men1.mainmenu[men1.selected].setFillColor(Color::Black);
-						men1.selected = 5 + resusme;
-						men1.mainmenu[5 + resusme].setFillColor(Color{ 255,204,0 });
+						men1.selected = 6;
+						men1.mainmenu[6].setFillColor(Color{ 255,204,0 });
 						men1.hand.setPosition(1140, 890 + shift);
 						pressed = true;
 					}
@@ -129,18 +131,18 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 							//so.play();
 							men1.MoveUp(men1.selected, men1.choises);
 						}
-						if (event.key.code == Keyboard::Enter || event.key.code == Keyboard::Escape && !pressed && men1.selected == 5 + resusme)
+						if (event.key.code == Keyboard::Enter || event.key.code == Keyboard::Escape && !pressed && men1.selected == 6)
 						{
 							sound.select_option_Sound();
-							if (men1.selected == 5 + resusme)
+							if (men1.selected == 6)
 								pageNumber = -1;
-							if (men1.selected == 0 + resusme)
+							if (men1.selected == 0)
 							{
 								Play_menu(window, GameMode);
 							}
-							if (men1.selected == 4 + resusme)
+							if (men1.selected == 4 )
 								options_menu(window);
-							if (men1.selected == 1 + resusme)
+							if (men1.selected == 1)
 								instructions(window);
 						}
 					}
@@ -173,12 +175,91 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 		window.display();
 	}
 }
+void Menu::levels(RenderWindow& window) {
+	Menu menu7;
+	menu7.Hand_intilization();
+	menu7.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
+	menu7.choises = 4;
+	x = 40;
+	for (int i = 0; i < menu7.choises; i++)
+	{
+		if (!i)
+			menu7.mainmenu[i].setFillColor(Color{ 255,204,0 });
+		else
+			menu7.mainmenu[i].setFillColor(Color::Black);
+		menu7.mainmenu[i].setFont(menu7.font);
+		menu7.mainmenu[i].setCharacterSize(50);
+		menu7.mainmenu[i].setPosition(Vector2f(1250, menu7.height / 2 + x));
+		x += 60;
+	}
+	menu7.mainmenu[0].setString("Level 1");
+	menu7.mainmenu[1].setString("Level 2");
+	menu7.mainmenu[2].setString("Level 3");
+	menu7.mainmenu[3].setString("Back");
+	while (window.isOpen())
+	{
+		Event event;
+
+		while (window.pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+				window.close();
+			if (event.type == Event::KeyPressed)
+			{
+				if (event.key.code == Keyboard::Down) {
+					sound.change_option_Sound();
+					menu7.MoveDown(menu7.selected, menu7.choises);
+				}
+				if (event.key.code == Keyboard::Up) {
+					sound.change_option_Sound();
+					menu7.MoveUp(menu7.selected, menu7.choises);
+				}
+				if (event.key.code == Keyboard::Escape && !pressed && menu7.selected != 3)
+				{
+					sound.change_option_Sound();
+					menu7.mainmenu[menu7.selected].setFillColor(Color::Black);
+					menu7.selected = 3;
+					menu7.mainmenu[3].setFillColor(Color{ 255,204,0 });
+					menu7.hand.setPosition(1140, 760);
+					pressed = true;
+				}
+				if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && !pressed))
+				{
+					sound.select_option_Sound();
+					if (menu7.selected == 0) {
+
+					}
+					if (menu7.selected == 3) {
+						pageNumber = 500;
+						pressed = true;
+						return;
+					}
+				}
+			}
+		}
+		if (!Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			pressed = false;
+		}
+		menu_UI.FaceMotion(window);
+		window.clear();
+		window.draw(menu_UI.bg);
+		for (int i = 0; i < menu7.choises; i++)
+		{
+			window.draw(menu7.mainmenu[i]);
+		}
+		window.draw(menu_UI.face);
+		window.draw(menu7.hand);
+		window.display();
+	}
+
+}
 void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 {
 	Menu menu2;
 	menu2.Hand_intilization();
 	menu2.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
-	menu2.choises = 4;
+	menu2.choises = 5;
 	x = 40;
 	for (int i = 0; i < menu2.choises; i++)
 	{
@@ -194,7 +275,8 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 	menu2.mainmenu[0].setString("Single");
 	menu2.mainmenu[1].setString("Multi");
 	menu2.mainmenu[2].setString("PowerUps");
-	menu2.mainmenu[3].setString("Back");
+	menu2.mainmenu[3].setString("Levels");
+	menu2.mainmenu[4].setString("Back");
 
 	pageNumber = 500;
 	while (window.isOpen())
@@ -204,24 +286,26 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 		{
 			if (event.type == Event::Closed)
 				window.close();
+			if (Keyboard::isKeyPressed(Keyboard::Escape) && menu2.selected != 4 && !pressed)
+			{
+				sound.change_option_Sound();
+				menu2.mainmenu[menu2.selected].setFillColor(Color::Black);
+				menu2.selected = 4;
+				menu2.mainmenu[4].setFillColor(Color{ 255,204,0 });
+				menu2.hand.setPosition(1140, 820);
+				pressed = true;
+			}
 			if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && !pressed))
 			{
 				sound.select_option_Sound();
 				if (menu2.selected == 3) {
+					levels(window);
+				}
+				if (menu2.selected == 4) {
 					pageNumber = 1000;
 					pressed = true;
 					return;
 				}
-			}
-
-			if (Keyboard::isKeyPressed(Keyboard::Escape) && menu2.selected != 3 && !pressed)
-			{
-				sound.change_option_Sound();
-				menu2.mainmenu[menu2.selected].setFillColor(Color::Black);
-				menu2.selected = 3;
-				menu2.mainmenu[3].setFillColor(Color{ 255,204,0 });
-				menu2.hand.setPosition(1140, 760);
-				pressed = true;
 			}
 			if (!Keyboard::isKeyPressed(Keyboard::Escape))
 			{
@@ -244,7 +328,7 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 					if (menu2.selected == 0)   GameMode = 1;
 					if (menu2.selected == 1)   GameMode = 2;
 					if (menu2.selected == 2)   GameMode = 3;
-					Gameplay();
+					if (menu2.selected < 3)       Gameplay();
 				}
 			}
 		}
@@ -264,6 +348,131 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 		}
 		window.display();
 	}
+}
+void  Menu::sound_options(RenderWindow& window) {
+	Menu menu6;
+	menu6.Hand_intilization();
+	menu6.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
+	menu6.choises = 3;
+	x = 40;
+	for (int i = 0; i < menu6.choises; i++)
+	{
+		if (!i) menu6.mainmenu[i].setFillColor(Color{ 255,204,0 });
+		else   menu6.mainmenu[i].setFillColor(Color::Black);
+		menu6.mainmenu[i].setFont(menu6.font);
+		menu6.mainmenu[i].setCharacterSize(50);
+		menu6.mainmenu[i].setPosition(Vector2f(1250, menu6.height / 2 + x));
+		x += 60;
+	}
+	menu6.mainmenu[0].setString("Sound - \t\t\t\t\t +");
+	menu6.mainmenu[1].setString("Music  - \t\t\t\t\t +");
+	menu6.mainmenu[2].setString("Back");
+	RectangleShape Sound(Vector2f(P_M_Sound * 3, 40));
+	Sound.setFillColor({ 180,3,3 });
+	Sound.setPosition(1400, menu6.height / 2 + 55);
+
+	RectangleShape Music(Vector2f(P_M_Music * 3, 40));
+	Music.setFillColor({ 180,3,3 });
+	Music.setPosition(1400, menu6.height / 2 + 115);
+
+	while (window.isOpen())
+	{
+		Event event;
+
+		while (window.pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+				window.close();
+			if (event.type == Event::KeyPressed)
+			{
+				if (event.key.code == Keyboard::Down) {
+					sound.change_option_Sound();
+					menu6.MoveDown(menu6.selected, menu6.choises);
+				}
+				if (event.key.code == Keyboard::Up) {
+					sound.change_option_Sound();
+					menu6.MoveUp(menu6.selected, menu6.choises);
+				}
+				if (event.key.code == Keyboard::Escape && !pressed && menu6.selected != 2)
+				{
+					sound.change_option_Sound();
+					menu6.mainmenu[menu6.selected].setFillColor(Color::Black);
+					menu6.selected = 2;
+					menu6.mainmenu[2].setFillColor(Color{ 255,204,0 });
+					menu6.hand.setPosition(1140, 700);
+					pressed = true;
+				}
+				if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && !pressed))
+				{
+					sound.select_option_Sound();
+					if (menu6.selected == 2) {
+						pressed = true;
+						return;
+					}
+				}
+				if (menu6.selected == 0)
+				{
+					if (Keyboard::isKeyPressed(Keyboard::Left))
+					{
+						if (P_M_Sound > 0)
+							P_M_Sound -= 10;
+						else
+							P_M_Sound = 0;
+					}
+					if (Keyboard::isKeyPressed(Keyboard::Right))
+					{
+						if (P_M_Sound < 100)
+							P_M_Sound += 10;
+						else
+							P_M_Sound = 100;
+					}
+					Sound.setSize(Vector2f(P_M_Sound * 3, 40));
+					sound.so.setVolume(P_M_Sound);
+					sound.so2.setVolume(P_M_Sound);
+					sound.so4.setVolume(P_M_Sound);
+					sound.so5.setVolume(P_M_Sound);
+					sound.so6.setVolume(P_M_Sound);
+					sound.so7.setVolume(P_M_Sound);
+				}
+				else if (menu6.selected == 1)
+				{
+					if (Keyboard::isKeyPressed(Keyboard::Left))
+					{
+						if (P_M_Music > 0)
+							P_M_Music -= 10;
+						else
+							P_M_Music = 0;
+					}
+					if (Keyboard::isKeyPressed(Keyboard::Right))
+					{
+						if (P_M_Music < 100)
+							P_M_Music += 10;
+						else
+							P_M_Music = 100;
+					}
+				}
+				Music.setSize(Vector2f(P_M_Music * 3, 40));
+				sound.bgmusic.setVolume(P_M_Music);
+			}
+		}
+		if (!Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			pressed = false;
+		}
+		menu_UI.FaceMotion(window);
+		window.clear();
+		window.draw(menu_UI.bg);
+		window.draw(Sound);
+		window.draw(Music);
+		for (int i = 0; i < menu6.choises; i++)
+		{
+			window.draw(menu6.mainmenu[i]);
+		}
+		window.draw(menu_UI.face);
+		window.draw(menu6.hand);
+		window.display();
+	}
+
 }
 void  Menu::options_menu1(RenderWindow& window)
 {
@@ -454,6 +663,7 @@ void  Menu::options_menu(RenderWindow& window)
 				{
 					sound.select_option_Sound();
 					if (menu4.selected == 0)  options_menu1(window);
+					if (menu4.selected == 1)  sound_options(window);
 					if (menu4.selected == 2) {
 						pageNumber = 1000;
 						pressed = true;

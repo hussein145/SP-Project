@@ -1,8 +1,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include"Menu.h"
-//#include "Header.h"
+#include<SFML/Audio.hpp>
+//#include"Menu.h"
+#include"Header.h"
 #include "menu_Bg_and_Face.h"
 #include "Walls_And_Background.h"
 #include "STAIRS.h"
@@ -126,12 +126,6 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 		player1.addspeed = 7;
 		player1.incspeed = 1.5;
 	}
-	else if (player1.droptype == 3)
-	{
-		mapspeed = 2;
-		addmapspeed = 7;
-		player1.droptype = -1;
-	}
 	else if (player1.droptype == 4)
 	{
 		rando = abs(rand() % 2);
@@ -140,77 +134,72 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 			stopsmall = 7;
 			for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
 			{
-				if (currstair % 100 != 0 || currstair % 50 != 0) {
+				if (currstair % 100 != 0 || currstair % 5 != 0) {
 					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
 				}
 			}
+			player1.droptype = -1;
 		}
-		else
+		else if(player1.check_on_ground)
 		{
-			stopbig = 7;
-			for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
+			int changable_stair = player1.curr_colission;
+			for (int i = 0; i < 5; i++)
 			{
-				if (currstair % 100 != 0 || currstair % 50 != 0) {
-					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() + Vector2f(50, 0));
-					if (Stairs.stairs[currstair].getGlobalBounds().intersects(background.wallsRight->getGlobalBounds()))
-						Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
-				}
+				Stairs.stairs[changable_stair].setTexture(&Stairs.floorTexture[0]);
+				Stairs.stairs[changable_stair].setOrigin(Stairs.floor_width / 2, 0);
+				Stairs.stairs[changable_stair].setSize(Vector2f(Stairs.floor_width, 50));
+				Stairs.stairs[changable_stair].setPosition(960, Stairs.stairs[changable_stair].getPosition().y);
+				changable_stair++;
+				changable_stair %= Stairs.stairsNum;
 			}
+			player1.droptype = -1;
 		}
 	}
 }
 void PowerUps::resetPowerups()
 {
-	if (player1.addspeed <= 0) {
-		player1.addspeed = 0;
-		player1.incspeed = 1;
-	}
-	else {
-		player1.addspeed -= 0.01;
-		player1.droptype = -1;
-	}
-	if (player1.addsuperjump <= 0) {
-		player1.addsuperjump = 0;
-		player1.superjump = 1;
-	}
-	else {
-		player1.addsuperjump -= 0.005;
-		player1.droptype = -1;
-	}
-	if (addmapspeed <= 0)
-	{
-		mapspeed = 1;
-		addmapspeed = 0;
-	}
-	else
-	{
-		addmapspeed -= 0.01;
-	}
-	if (stopsmall < 0) {
-		stopsmall = 0;
-		for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
-		{
-			if (currstair % 100 != 0 || currstair % 50 != 0)
-				Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() + Vector2f(50, 0));
+	if (player1.addspeed != 0 && player1.addspeed != 4) {
+		if (player1.addspeed <= 0) {
+			player1.addspeed = 0;
+			player1.incspeed = 1;
 		}
-	}
-	else {
-		if (stopsmall != 0)
-			stopsmall -= 0.01;
-		player1.droptype = -1;
-	}
-	if (stopbig < 0) {
-		stopbig = 0;
-		for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
-		{
-			if (currstair % 100 != 0 || currstair % 50 != 0) {
-				Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
+		else {
+			player1.addspeed -= 0.01;
+			player1.droptype = -1;
+		}
+		if (player1.addsuperjump <= 0) {
+			player1.addsuperjump = 0;
+			player1.superjump = 1;
+		}
+		else {
+			player1.addsuperjump -= 0.005;
+			player1.droptype = -1;
+		}
+		if (stopsmall < 0) {
+			stopsmall = 0;
+			for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
+			{
+				if (currstair % 100 != 0 || currstair % 5 != 0)
+					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() + Vector2f(50, 0));
 			}
 		}
-	}
-	else {
-		if (stopbig != 0)
-			stopbig -= 0.01;
-		player1.droptype = -1;
+		else {
+			if (stopsmall != 0)
+				stopsmall -= 0.01;
+			player1.droptype = -1;
+		}
+		if (stopbig < 0) {
+			stopbig = 0;
+			for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
+			{
+				if (currstair % 100 != 0 || currstair % 5 != 0)
+					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() - Vector2f(50, 0));
+			}
+		}
+		else {
+			if (stopbig != 0)
+				stopbig -= 0.01;
+			player1.droptype = -1;
+		}
 	}
 }

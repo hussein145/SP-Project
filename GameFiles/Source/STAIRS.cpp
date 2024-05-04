@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include"Menu.h"
+//#include"Menu.h"
+#include"Header.h"
 #include "menu_Bg_and_Face.h"
 #include "Walls_And_Background.h"
 #include "STAIRS.h"
@@ -26,7 +27,11 @@ void STAIRS::strnum() {
 }
 void STAIRS::StairsTextures()
 {
-	if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
+	if (Number_Of_Stair >= 0 && Number_Of_Stair < 100) {
+		stairTexture[0].loadFromFile("Assets/Textures/Stair.png");
+		stairs[currstair].setTexture(&stairTexture[0]);
+	}
+	else if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
 	{
 		stairTexture[1].loadFromFile("Assets/Textures/Stair2.png");
 		stairs[currstair].setTexture(&stairTexture[1]);
@@ -38,7 +43,13 @@ void STAIRS::StairsTextures()
 	}
 }
 void STAIRS::FloorTextures() {
-	if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
+	if (Number_Of_Stair >= 0 && Number_Of_Stair < 100) {
+		floorTexture[0].loadFromFile("Assets/Textures/floor.png");
+		stairs[currstair].setTexture(&floorTexture[0]);
+		
+	}
+
+	else if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
 	{
 		floorTexture[1].loadFromFile("Assets/Textures/floor2.png");
 		stairs[currstair].setTexture(&floorTexture[1]);
@@ -82,8 +93,8 @@ void STAIRS::intiliztion1(int GameMode) {
 		}
 		else
 		{
-			stairTexture[0].loadFromFile("Assets/Textures/Stair.png");
-			stairs[currstair].setTexture(&stairTexture[0]);
+			//stairTexture[0].loadFromFile("Assets/Textures/Stair.png");
+			//stairs[currstair].setTexture(&stairTexture[0]);
 			StairsTextures();
 			////SET SIZE
 			size_Of_Stair = Vector2f((rand() % 300 + 200), 60);
@@ -106,7 +117,6 @@ void STAIRS::intiliztion1(int GameMode) {
 	currstair--;
 }
 void STAIRS::updateStairs(int GameMode, View& player1_View, View& player2_View) {
-	RightLimit = ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width) - stairs[updatestair].getSize().x - (1920 - ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width));
 	bool player2_Notexist = 1;
 	if (GameMode == 2)
 	{
@@ -127,6 +137,11 @@ void STAIRS::updateStairs(int GameMode, View& player1_View, View& player2_View) 
 		}
 		else
 		{
+			size_Of_Stair = Vector2f((rand() % 300 + 200), 60);
+			stairs[updatestair].setSize(size_Of_Stair);
+			stairs[updatestair].setOrigin(size_Of_Stair.x / 2, 0);
+
+			RightLimit = ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width) - stairs[updatestair].getSize().x - (1920 - ((background.RightWalls_Pos_x - distanceOfMove) - background.Walls_Width));
 			StairPosition = Vector2f(rand() % RightLimit + (background.LeftWall_Pos_x + background.Walls_Width + distanceOfMove + stairs[updatestair].getSize().x / 2), stairs[currstair].getPosition().y - heightBetweenStair);
 			currstair = updatestair;
 			StairsTextures();

@@ -330,7 +330,7 @@ void Gameplay()
 	if (PLayer2 == 0)
 		player2.inti(tex2);
 	else if (PLayer2 == 1)
-		player2.inti(tex2);
+		player2.inti(tex1);
 
 
 	//music(k);

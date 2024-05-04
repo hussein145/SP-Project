@@ -15,16 +15,10 @@ struct Menu
 	int height = 1080;
 	int choises;
 	int positionOfHand = 60;
-	bool infile = 0;
-	bool boolenter = 0;
 	bool play_again = 0;
+	int x = 40;
 	Texture handTex;
 	RectangleShape hand;
-	Texture enternameTX;
-	Sprite enternameSP;
-	Font playernamefont;
-	Text playerNameText;
-	string playername;
 	void Hand_intilization();
 	void MoveDown(int& selected, int choises);
 	void MoveUp(int& selected, int choises);
@@ -34,7 +28,4 @@ struct Menu
 	void options_menu(RenderWindow& window);
 	void instructions(RenderWindow& window);
 	void Pause(RenderWindow& window, Texture gametexture);
-	void filetopair();
-	pair <int, string> list[6];
-	//void Menues(RenderWindow& window);
 };

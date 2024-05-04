@@ -327,6 +327,10 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 		}
 		window.draw(menu2.hand);
 
+		if (play_again) {
+			Gameplay();
+			window.clear();
+		}
 		window.display();
 	}
 }
@@ -660,10 +664,13 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 						return;
 					}
 					if (Pause1.selected == 0 + END) {
-
+						play_again = 1;
+						exit = 1;
+						return;
 					}
 					if (Pause1.selected == 1 + END) {
 						window.setView(window.getDefaultView());
+						play_again = 0;
 						exit = 1;
 						return;
 					}
@@ -685,9 +692,8 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 		window.display();
 	}
 }
-	char c;
 
-	void Menu::filetopair() {
+void Menu::filetopair() {
 		fstream file("high score.txt", ios::in);
 		if (file.is_open())
 		{

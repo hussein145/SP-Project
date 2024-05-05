@@ -147,7 +147,7 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 			}
 			player1.droptype = -1;
 		}
-		else if(player1.check_on_ground)
+		else if (player1.check_on_ground)
 		{
 			int changable_stair = player1.curr_colission;
 			for (int i = 0; i < 5; i++)
@@ -165,7 +165,7 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 }
 void PowerUps::resetPowerups()
 {
-	if (player1.addspeed != 0 && player1.addspeed != 4) {
+	
 		if (player1.addspeed <= 0) {
 			player1.addspeed = 0;
 			player1.incspeed = 1;
@@ -202,7 +202,8 @@ void PowerUps::resetPowerups()
 		else {
 			if (stopsmall != 0)
 				stopsmall -= 0.01;
-			player1.droptype = -1;
+			if (player1.addspeed != 0 && player1.addspeed != 4)
+				player1.droptype = -1;
 		}
 		if (stopbig < 0) {
 			stopbig = 0;
@@ -215,7 +216,8 @@ void PowerUps::resetPowerups()
 		else {
 			if (stopbig != 0)
 				stopbig -= 0.01;
-			player1.droptype = -1;
+			if (player1.addspeed != 0 && player1.addspeed != 4)
+				player1.droptype = -1;
 		}
-	}
+	
 }

@@ -172,7 +172,8 @@ void PowerUps::resetPowerups()
 		}
 		else {
 			player1.addspeed -= 0.01;
-			player1.droptype = -1;
+			if(player1.addspeed != 0 && player1.addspeed != 4)
+				player1.droptype = -1;
 		}
 		if (player1.addsuperjump <= 0) {
 			player1.addsuperjump = 0;
@@ -180,7 +181,8 @@ void PowerUps::resetPowerups()
 		}
 		else {
 			player1.addsuperjump -= 0.005;
-			player1.droptype = -1;
+			if(player1.addspeed != 0 && player1.addspeed != 4)
+				player1.droptype = -1;
 		}
 		if (addmapspeed <= 0)
 		{

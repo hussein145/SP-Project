@@ -30,6 +30,7 @@ struct STAIRS
 	int Stairs_OF_EachFloor = 50;
 
 	//stairs intiliztion
+	void Textures();
 	void StairsTextures();
 	void FloorTextures();
 	void intiliztion1(int GameMode);

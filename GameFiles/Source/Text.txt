@@ -1,0 +1,5 @@
+HABIBA    110
+HABIBA    30
+NONE    0
+NONE    0
+NONE    0

@@ -208,8 +208,12 @@ void Menu::levels(RenderWindow& window) {
 		{
 			if (event.type == Event::Closed)
 				window.close();
-			if (event.type == Event::KeyPressed)
+			if (event.type == Event::KeyReleased) {
+				pressed = false;
+			}
+			if (event.type == Event::KeyPressed && !pressed)
 			{
+				pressed = true;
 				if (event.key.code == Keyboard::Down) {
 					sound.change_option_Sound();
 					menu7.MoveDown(menu7.selected, menu7.choises);
@@ -218,16 +222,7 @@ void Menu::levels(RenderWindow& window) {
 					sound.change_option_Sound();
 					menu7.MoveUp(menu7.selected, menu7.choises);
 				}
-				if (event.key.code == Keyboard::Escape && !pressed && menu7.selected != 3)
-				{
-					sound.change_option_Sound();
-					menu7.mainmenu[menu7.selected].setFillColor(Color::Black);
-					menu7.selected = 3;
-					menu7.mainmenu[3].setFillColor(Color{ 255,204,0 });
-					menu7.hand.setPosition(1140, 760);
-					pressed = true;
-				}
-				if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && !pressed))
+				if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && menu7.selected == 3))
 				{
 					sound.select_option_Sound();
 					if (menu7.selected == 0) {
@@ -235,15 +230,19 @@ void Menu::levels(RenderWindow& window) {
 					}
 					if (menu7.selected == 3) {
 						pageNumber = 500;
-						pressed = true;
+						pressed = 0;
 						return;
 					}
 				}
+				if (event.key.code == Keyboard::Escape && menu7.selected != 3)
+				{
+					sound.change_option_Sound();
+					menu7.mainmenu[menu7.selected].setFillColor(Color::Black);
+					menu7.selected = 3;
+					menu7.mainmenu[3].setFillColor(Color{ 255,204,0 });
+					menu7.hand.setPosition(1140, 760);
+				}
 			}
-		}
-		if (!Keyboard::isKeyPressed(Keyboard::Escape))
-		{
-			pressed = false;
 		}
 		menu_UI.FaceMotion(window);
 		window.clear();
@@ -290,33 +289,31 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 		{
 			if (event.type == Event::Closed)
 				window.close();
-			if (Keyboard::isKeyPressed(Keyboard::Escape) && menu2.selected != 4 && !pressed)
-			{
-				sound.change_option_Sound();
-				menu2.mainmenu[menu2.selected].setFillColor(Color::Black);
-				menu2.selected = 4;
-				menu2.mainmenu[4].setFillColor(Color{ 255,204,0 });
-				menu2.hand.setPosition(1140, 820);
-				pressed = true;
-			}
-			if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && !pressed))
-			{
-				sound.select_option_Sound();
-				if (menu2.selected == 3) {
-					levels(window);
-				}
-				if (menu2.selected == 4) {
-					pageNumber = 1000;
-					pressed = true;
-					return;
-				}
-			}
-			if (!Keyboard::isKeyPressed(Keyboard::Escape))
-			{
+			if (event.type == Event::KeyReleased) {
 				pressed = false;
 			}
-			if (event.type == Event::KeyPressed)
-			{
+			if (event.type == Event::KeyPressed && !pressed) {
+				pressed = true;
+				if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && menu2.selected == 4))
+				{
+					sound.select_option_Sound();
+					if (menu2.selected == 3) {
+						levels(window);
+					}
+					if (menu2.selected == 4) {
+						pageNumber = 1000;
+						return;
+					}
+				}
+				if (event.key.code == Keyboard::Escape && menu2.selected != 4)
+				{
+					sound.change_option_Sound();
+					menu2.mainmenu[menu2.selected].setFillColor(Color::Black);
+					menu2.selected = 4;
+					menu2.mainmenu[4].setFillColor(Color{ 255,204,0 });
+					menu2.hand.setPosition(1140, 820);
+					
+				}
 				if (event.key.code == Keyboard::Down) {
 					sound.change_option_Sound();
 					menu2.MoveDown(menu2.selected, menu2.choises);
@@ -334,6 +331,7 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 					if (menu2.selected == 2)   GameMode = 3;
 					if (menu2.selected < 3)       Gameplay();
 				}
+				
 			}
 		}
 		menu_UI.FaceMotion(window);

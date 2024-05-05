@@ -71,13 +71,13 @@ void PowerUps::dropcollision()
 			}
 		}
 }
-void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) {
+void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 	if (player1.droptype == 0)
 	{
 		Stairs.distanceOfMove = 100;
 		skip = 1;
 		start = 1;
-		if (timerOfMove.getElapsedTime().asSeconds() <= 5)
+		if (elapsedTime.asSeconds() <= 5)
 		{
 			for (int i = 0; i < Stairs.stairsNum; i++)
 			{
@@ -95,17 +95,19 @@ void PowerUps::checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning) 
 			gameclock.clock.move(velocity_x * dt, 0);
 			//gameclock.cl2.move(velocity_x * dt, 0);
 		}
-		else if (timerOfMove.getElapsedTime().asSeconds() > 5 && timerOfMove.getElapsedTime().asSeconds() < 8)
+		else if (elapsedTime.asSeconds() > 5 && elapsedTime.asSeconds() < 8)
 		{
 			velocity_x = 0;
 		}
-		else if (timerOfMove.getElapsedTime().asSeconds() >= 8)
+		else if (elapsedTime.asSeconds() >= 8)
 		{
 			StartReturning = 1;
 			velocity_x = -20;
-			timerOfMove.restart();
+			TimeOfMove.restart();
+			elapsedTime = TimeOfMove.getElapsedTime();
+			pausedTime = TimeOfMove.getElapsedTime();
 		}
-		if (timerOfMove.getElapsedTime().asSeconds() >= 5 && StartReturning)
+		if (elapsedTime.asSeconds() >= 5 && StartReturning)
 		{
 			StartReturning = 0;
 			player1.droptype = -1;

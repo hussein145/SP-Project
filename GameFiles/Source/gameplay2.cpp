@@ -225,6 +225,7 @@ void DRAW()
 		window.draw(background.wallsLeft[i]);
 		window.draw(background.wallsRight[i]);
 	}
+	
 }
 void DRAW_View1()
 {
@@ -245,7 +246,7 @@ void DRAW_View1()
 		player1.score_txt.setPosition(30, 990);
 	}
 	window.draw(player1.score_txt);
-	window.draw(player1.score_txt);
+	window.draw(player1.compo);
 	if (!END)
 	{
 		window.draw(File.highscoreENDsp);

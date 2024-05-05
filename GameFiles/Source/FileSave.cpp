@@ -10,12 +10,14 @@
 #include "FileSave.h"
 
 extern Event event;
-
+bool press = 0;
 void FileSave::TypeYourName()
 {
-	if (event.type == Event::KeyPressed)
-
-	{
+	if (event.type == Event::KeyPressed) {
+		press = 1;
+	}
+	if (event.type == Event::KeyReleased && press) {
+		press = 0;
 		if (event.key.code >= Keyboard::A && event.key.code <= Keyboard::Z)
 		{
 			playername.push_back('A' + event.key.code);
@@ -29,16 +31,17 @@ void FileSave::TypeYourName()
 		{
 			playername.push_back(' ');
 		}
-	}
-	if (event.key.code == Keyboard::Enter)
-	{
-		if (!boolenter)
-		{
 
-			enternameSP.setPosition(-1000, -1000);
-			playerNameText.setPosition(-1000, -1000);
-			infile = 1;
-			boolenter = 1;
+		if (event.key.code == Keyboard::Enter)
+		{
+			if (!boolenter)
+			{
+
+				enternameSP.setPosition(-1000, -1000);
+				playerNameText.setPosition(-1000, -1000);
+				infile = 1;
+				boolenter = 1;
+			}
 		}
 	}
 	playerNameText.setString(playername);

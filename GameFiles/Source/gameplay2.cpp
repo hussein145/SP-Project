@@ -170,17 +170,17 @@ void CountScore(Players& player, int i)
 {
 	if (player.curr_colission > i) {
 		if ((player.curr_colission - i) <= 9) { // Fall from stair
-			player.Score -= player.curr_colission - i;
+			player.floor -= player.curr_colission - i;
 			player.cnt = 1;
 		}
 		else { // Jump and loop repeat itself
 			player.cnt = (Stairs.stairsNum - player.curr_colission) + i;
-			player.Score += (Stairs.stairsNum - player.curr_colission) + i;
+			player.floor += (Stairs.stairsNum - player.curr_colission) + i;
 		}
 	}
 	else { // i > curr_colission (Normal Condition)
 		player.cnt = (i - player.curr_colission);
-		player.Score += (i - player.curr_colission);
+		player.floor += (i - player.curr_colission);
 	}
 	player.curr_colission = i;
 }
@@ -225,6 +225,13 @@ void DRAW()
 		window.draw(background.wallsLeft[i]);
 		window.draw(background.wallsRight[i]);
 	}
+	if (!END)
+	{
+		window.draw(File.highscoreENDsp);
+		window.draw(File.scoreText1);
+		window.draw(File.scoreText2);
+		window.draw(File.scoreText3);
+	}
 }
 void DRAW_View1()
 {
@@ -242,10 +249,10 @@ void DRAW_View1()
 	window.draw(gameclock.star);
 
 	if (GameMode == 2) {
-		player1.score.setPosition(30, 990);
+		player1.score_txt.setPosition(30, 990);
 	}
-	window.draw(player1.score);
-	window.draw(player1.compo);
+	window.draw(player1.score_txt);
+	window.draw(player1.score_txt);
 }
 void DRAW_View2()
 {
@@ -260,8 +267,8 @@ void DRAW_View2()
 	window.draw(gameclock.power2);
 	window.draw(gameclock.star2);
 
-	player2.score.setPosition(980, 990);
-	window.draw(player2.score);
+	player2.score_txt.setPosition(980, 990);
+	window.draw(player2.score_txt);
 	window.draw(player2.compo);
 }
 
@@ -314,7 +321,7 @@ void Gameplay()
 
 	view.view_insilization();
 
-	
+
 
 
 	bool StartMoving = 0;
@@ -341,7 +348,7 @@ void Gameplay()
 				window.close();
 			if (END ? (Play.key.code == Keyboard::Escape && !pressed) : (Play.type == Event::KeyPressed && !pressed))  //&& !menu.pressed
 			{
-		
+
 				pressed = true;
 				GameTexture.create(1920, 1080);
 				GameTexture.update(window);
@@ -412,8 +419,12 @@ void Gameplay()
 		dt = clockk.restart().asSeconds();
 		collisions(player1);
 		collisions(player2);
-		player1.score.setString("Score: " + to_string(player1.Score * 10));
-		player2.score.setString("Score: " + to_string(player2.Score * 10));
+		/*=====================================calculate score and compo===================================*/
+		player1.score = player1.floor * 10;
+		player2.score = player2.floor * 10;
+
+		player1.score_txt.setString("Score: " + to_string(player1.score));
+		player2.score_txt.setString("Score: " + to_string(player2.score));
 		if (player1.cnt != 1)
 		{
 			player1.compo_cnt += player1.cnt;
@@ -434,6 +445,7 @@ void Gameplay()
 		else {
 			player2.compo_cnt = 0;
 		}
+		/*=====================================calculate score and compo===================================*/
 		Set_ObjectsOnStairs();
 
 		if (GameMode == 3)
@@ -448,12 +460,12 @@ void Gameplay()
 			}
 			//cout << TimeOfMove.getElapsedTime().asSeconds() << endl;
 			//cout << elapsedTime.asSeconds() << endl;
-			
+
 
 			Power.elapsedTime = Power.TimeOfMove.getElapsedTime() + Power.pausedTime;
-			
+
 			Power.checkdrop(StartMoving, StartReturning);
-			
+
 			Power.resetPowerups();
 
 		}
@@ -467,11 +479,12 @@ void Gameplay()
 			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540)) && check1)
 		{
 			check1 = 0;
-			File.intopair(player1.Score);
+			File.intopair(player1.floor);
 			File.pairtofile();
 
 			Map.move = 0;
 			END = 0;
+
 			if (alive) {
 				if (sound.so4.getStatus() == Sound::Stopped) {
 					sound.falling_sound();
@@ -479,6 +492,13 @@ void Gameplay()
 				}
 			}
 		}
+
+		if (!END)
+		{
+			File.highscoreEND(player1.floor, player1.Max_Compo);
+		}
+
+
 		//cout << dt << endl;
 		player1.Players_Motion(buff, Keyboard::A, Keyboard::D, Keyboard::Space);
 		player2.Players_Motion(buff, Keyboard::Left, Keyboard::Right, Keyboard::Numpad0);

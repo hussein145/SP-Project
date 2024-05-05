@@ -12,6 +12,7 @@
 extern Event event;
 extern Sounds sound;
 extern Menu menu;
+extern menu_Bg_and_Face menu_UI;
 bool press = 0;
 void FileSave::highscore_gameover(int score, int floor, int combo)
 {
@@ -23,10 +24,10 @@ void FileSave::highscore_gameover(int score, int floor, int combo)
 
 	gameovertx.loadFromFile("Assets/Textures/gameover.png");
 	gameoversp.setTexture(gameovertx);
-	gameoversp.setPosition(400,180);
-	gameoversp.setScale(2,2),
+	gameoversp.setPosition(400, 180);
+	gameoversp.setScale(2, 2),
 
-	font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
+		font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	scoreText1.setFont(font);
 	scoreText2.setFont(font);
 	scoreText3.setFont(font);
@@ -110,6 +111,7 @@ void  FileSave::highscore(RenderWindow& window)
 		}
 
 		window.clear();
+		window.draw(menu_UI.bg);
 		window.draw(profilesp);
 		for (int i = 0; i < 5; i++)
 		{

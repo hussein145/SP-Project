@@ -13,7 +13,7 @@ extern Event event;
 extern Sounds sound;
 extern Menu menu;
 bool press = 0;
-void FileSave::highscoreEND(int score, int combo)
+void FileSave::highscoreEND(int score, int floor, int combo)
 {
 
 	highscoreENDtx.loadFromFile("Assets/Textures/High_Score.png");
@@ -27,8 +27,8 @@ void FileSave::highscoreEND(int score, int combo)
 	scoreText3.setFont(font);
 
 
-	scoreText1.setString("SCORE:" + to_string(score * 10));
-	scoreText2.setString("FLOOR:" + to_string(score));
+	scoreText1.setString("SCORE:" + to_string(score));
+	scoreText2.setString("FLOOR:" + to_string(floor));
 	scoreText3.setString("COMBO:" + to_string(combo));
 	//scoreText3.setString()
 	scoreText1.setPosition(600, 600);

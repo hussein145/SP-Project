@@ -123,9 +123,6 @@ void FileSave::TypeYourName()
 {
 	if (event.type == Event::KeyPressed) {
 		press = 1;
-	}
-	if (event.type == Event::KeyReleased && press) {
-		press = 0;
 		if (event.key.code >= Keyboard::A && event.key.code <= Keyboard::Z)
 		{
 			playername.push_back('A' + event.key.code);
@@ -140,6 +137,10 @@ void FileSave::TypeYourName()
 		{
 			playername.push_back(' ');
 		}
+	}
+	if (event.type == Event::KeyReleased && press) {
+		press = 0;
+		
 
 		if (event.key.code == Keyboard::Enter)
 		{

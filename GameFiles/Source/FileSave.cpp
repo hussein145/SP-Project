@@ -13,6 +13,37 @@ extern Event event;
 extern Sounds sound;
 extern Menu menu;
 bool press = 0;
+void FileSave::highscoreEND(int score, int combo)
+{
+
+	highscoreENDtx.loadFromFile("Assets/Textures/High_Score.png");
+	highscoreENDsp.setTexture(highscoreENDtx);
+	highscoreENDsp.setPosition(500, 500);
+	
+	font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
+
+	scoreText1.setFont(font);
+	scoreText2.setFont(font);
+	scoreText3.setFont(font);
+
+
+	scoreText1.setString("SCORE:" + to_string(score * 10));
+	scoreText2.setString("FLOOR:" + to_string(score));
+	scoreText3.setString("COMBO:" + to_string(combo));
+	//scoreText3.setString()
+	scoreText1.setPosition(600, 600);
+	scoreText2.setPosition(600, 700);
+	scoreText3.setPosition(600, 800);
+
+	scoreText1.setCharacterSize(30);
+	scoreText2.setCharacterSize(30);
+	scoreText3.setCharacterSize(30);
+
+	scoreText2.setFillColor(Color::White);
+	scoreText3.setFillColor(Color::White);
+	scoreText1.setFillColor(Color::White);
+
+}
 void  FileSave::highscore(RenderWindow& window)
 {
 	Texture profiltex;
@@ -102,8 +133,8 @@ void FileSave::TypeYourName()
 		}
 		else if (event.key.code == Keyboard::BackSpace)
 		{
-			if(playername.size())
-			playername.pop_back();
+			if (playername.size())
+				playername.pop_back();
 		}
 		else if (event.key.code == Keyboard::Space)
 		{
@@ -165,7 +196,7 @@ void FileSave::filetopair() {
 void FileSave::pairtofile()
 {
 	ofstream file("Text.txt", ios::out);
-	if (file.is_open()) 
+	if (file.is_open())
 	{
 		for (int i = 0; i < 5; i++)
 		{
@@ -180,10 +211,10 @@ void FileSave::pairtofile()
 }
 void FileSave::intopair(int score)
 {
-	if (score * 10 > list[4].first)
+	if (score > list[4].first)
 	{
 		list[4].second = playername;
-		list[4].first = score * 10;
+		list[4].first = score;
 	}
 	sort(list, list + 5);
 	reverse(list, list + 5);

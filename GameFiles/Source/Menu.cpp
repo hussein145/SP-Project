@@ -109,11 +109,11 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 				File.TypeYourName();
 				if (File.infile)
 				{
-					if (event.type == Event::KeyReleased)  {
+					if (event.type == Event::KeyReleased) {
 						pressed = false;
 					}
-					
-					if (event.type == Event::KeyPressed &&  !pressed) {
+
+					if (event.type == Event::KeyPressed && !pressed) {
 						pressed = true;
 						if (event.key.code == Keyboard::Down)
 						{
@@ -141,6 +141,11 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 								options_menu(window);
 							if (men1.selected == 1)
 								instructions(window);
+							if (men1.selected == 3)
+							{
+								File.highscore(window);
+
+							}
 						}
 						if (event.key.code == Keyboard::Escape) {
 							sound.change_option_Sound();

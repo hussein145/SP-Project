@@ -20,7 +20,7 @@ void Players::inti(Texture& texture) {
 	j = velocity_x = velocity_y = 0;
 	int droptype = -1;
 	incspeed = superjump = 1,
-	addspeed = addsuperjump = 0;
+		addspeed = addsuperjump = 0;
 
 	character.setTexture(texture);
 	character.setPosition(500, Stairs.stairs[0].getPosition().y - 30);
@@ -99,11 +99,11 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		Motion_Velocity = 6;
 	/*============================================================*/
 	if (Keyboard::isKeyPressed(right)) {
-		velocity_x += Motion_Velocity * dt * incspeed * 1.05;
+		velocity_x += Motion_Velocity * dt * incspeed * 1.07;
 		validL = 0;
 	}
 	else if (Keyboard::isKeyPressed(left)) {
-		velocity_x -= Motion_Velocity * dt * incspeed * 1.05;
+		velocity_x -= Motion_Velocity * dt * incspeed * 1.07;
 		validR = 0;
 	}
 	/*============================================================*/

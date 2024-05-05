@@ -3,16 +3,17 @@
 #include<SFML/Audio.hpp>
 #include<string>
 #include"Menu.h"
-
 #include "menu_Bg_and_Face.h"
 #include "Walls_And_Background.h"
 #include "STAIRS.h"
+#include "Sounds.h"
 #include "Players.h"
 using namespace std;
 using namespace sf;
 extern Clock clockk;
 extern float dt;
 extern Walls_And_Background background;
+extern Sounds sound;
 extern STAIRS Stairs;
 extern int GameMode;
 
@@ -82,11 +83,21 @@ void Players::update() {
 	if (Stairs.stairs[curr_colission].getPosition().x + (Stairs.stairs[curr_colission].getSize().x) / 2 <= character.getPosition().x && check_on_ground) {
 		character.setTextureRect(IntRect(50 * int(t), 60 * 3, 50, 60));
 		t += 0.02f;
+		if (sound.so7.getStatus() == Sound::Stopped)
+		{
+			sound.gonna_fall();
+
+		}
 	}
 	if (Stairs.stairs[curr_colission].getPosition().x - (Stairs.stairs[curr_colission].getSize().x) / 2 >= character.getPosition().x && check_on_ground) {
 		character.setScale(-2.4, 2.4);
 		character.setTextureRect(IntRect(50 * int(t), 60 * 3, 50, 60));
 		t += 0.02f;
+		if (sound.so7.getStatus() == Sound::Stopped)
+		{
+			sound.gonna_fall();
+
+		}
 	}
 	if (t >= 2)
 		t = 0;

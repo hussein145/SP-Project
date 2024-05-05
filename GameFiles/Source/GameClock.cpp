@@ -8,6 +8,7 @@
 #include "Players.h"
 #include "PowerUps.h"
 #include "GameClock.h"
+#include "Sounds.h"
 using namespace std;
 using namespace sf;
 
@@ -16,6 +17,7 @@ extern float dt;
 extern int GameMode;
 extern View player1_View;
 extern float resize, resize2;
+extern Sounds sound;
 
 void GameClock::View1_SetClock()
 {
@@ -26,8 +28,8 @@ void GameClock::View1_SetClock()
 		clock.setPosition(0, 118);
 		Hour_hand.setPosition(clock.getPosition().x + 42, clock.getPosition().y + 60);
 		power.setPosition(clock.getPosition().x + 32, clock.getPosition().y + 220);
-		star.setPosition(clock.getPosition().x , clock.getPosition().y + 230);
-		player1.compo.setPosition(star.getPosition().x+40, star.getPosition().y+5);
+		star.setPosition(clock.getPosition().x, clock.getPosition().y + 230);
+		player1.compo.setPosition(star.getPosition().x + 40, star.getPosition().y + 5);
 		if (player1.compo_cnt && resize)
 		{
 			star.setScale(1, 1);
@@ -44,8 +46,8 @@ void GameClock::View1_SetClock()
 		power.setPosition(clock.getPosition().x + 65, clock.getPosition().y + 440);
 		star.setPosition(clock.getPosition().x, clock.getPosition().y + 450);
 		Hour_hand.setPosition(clock.getPosition().x + 85, clock.getPosition().y + 120);
-		player1.compo.setPosition(star.getPosition().x+80, star.getPosition().y+15);
-		if(player1.compo_cnt && resize)
+		player1.compo.setPosition(star.getPosition().x + 80, star.getPosition().y + 15);
+		if (player1.compo_cnt && resize)
 			star.setScale(2, 2);
 	}
 }
@@ -57,9 +59,9 @@ void GameClock::View2_SetClock()
 	Hour_hand.setScale(1, 1);
 	clock.setPosition(960, 118);
 	Hour_hand.setPosition(clock.getPosition().x + 42, clock.getPosition().y + 60);
-	star2.setPosition(clock.getPosition().x , clock.getPosition().y + 230);
+	star2.setPosition(clock.getPosition().x, clock.getPosition().y + 230);
 	power2.setPosition(clock.getPosition().x + 32, clock.getPosition().y + 220);
-	player2.compo.setPosition(star2.getPosition().x+40, star2.getPosition().y+5);
+	player2.compo.setPosition(star2.getPosition().x + 40, star2.getPosition().y + 5);
 	if (player2.compo_cnt && resize2)
 	{
 		star2.setScale(1, 1);
@@ -92,7 +94,7 @@ void GameClock::setclock()
 void GameClock::update_clock(float& view_velocity, bool move)
 {
 	if (move) {
-		l += 0.07f ;
+		l += 0.07f;
 		Hour_hand.setRotation(int(l));
 		herry2.move(0, -550 * dt);
 	}
@@ -105,5 +107,7 @@ void GameClock::update_clock(float& view_velocity, bool move)
 		herry2.setPosition(650, player1_View.getCenter().y + 550);
 		herry2.setScale(2.5, 2.5);
 		view_velocity += 5;
+		sound.clock_ring_sound();
+		sound.hurry_up_sound();
 	}
 }

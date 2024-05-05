@@ -496,7 +496,7 @@ void Gameplay()
 
 		if (!END)
 		{
-			File.highscoreEND(player1.floor, player1.Max_Compo);
+			File.highscoreEND(player1.score, player1.floor, player1.Max_Compo);
 		}
 
 

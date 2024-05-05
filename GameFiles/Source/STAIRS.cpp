@@ -24,42 +24,42 @@ void STAIRS::strnum() {
 		strTxt[currstair].setPosition(Strs10[currstair].getPosition().x, Strs10[currstair].getPosition().y + 15);
 	}
 }
+void STAIRS::Textures()
+{
+	stairTexture[0].loadFromFile("Assets/Textures/Stair.png");
+	stairTexture[1].loadFromFile("Assets/Textures/Stair2.png");
+	stairTexture[2].loadFromFile("Assets/Textures/Stair3.png");
+	floorTexture[0].loadFromFile("Assets/Textures/floor.png");
+	floorTexture[1].loadFromFile("Assets/Textures/floor2.png");
+	floorTexture[2].loadFromFile("Assets/Textures/floor3.png");
+
+}
 void STAIRS::StairsTextures()
 {
 	if (Number_Of_Stair >= 0 && Number_Of_Stair < 100) {
-		stairTexture[0].loadFromFile("Assets/Textures/Stair.png");
 		stairs[currstair].setTexture(&stairTexture[0]);
 	}
-	else if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
-	{
-		stairTexture[1].loadFromFile("Assets/Textures/Stair2.png");
+	else if (Number_Of_Stair >= 100 && Number_Of_Stair < 200){
 		stairs[currstair].setTexture(&stairTexture[1]);
 	}
-	else if (Number_Of_Stair >= 200 && Number_Of_Stair < 300)
-	{
-		stairTexture[2].loadFromFile("Assets/Textures/Stair3.png");
+	else if (Number_Of_Stair >= 200 && Number_Of_Stair < 300){
 		stairs[currstair].setTexture(&stairTexture[2]);
 	}
 }
 void STAIRS::FloorTextures() {
 	if (Number_Of_Stair >= 0 && Number_Of_Stair < 100) {
-		floorTexture[0].loadFromFile("Assets/Textures/floor.png");
 		stairs[currstair].setTexture(&floorTexture[0]);
-		
 	}
 
-	else if (Number_Of_Stair >= 100 && Number_Of_Stair < 200)
-	{
-		floorTexture[1].loadFromFile("Assets/Textures/floor2.png");
+	else if (Number_Of_Stair >= 100 && Number_Of_Stair < 200){
 		stairs[currstair].setTexture(&floorTexture[1]);
 	}
-	else if (Number_Of_Stair >= 200 && Number_Of_Stair < 300)
-	{
-		floorTexture[2].loadFromFile("Assets/Textures/floor3.png");
+	else if (Number_Of_Stair >= 200 && Number_Of_Stair < 300){
 		stairs[currstair].setTexture(&floorTexture[2]);
 	}
 }
 void STAIRS::intiliztion1(int GameMode) {
+	Textures();
 	if (GameMode == 2)
 	{
 		background.LeftWall_Pos_x = 0, background.RightWalls_Pos_x = 1920;
@@ -82,8 +82,8 @@ void STAIRS::intiliztion1(int GameMode) {
 		if (currstair % Stairs_OF_EachFloor == 0) //50
 		{
 			//cout << currstair << endl;
-			floorTexture[0].loadFromFile("Assets/Textures/floor.png");
-			stairs[currstair].setTexture(&floorTexture[0]);
+			//floorTexture[0].loadFromFile("Assets/Textures/floor.png");
+			//stairs[currstair].setTexture(&floorTexture[0]);
 			FloorTextures();
 			stairs[currstair].setSize(Vector2f(floor_width, 50));
 			stairs[currstair].setOrigin(floor_width / 2, 0);

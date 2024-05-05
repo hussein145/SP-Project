@@ -16,7 +16,8 @@ int P_M_Music = 100;	//background,game;
 int PLayer1 = 0;
 int PLayer2 = 0;
 extern bool END;
-bool pressed = false;
+bool pressed = true;
+bool esc_button = true;
 extern Sounds sound;
 extern FileSave File;
 
@@ -81,7 +82,7 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 	x = 40;
 	for (int i = 0; i < men1.choises; i++)
 	{
-		if(!i)
+		if (!i)
 			men1.mainmenu[i].setFillColor(Color{ 255,204,0 });
 		else
 			men1.mainmenu[i].setFillColor(Color::Black);
@@ -94,12 +95,12 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 	menu_UI.back_ground(window);
 	men1.Hand_intilization();
 	File.EnterName();
-
+	pressed = false;
 	while (window.isOpen())
 	{
 		if (pageNumber == 1000)
 		{
-			
+
 			while (window.pollEvent(event))
 			{
 				if (event.type == Event::Closed)
@@ -108,17 +109,12 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 				File.TypeYourName();
 				if (File.infile)
 				{
-					if (event.key.code == Keyboard::Escape && !pressed && men1.selected != 6)
-					{
-						sound.change_option_Sound();
-						men1.mainmenu[men1.selected].setFillColor(Color::Black);
-						men1.selected = 6;
-						men1.mainmenu[6].setFillColor(Color{ 255,204,0 });
-						men1.hand.setPosition(1140, 890 + shift);
-						pressed = true;
+					if (event.type == Event::KeyReleased)  {
+						pressed = false;
 					}
-					if (event.type == Event::KeyPressed)
-					{
+					
+					if (event.type == Event::KeyPressed &&  !pressed) {
+						pressed = true;
 						if (event.key.code == Keyboard::Down)
 						{
 							sound.change_option_Sound();
@@ -131,8 +127,9 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 							//so.play();
 							men1.MoveUp(men1.selected, men1.choises);
 						}
-						if (event.key.code == Keyboard::Enter || event.key.code == Keyboard::Escape && !pressed && men1.selected == 6)
+						if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && men1.selected == 6))
 						{
+							esc_button = 1;
 							sound.select_option_Sound();
 							if (men1.selected == 6)
 								pageNumber = -1;
@@ -140,17 +137,19 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 							{
 								Play_menu(window, GameMode);
 							}
-							if (men1.selected == 4 )
+							if (men1.selected == 4)
 								options_menu(window);
 							if (men1.selected == 1)
 								instructions(window);
 						}
+						if (event.key.code == Keyboard::Escape) {
+							sound.change_option_Sound();
+							men1.mainmenu[men1.selected].setFillColor(Color::Black);
+							men1.selected = 6;
+							men1.mainmenu[6].setFillColor(Color{ 255,204,0 });
+							men1.hand.setPosition(1140, 890 + shift);
+						}
 					}
-					if (!Keyboard::isKeyPressed(Keyboard::Escape))
-					{
-						pressed = false;
-					}
-
 				}
 			}
 		}
@@ -263,7 +262,7 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 	x = 40;
 	for (int i = 0; i < menu2.choises; i++)
 	{
-		if(!i)
+		if (!i)
 			menu2.mainmenu[i].setFillColor(Color{ 255,204,0 });
 		else
 			menu2.mainmenu[i].setFillColor(Color::Black);
@@ -484,7 +483,7 @@ void  Menu::options_menu1(RenderWindow& window)
 	x = 40;
 	for (int i = 0; i < menu5.choises; i++)
 	{
-		if(!i) menu5.mainmenu[i].setFillColor(Color{ 255,204,0 });
+		if (!i) menu5.mainmenu[i].setFillColor(Color{ 255,204,0 });
 		else   menu5.mainmenu[i].setFillColor(Color::Black);
 		menu5.mainmenu[i].setFont(menu5.font);
 		menu5.mainmenu[i].setPosition(Vector2f(1250, menu5.height / 2 + x));
@@ -621,7 +620,7 @@ void  Menu::options_menu(RenderWindow& window)
 	x = 40;
 	for (int i = 0; i < menu4.choises; i++)
 	{
-		if(!i) menu4.mainmenu[i].setFillColor(Color{ 255,204,0 });
+		if (!i) menu4.mainmenu[i].setFillColor(Color{ 255,204,0 });
 		else   menu4.mainmenu[i].setFillColor(Color::Black);
 		menu4.mainmenu[i].setFont(menu4.font);
 		menu4.mainmenu[i].setCharacterSize(50);
@@ -631,7 +630,7 @@ void  Menu::options_menu(RenderWindow& window)
 	menu4.mainmenu[0].setString("GFX Options");
 	menu4.mainmenu[1].setString("Sound options");
 	menu4.mainmenu[2].setString("Back");
-	
+
 	while (window.isOpen())
 	{
 		Event event;
@@ -723,7 +722,7 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 	x = 200;
 	for (int i = 0; i < Pause1.choises; i++)
 	{
-		if(!i) Pause1.mainmenu[i].setFillColor(Color{ 255,204,0 });
+		if (!i) Pause1.mainmenu[i].setFillColor(Color{ 255,204,0 });
 		else  Pause1.mainmenu[i].setFillColor(sf::Color::Black);
 		Pause1.mainmenu[i].setFont(Pause1.font);
 		Pause1.mainmenu[i].setCharacterSize(70);

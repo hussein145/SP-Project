@@ -15,5 +15,6 @@ struct FileSave
 	void TypeYourName();
 	void pairtofile();
 	void intopair(int score);
+	void  highscore(RenderWindow& window);
 };
 

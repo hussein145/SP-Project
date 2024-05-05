@@ -225,7 +225,7 @@ void DRAW()
 		window.draw(background.wallsLeft[i]);
 		window.draw(background.wallsRight[i]);
 	}
-	
+
 }
 void DRAW_View1()
 {
@@ -242,17 +242,31 @@ void DRAW_View1()
 	window.draw(gameclock.power);
 	window.draw(gameclock.star);
 
-	if (GameMode == 2) {
+	if (GameMode == 2) 
+	{
 		player1.score_txt.setPosition(30, 990);
 	}
 	window.draw(player1.score_txt);
 	window.draw(player1.compo);
 	if (!END)
 	{
-		window.draw(File.highscoreENDsp);
-		window.draw(File.scoreText1);
-		window.draw(File.scoreText2);
-		window.draw(File.scoreText3);
+		
+		if (player1.oveer )
+		{
+			window.draw(File.highscoreENDsp);
+			window.draw(File.scoreText1);
+			window.draw(File.scoreText2);
+			window.draw(File.scoreText3);
+		}
+		else
+		{
+			window.draw(File.gameoversp);
+			window.draw(File.scoreText1);
+			window.draw(File.scoreText2);
+			window.draw(File.scoreText3);
+			
+
+		}
 	}
 }
 void DRAW_View2()
@@ -479,25 +493,32 @@ void Gameplay()
 		if ((player1.character.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540)) && check1)
 		{
+			if (player1.score > File.list[0].first)
+			{
+				player1.oveer = 1;
+			}
+			else
+			{
+				player1.oveer = 0;
+			}
 			check1 = 0;
+		
 			File.intopair(player1.score);
 			File.pairtofile();
-
+			File.highscore_gameover(player1.score, player1.floor, player1.Max_Compo);
 			Map.move = 0;
 			END = 0;
 
-			if (alive) {
-				if (sound.so4.getStatus() == Sound::Stopped) {
+			if (alive)
+			{
+				if (sound.so4.getStatus() == Sound::Stopped) 
+				{
 					sound.falling_sound();
 					alive = false;
 				}
 			}
 		}
 
-		if (!END)
-		{
-			File.highscoreEND(player1.score, player1.floor, player1.Max_Compo);
-		}
 
 
 		//cout << dt << endl;

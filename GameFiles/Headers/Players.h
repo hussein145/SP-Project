@@ -14,6 +14,7 @@ struct Players
 
 	Sprite character;
 	Texture texture;
+	bool oveer = 0;
 	float j = 0.f;
 	float velocity_x = 0;
 	float velocity_y = 0;
@@ -35,4 +36,3 @@ struct Players
 	void Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump);
 	bool ss = false;
 };
-

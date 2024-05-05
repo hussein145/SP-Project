@@ -312,15 +312,11 @@ void Gameplay()
 	else if (PLayer2 == 1)
 		player2.inti(tex1);
 
-
-	//music(k);
-
-
-
-	//view insilization
 	view.view_insilization();
-	Clock TimeOfMove;
-	//Time TimeOfMove;
+
+	
+
+
 	bool StartMoving = 0;
 	bool StartReturning = 0;
 	int disapp = 0, disapp2;
@@ -338,7 +334,6 @@ void Gameplay()
 			Vector2f pos = Vector2f(Mouse::getPosition(window));
 			cout << pos.x << " " << pos.y << endl;
 		}*/
-
 		Event Play;
 		while (window.pollEvent(Play))
 		{
@@ -346,12 +341,14 @@ void Gameplay()
 				window.close();
 			if (END ? (Play.key.code == Keyboard::Escape && !pressed) : (Play.type == Event::KeyPressed && !pressed))  //&& !menu.pressed
 			{
+		
 				pressed = true;
 				GameTexture.create(1920, 1080);
 				GameTexture.update(window);
+				Power.pausedTime = Power.TimeOfMove.getElapsedTime();
 				menu.Pause(window, GameTexture);
 				clockk.restart();
-				//TimeOfMove.restart();
+				Power.TimeOfMove.restart();
 				if (menu.exit)
 				{
 					menu.exit = 0;
@@ -413,7 +410,6 @@ void Gameplay()
 		disapp2 = player2.compo_cnt;
 
 		dt = clockk.restart().asSeconds();
-		dt2 = clockk2.restart().asSeconds();
 		collisions(player1);
 		collisions(player2);
 		player1.score.setString("Score: " + to_string(player1.Score * 10));
@@ -446,12 +442,22 @@ void Gameplay()
 			//clock
 			if (!StartMoving)
 			{
-				TimeOfMove.restart();
+				Power.TimeOfMove.restart();
+				Power.elapsedTime = Power.TimeOfMove.getElapsedTime();
+				Power.pausedTime.Zero;
 			}
-			Power.checkdrop(TimeOfMove, StartMoving, StartReturning);
+			//cout << TimeOfMove.getElapsedTime().asSeconds() << endl;
+			//cout << elapsedTime.asSeconds() << endl;
+			
+
+			Power.elapsedTime = Power.TimeOfMove.getElapsedTime() + Power.pausedTime;
+			
+			Power.checkdrop(StartMoving, StartReturning);
+			
 
 			if (player1.droptype != 0)
 				Power.resetPowerups();
+
 		}
 		Map.update();
 		view.SetView();

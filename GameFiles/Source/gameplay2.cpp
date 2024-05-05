@@ -454,9 +454,7 @@ void Gameplay()
 			
 			Power.checkdrop(StartMoving, StartReturning);
 			
-
-			if (player1.droptype != 0)
-				Power.resetPowerups();
+			Power.resetPowerups();
 
 		}
 		Map.update();

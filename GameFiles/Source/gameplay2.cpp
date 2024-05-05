@@ -225,13 +225,6 @@ void DRAW()
 		window.draw(background.wallsLeft[i]);
 		window.draw(background.wallsRight[i]);
 	}
-	if (!END)
-	{
-		window.draw(File.highscoreENDsp);
-		window.draw(File.scoreText1);
-		window.draw(File.scoreText2);
-		window.draw(File.scoreText3);
-	}
 }
 void DRAW_View1()
 {
@@ -253,6 +246,13 @@ void DRAW_View1()
 	}
 	window.draw(player1.score_txt);
 	window.draw(player1.score_txt);
+	if (!END)
+	{
+		window.draw(File.highscoreENDsp);
+		window.draw(File.scoreText1);
+		window.draw(File.scoreText2);
+		window.draw(File.scoreText3);
+	}
 }
 void DRAW_View2()
 {
@@ -479,7 +479,7 @@ void Gameplay()
 			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540)) && check1)
 		{
 			check1 = 0;
-			File.intopair(player1.floor);
+			File.intopair(player1.score);
 			File.pairtofile();
 
 			Map.move = 0;

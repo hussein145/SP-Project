@@ -1,9 +1,12 @@
 #pragma once
 struct Players
 {
-	Font score_Tex;
-	Text score;
-	int Score = 0;
+	Font font;
+
+	Text score_txt;
+	int score;
+
+	int floor = 0;
 	int compo_cnt = 0;
 	int cnt = 0;
 	int Max_Compo = 0;
@@ -23,12 +26,13 @@ struct Players
 	int curr_colission = 0;
 	const float gravity = 17.f;
 	const float jumpVelocity = 8.f;
-	const float Ground = 900;
 	int droptype = -1;
 	float incspeed = 1, addspeed = 0, superjump = 1, addsuperjump = 0;
 	Sound so4;
+	//Sound sound;
 	void inti(Texture& texture);
 	void update();
 	void Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump);
+	bool ss = false;
 };
 

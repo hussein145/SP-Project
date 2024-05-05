@@ -14,11 +14,14 @@ struct PowerUps
 	float mapspeed = 1, addmapspeed = 0;
 	int rando;
 
+	Clock TimeOfMove;
+	Time elapsedTime;
+	Time pausedTime;
+
 	void setDrops();
 	void generateDrop(Vector2f stair_position, bool check);
 	void dropcollision();
-	void checkdrop(Clock& timerOfMove, bool& start, bool& StartReturning);
+	void checkdrop(bool& start, bool& StartReturning);
 	void resetPowerups();
 };
-
 

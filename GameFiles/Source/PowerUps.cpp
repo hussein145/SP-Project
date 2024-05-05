@@ -127,6 +127,12 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 		player1.addspeed = 7;
 		player1.incspeed = 1.5;
 	}
+	else if (player1.droptype == 3)
+	{
+		mapspeed = 2;
+		addmapspeed = 7;
+		player1.droptype = -1;
+	}
 	else if (player1.droptype == 4)
 	{
 		rando = abs(rand() % 2);
@@ -175,6 +181,15 @@ void PowerUps::resetPowerups()
 		else {
 			player1.addsuperjump -= 0.005;
 			player1.droptype = -1;
+		}
+		if (addmapspeed <= 0)
+		{
+			mapspeed = 1;
+			addmapspeed = 0;
+		}
+		else
+		{
+			addmapspeed -= 0.01;
 		}
 		if (stopsmall < 0) {
 			stopsmall = 0;

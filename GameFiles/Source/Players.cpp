@@ -1,7 +1,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include<SFML/Audio.hpp>
+#include<string>
 #include"Menu.h"
+
 #include "menu_Bg_and_Face.h"
 #include "Walls_And_Background.h"
 #include "STAIRS.h"
@@ -16,7 +18,7 @@ extern int GameMode;
 
 void Players::inti(Texture& texture) {
 
-	Score = compo_cnt = cnt = Max_Compo = curr_colission = 0;
+	floor = compo_cnt = cnt = Max_Compo = curr_colission = 0;
 	j = velocity_x = velocity_y = 0;
 	int droptype = -1;
 	incspeed = superjump = 1,
@@ -28,12 +30,12 @@ void Players::inti(Texture& texture) {
 	character.setOrigin(25, 30);
 	character.setScale(2.4, 2.4);
 
-	score_Tex.loadFromFile("Assets//Fonts//BrownieStencil-8O8MJ.ttf");
+	font.loadFromFile("Assets//Fonts//BrownieStencil-8O8MJ.ttf");
 
-	score.setFont(score_Tex);
-	score.setCharacterSize(50);
-	score.setPosition(240, 1000);
-	compo.setFont(score_Tex);
+	score_txt.setFont(font);
+	score_txt.setCharacterSize(50);
+	score_txt.setPosition(240, 1000);
+	compo.setFont(font);
 	compo.setPosition(300, 580);
 
 	x = 0;
@@ -99,11 +101,11 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		Motion_Velocity = 6;
 	/*============================================================*/
 	if (Keyboard::isKeyPressed(right)) {
-		velocity_x += Motion_Velocity * dt * incspeed * 1.07;
+		velocity_x += Motion_Velocity * dt * incspeed * 1.05;
 		validL = 0;
 	}
 	else if (Keyboard::isKeyPressed(left)) {
-		velocity_x -= Motion_Velocity * dt * incspeed * 1.07;
+		velocity_x -= Motion_Velocity * dt * incspeed * 1.05;
 		validR = 0;
 	}
 	/*============================================================*/

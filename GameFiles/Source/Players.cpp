@@ -21,7 +21,7 @@ void Players::inti(Texture& texture) {
 
 	floor = compo_cnt = cnt = Max_Compo = curr_colission = 0;
 	j = velocity_x = velocity_y = 0;
-	int droptype = -1;
+	droptype = -1;
 	incspeed = superjump = 1,
 		addspeed = addsuperjump = 0;
 

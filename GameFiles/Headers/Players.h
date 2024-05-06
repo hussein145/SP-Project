@@ -31,7 +31,6 @@ struct Players
 	int droptype = -1;
 	float incspeed = 1, addspeed = 0, superjump = 1, addsuperjump = 0;
 	float catch_speed = 0;
-	float jj = 0.f;
 	Sound so4;
 	//Sound sound;
 	void inti(Texture& texture);

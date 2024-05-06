@@ -11,7 +11,8 @@
 
 extern Event event;
 extern Sounds sound;
-extern Menu menu;
+extern Players player1;
+
 extern menu_Bg_and_Face menu_UI;
 bool press = 0;
 void FileSave::highscore_gameover(int score, int floor, int combo)
@@ -84,13 +85,13 @@ void  FileSave::highscore(RenderWindow& window)
 		scoreStr[i] = to_string(list[i].first);
 		text[i].setString(scoreStr[i]);
 		text[i].setPosition(500, 200 + ((i + 1) * 35));
-		text2[i].setString(list[i].second);
+		text2[i].setString(list[i].second.Name);
 		text2[i].setPosition(250, 200 + ((i + 1) * 35));
 		string floorStr[5];
 		floorStr[i] = to_string(list[i].first / 10);
 		text3[i].setString(floorStr[i]);
 		text3[i].setPosition(500, 550 + ((i + 1) * 35));
-		text4[i].setString(list[i].second);
+		text4[i].setString(list[i].second.Name);
 		text4[i].setPosition(250, 550 + ((i + 1) * 35));
 
 	}
@@ -106,7 +107,7 @@ void  FileSave::highscore(RenderWindow& window)
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
 			sound.select_option_Sound();
-			menu.pageNumber = 1000;
+			//menu.pageNumber = 1000;
 			return;
 		}
 
@@ -187,15 +188,18 @@ void FileSave::filetopair() {
 		if (file.peek() == std::ifstream::traits_type::eof()) {
 			// File is empty; initialize with default values
 			for (int i = 0; i < 5; i++) {
-				list[i].second = "NONE";
 				list[i].first = 0;
+				list[i].second.Name = "NONE";
+				list[i].second.floor = 0;
+				list[i].second.max_compo = 0;
 			}
 		}
 		else {
 			// File is not empty; read data
 			for (int i = 0; i < 5; i++) {
-				file >> list[i].second >> list[i].first;
+				file >> list[i].second.Name >> list[i].first >> list[i].second.floor >> list[i].second.max_compo;
 			}
+			//list[i].first
 		}
 		file.close();
 	}
@@ -208,7 +212,7 @@ void FileSave::pairtofile()
 	{
 		for (int i = 0; i < 5; i++)
 		{
-			file << list[i].second << "    " << list[i].first << "\n";
+			file << list[i].second.Name << "    " << list[i].first << "    " << list[i].second.floor << "    " << list[i].second.max_compo << "\n";
 		}
 		file.close();
 	}
@@ -217,13 +221,17 @@ void FileSave::pairtofile()
 		cout << "Error opening file for writing." << endl;
 	}
 }
+bool comparePairs(const std::pair<int, Data>& a, const std::pair<int, Data>& b) {
+	return a.first > b.first; // Change > to < for ascending order
+}
 void FileSave::intopair(int score)
 {
 	if (score > list[4].first)
 	{
-		list[4].second = playername;
+		list[4].second.Name = playername;
+		list[4].second.floor = player1.floor;
+		list[4].second.max_compo = player1.Max_Compo;
 		list[4].first = score;
 	}
-	sort(list, list + 5);
-	reverse(list, list + 5);
+	sort(std::begin(list), std::end(list), comparePairs);
 }

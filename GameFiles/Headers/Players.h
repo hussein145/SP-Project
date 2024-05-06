@@ -21,6 +21,7 @@ struct Players
 	float jump_height;
 	float Motion_Velocity;
 	bool validL = 0, validR = 0;
+	int rotate = 0;
 	float x;
 	float t = 0.f;
 	bool check_on_ground = 1;
@@ -29,6 +30,8 @@ struct Players
 	const float jumpVelocity = 8.f;
 	int droptype = -1;
 	float incspeed = 1, addspeed = 0, superjump = 1, addsuperjump = 0;
+	float catch_speed = 0;
+	float jj = 0.f;
 	Sound so4;
 	//Sound sound;
 	void inti(Texture& texture);

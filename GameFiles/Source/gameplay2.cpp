@@ -326,10 +326,7 @@ void Gameplay()
 		player1.inti(tex1);
 	else if (PLayer1 == 1)
 		player1.inti(tex2);
-
 	else if (PLayer1 == 2)
-
-
 		player1.inti(tex3);
 
 	if (PLayer2 == 0)
@@ -337,7 +334,6 @@ void Gameplay()
 	else if (PLayer2 == 1)
 		player2.inti(tex1);
 	else if (PLayer2 == 2)
-
 		player2.inti(tex3);
 
 	view.view_insilization();

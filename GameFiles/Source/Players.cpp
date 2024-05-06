@@ -101,17 +101,7 @@ void Players::update() {
 	}
 	if (!check_on_ground && catch_speed <= -16.0) {
 		character.setTextureRect(IntRect(200, 60 * 2, 50, 60));
-		if (rotate==0) {
-			character.rotate(jj * 180);
-			jj += 0.6f;
-			if (jj > 2.0) {
-				jj = 0.f;
-			}
-		}
-		rotate++;
-		if (rotate == 2) {
-			rotate = 0;
-		}
+		character.rotate(3.5);
 	}
     if (velocity_y<=0.5 && velocity_y>=0) {
 		catch_speed = 0;

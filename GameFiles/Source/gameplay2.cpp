@@ -469,7 +469,7 @@ void Gameplay()
 		collisions(player1);
 		collisions(player2);
 		//= ====================================calculate score and compo================================== = //
-			player1.score = player1.floor * 10;
+		player1.score = player1.floor * 10;
 		player2.score = player2.floor * 10;
 
 		player1.score_txt.setString("Score: " + to_string(player1.score));
@@ -495,7 +495,7 @@ void Gameplay()
 			player2.compo_cnt = 0;
 		}
 		//= ====================================calculate score and compo================================== = //
-			Set_ObjectsOnStairs();
+		Set_ObjectsOnStairs();
 
 		if (GameMode == 3)
 		{
@@ -523,19 +523,21 @@ void Gameplay()
 		if ((player1.character.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540)) && check1)
 		{
-			if (player1.score > File.list[0].first)
-			{
-				player1.oveer = 1;
-			}
-			else
-			{
-				player1.oveer = 0;
-			}
-			check1 = 0;
+			if (GameMode == 1) {
+				if (player1.score > File.list[0].first)
+				{
+					player1.oveer = 1;
+				}
+				else
+				{
+					player1.oveer = 0;
+				}
+				check1 = 0;
 
-			File.intopair(player1.score);
-			File.pairtofile();
-			File.highscore_gameover(player1.score, player1.floor, player1.Max_Compo);
+				File.intopair(player1.score);
+				File.pairtofile();
+				File.highscore_gameover(player1.score, player1.floor, player1.Max_Compo);
+			}
 			Map.move = 0;
 			END = 0;
 
@@ -567,7 +569,7 @@ void Gameplay()
 			player2.compo.setCharacterSize(0);
 		}
 		//= ================================================== = DRAW================================ = //
-			window.clear();
+		window.clear();
 		window.setView(player1_View);
 		DRAW();
 		DRAW_View1();

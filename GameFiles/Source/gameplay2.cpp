@@ -18,9 +18,6 @@
 using namespace sf;
 using namespace std;
 
-//int select = 0;
-//PauseMenu pausemenu;
-//Menu Pause1;
 Menu menu;
 Walls_And_Background background;
 STAIRS Stairs;
@@ -242,7 +239,7 @@ void DRAW_View1()
 	window.draw(gameclock.power);
 	window.draw(gameclock.star);
 
-	if (GameMode == 2) 
+	if (GameMode == 2)
 	{
 		player1.score_txt.setPosition(30, 990);
 	}
@@ -250,8 +247,8 @@ void DRAW_View1()
 	window.draw(player1.compo);
 	if (!END)
 	{
-		
-		if (player1.oveer )
+
+		if (player1.oveer)
 		{
 			window.draw(File.highscoreENDsp);
 			window.draw(File.scoreText1);
@@ -264,7 +261,7 @@ void DRAW_View1()
 			window.draw(File.scoreText1);
 			window.draw(File.scoreText2);
 			window.draw(File.scoreText3);
-			
+
 
 		}
 	}
@@ -335,9 +332,6 @@ void Gameplay()
 		player2.inti(tex1);
 
 	view.view_insilization();
-
-
-
 
 	bool StartMoving = 0;
 	bool StartReturning = 0;
@@ -471,12 +465,8 @@ void Gameplay()
 			{
 				Power.TimeOfMove.restart();
 				Power.elapsedTime = Power.TimeOfMove.getElapsedTime();
-				Power.pausedTime.Zero;
+				Power.pausedTime = Power.TimeOfMove.getElapsedTime();
 			}
-			//cout << TimeOfMove.getElapsedTime().asSeconds() << endl;
-			//cout << elapsedTime.asSeconds() << endl;
-
-
 			Power.elapsedTime = Power.TimeOfMove.getElapsedTime() + Power.pausedTime;
 
 			Power.checkdrop(StartMoving, StartReturning);
@@ -502,7 +492,7 @@ void Gameplay()
 				player1.oveer = 0;
 			}
 			check1 = 0;
-		
+
 			File.intopair(player1.score);
 			File.pairtofile();
 			File.highscore_gameover(player1.score, player1.floor, player1.Max_Compo);
@@ -511,7 +501,7 @@ void Gameplay()
 
 			if (alive)
 			{
-				if (sound.so4.getStatus() == Sound::Stopped) 
+				if (sound.so4.getStatus() == Sound::Stopped)
 				{
 					sound.falling_sound();
 					alive = false;

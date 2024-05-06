@@ -26,6 +26,31 @@ float dt, dt2;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 
+// stage stars
+Sprite star1, star2;
+Texture starT1, starT2;
+void starsIntiliztion() {
+	starT1.loadFromFile("Assets\\Textures\\newstage.png");
+	starT2.loadFromFile("Assets\\Textures\\newstage2.png");
+	star1.setTexture(starT1);
+	star1.setPosition(350, player1.character.getPosition().y - 700);
+	star1.setScale(0.65, 0.8);
+	star2.setTexture(starT2);
+	star2.setPosition(350, player1.character.getPosition().y - 700);
+	star2.setScale(0.4, 0.6);
+
+}
+void starsMove() {
+	if (player1.floor % 50 == 0 && player1.floor != 0) {
+		star1.move(0, 4);
+		star2.move(0, 4);
+	}
+	else if (player1.floor != 0) {
+		star1.setPosition(350, player1.character.getPosition().y - 700);
+		star2.setPosition(350, player1.character.getPosition().y - 700);
+	}
+}
+
 
 void Intilize_Numbers()
 {
@@ -208,6 +233,10 @@ void DRAW()
 			window.draw(Power.dropBag[i].dropShape);
 		}
 	}
+	if (player1.floor % 50 == 0 && player1.floor != 0) {
+		window.draw(star1);
+		window.draw(star2);
+	}
 	for (int i = 0; i < background.bgNums; i++)
 	{
 		window.draw(background.wallsLeft[i]);
@@ -305,6 +334,9 @@ void Gameplay()
 	//map insilization
 	Map.intilization();
 
+	// new stage starts intiliztion
+	starsIntiliztion();
+
 	//player
 	extern int PLayer1;
 	extern int PLayer2;
@@ -383,6 +415,9 @@ void Gameplay()
 			}
 		}
 
+		// new stage stars move
+		starsMove();
+
 		if (player1.compo_cnt > 0 && player1.compo_cnt != disapp)
 			resize = GameMode == 2 ? 103 : 203;
 		else if (player1.compo_cnt == 0)
@@ -425,7 +460,7 @@ void Gameplay()
 		collisions(player1);
 		collisions(player2);
 		//= ====================================calculate score and compo================================== = //
-			player1.score = player1.floor * 10;
+		player1.score = player1.floor * 10;
 		player2.score = player2.floor * 10;
 
 		player1.score_txt.setString("Score: " + to_string(player1.score));
@@ -451,7 +486,7 @@ void Gameplay()
 			player2.compo_cnt = 0;
 		}
 		//= ====================================calculate score and compo================================== = //
-			Set_ObjectsOnStairs();
+		Set_ObjectsOnStairs();
 
 		if (GameMode == 3)
 		{
@@ -479,19 +514,21 @@ void Gameplay()
 		if ((player1.character.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540)) && check1)
 		{
-			if (player1.score > File.list[0].first)
-			{
-				player1.oveer = 1;
-			}
-			else
-			{
-				player1.oveer = 0;
-			}
-			check1 = 0;
+			if (GameMode == 1) {
+				if (player1.score > File.list[0].first)
+				{
+					player1.oveer = 1;
+				}
+				else
+				{
+					player1.oveer = 0;
+				}
+				check1 = 0;
 
-			File.intopair(player1.score);
-			File.pairtofile();
-			File.highscore_gameover(player1.score, player1.floor, player1.Max_Compo);
+				File.intopair(player1.score);
+				File.pairtofile();
+				File.highscore_gameover(player1.score, player1.floor, player1.Max_Compo);
+			}
 			Map.move = 0;
 			END = 0;
 
@@ -523,7 +560,7 @@ void Gameplay()
 			player2.compo.setCharacterSize(0);
 		}
 		//= ================================================== = DRAW================================ = //
-			window.clear();
+		window.clear();
 		window.setView(player1_View);
 		DRAW();
 		DRAW_View1();

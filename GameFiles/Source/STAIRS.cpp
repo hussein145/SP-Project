@@ -70,7 +70,7 @@ void STAIRS::intiliztion1(int GameMode) {
 		background.LeftWall_Pos_x = 240, background.RightWalls_Pos_x = 1680;
 		background.bg_width = 1420, floor_width = 1420;
 	}
-	stairs[0].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width / 2, 955));
+	stairs[0].setPosition(Vector2f(960, 955));
 	Block_texture.loadFromFile("Assets/Textures/strnum.png");
 	Gfont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	//stairs & floors
@@ -81,19 +81,14 @@ void STAIRS::intiliztion1(int GameMode) {
 		strTxt[currstair].setFont(Gfont);
 		if (currstair % Stairs_OF_EachFloor == 0) //50
 		{
-			//cout << currstair << endl;
-			//floorTexture[0].loadFromFile("Assets/Textures/floor.png");
-			//stairs[currstair].setTexture(&floorTexture[0]);
 			FloorTextures();
 			stairs[currstair].setSize(Vector2f(floor_width, 50));
-			stairs[currstair].setOrigin(floor_width / 2, 0);
+			stairs[currstair].setOrigin(floor_width / 2.0f, 0);
 			if (currstair)
-				stairs[currstair].setPosition(Vector2f(background.LeftWall_Pos_x + floor_width / 2, stairs[currstair - 1].getPosition().y - heightBetweenStair));
+				stairs[currstair].setPosition(Vector2f(960.0f, stairs[currstair - 1].getPosition().y - heightBetweenStair));
 		}
 		else
 		{
-			//stairTexture[0].loadFromFile("Assets/Textures/Stair.png");
-			//stairs[currstair].setTexture(&stairTexture[0]);
 			StairsTextures();
 			////SET SIZE
 			size_Of_Stair = Vector2f((rand() % 300 + 200), 60);
@@ -130,7 +125,7 @@ void STAIRS::updateStairs(int GameMode, View& player1_View, View& player2_View) 
 
 		if (updatestair % Stairs_OF_EachFloor == 0) //50
 		{
-			StairPosition = (Vector2f(background.LeftWall_Pos_x + floor_width / 2, stairs[currstair].getPosition().y - heightBetweenStair));
+			StairPosition = (Vector2f(960.f, stairs[currstair].getPosition().y - heightBetweenStair));
 			currstair = updatestair;
 			FloorTextures();
 		}

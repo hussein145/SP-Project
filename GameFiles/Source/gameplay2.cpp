@@ -35,6 +35,31 @@ float dt, dt2;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 
+// stage stars
+Sprite star1, star2;
+Texture starT1, starT2;
+void starsIntiliztion() {
+	starT1.loadFromFile("Assets\\Textures\\newstage.png");
+	starT2.loadFromFile("Assets\\Textures\\newstage2.png");
+	star1.setTexture(starT1);
+	star1.setPosition(350, player1.character.getPosition().y - 700);
+	star1.setScale(0.65, 0.8);
+	star2.setTexture(starT2);
+	star2.setPosition(350, player1.character.getPosition().y - 700);
+	star2.setScale(0.4, 0.6);
+
+}
+void starsMove() {
+	if (player1.floor % 50 == 0 && player1.floor != 0) {
+		star1.move(0, 4);
+		star2.move(0, 4);
+	}
+	else if (player1.floor != 0) {
+		star1.setPosition(350, player1.character.getPosition().y - 700);
+		star2.setPosition(350, player1.character.getPosition().y - 700);
+	}
+}
+
 
 void Intilize_Numbers()
 {
@@ -217,6 +242,10 @@ void DRAW()
 			window.draw(Power.dropBag[i].dropShape);
 		}
 	}
+	if (player1.floor % 50 == 0 && player1.floor != 0) {
+		window.draw(star1);
+		window.draw(star2);
+	}
 	for (int i = 0; i < background.bgNums; i++)
 	{
 		window.draw(background.wallsLeft[i]);
@@ -314,6 +343,9 @@ void Gameplay()
 	//map insilization
 	Map.intilization();
 
+	// new stage starts intiliztion
+	starsIntiliztion();
+
 	//player
 	extern int PLayer1;
 	extern int PLayer2;
@@ -391,6 +423,9 @@ void Gameplay()
 				pressed = false;
 			}
 		}
+
+		// new stage stars move
+		starsMove();
 
 		if (player1.compo_cnt > 0 && player1.compo_cnt != disapp)
 			resize = GameMode == 2 ? 103 : 203;

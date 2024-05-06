@@ -93,6 +93,14 @@ void Players::update() {
 
 		}
 	}
+	if (!check_on_ground && catch_speed <= -16.0) {
+		character.setTextureRect(IntRect(200, 60 * 2, 50, 60));
+		character.rotate(3.5);
+	}
+    if (velocity_y<=0.5 && velocity_y>=0) {
+		catch_speed = 0;
+		character.setRotation(0);
+	}
 	if (t >= 2)
 		t = 0;
 	if (x > 3.9)
@@ -123,7 +131,9 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		velocity_x += Motion_Velocity * dt * incspeed + 0.2;
 		if (velocity_x > 0.f)
 			velocity_x = 0;
+
 	}
+	
 	validL = validR = 1;
 	/*================================================================*/
 	if (velocity_y > 0 || !check_on_ground) {
@@ -142,11 +152,13 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 			if (abs(velocity_x) > 4.f)
 				velocity_y *= abs(velocity_x) / 4.f;
 			//jump_height = velocity_y;
-		}
+		};
+		catch_speed = velocity_y;
 		check_on_ground = false;
 		so4.setBuffer(buff);
 		so4.play();
 	}
+	
 	if (check_on_ground) {
 		velocity_y = 0;
 	}

@@ -496,6 +496,11 @@ void  Menu::options_menu1(RenderWindow& window)
 	Texture pl2;
 	pl2.loadFromFile("Assets/Textures/icytower2.png");
 
+
+	Texture pl3;
+	pl3.loadFromFile("Assets/Textures/icy_demon1.png");
+
+
 	Sprite player1;
 	Sprite player2;
 
@@ -543,11 +548,11 @@ void  Menu::options_menu1(RenderWindow& window)
 					if (PLayer1 > 0)
 						PLayer1--;
 					else
-						PLayer1 = 1;
+						PLayer1 = 2;
 				}
 				if (Keyboard::isKeyPressed(Keyboard::Right))
 				{
-					if (PLayer1 < 1)
+					if (PLayer1 < 2)
 						PLayer1++;
 					else
 						PLayer1 = 0;
@@ -560,11 +565,11 @@ void  Menu::options_menu1(RenderWindow& window)
 					if (PLayer2 > 0)
 						PLayer2--;
 					else
-						PLayer2 = 1;
+						PLayer2 = 2;
 				}
 				if (Keyboard::isKeyPressed(Keyboard::Right))
 				{
-					if (PLayer2 < 1)
+					if (PLayer2 < 2)
 						PLayer2++;
 					else
 						PLayer2 = 0;
@@ -579,6 +584,12 @@ void  Menu::options_menu1(RenderWindow& window)
 		{
 			player1.setTexture(pl2);
 		}
+
+		else if (PLayer1 == 2)
+		{
+			player1.setTexture(pl3);
+		}
+
 		if (PLayer2 == 1)
 		{
 			player2.setTexture(pl1);
@@ -586,6 +597,10 @@ void  Menu::options_menu1(RenderWindow& window)
 		else if (PLayer2 == 0)
 		{
 			player2.setTexture(pl2);
+		}
+		else if (PLayer2 == 2)
+		{
+			player2.setTexture(pl3);
 		}
 		player1.setTextureRect(IntRect(0, 0, 50, 60));
 		player1.setScale(2.4, 2.4);

@@ -276,6 +276,7 @@ void DRAW_View2()
 }
 
 float resize = 0, resize2 = 0;
+
 void Gameplay()
 {
 	Intilize_Numbers();
@@ -308,19 +309,23 @@ void Gameplay()
 	extern int PLayer1;
 	extern int PLayer2;
 
-	Texture tex1, tex2;
+	Texture tex1, tex2, tex3;
 	tex1.loadFromFile("Assets/Textures/icytower1.png");
 	tex2.loadFromFile("Assets/Textures/icytower2.png");
+	tex3.loadFromFile("Assets/Textures/icy_demon1.png");
 	if (PLayer1 == 0)
 		player1.inti(tex1);
 	else if (PLayer1 == 1)
 		player1.inti(tex2);
-
+	else if (PLayer1 == 2)
+		player1.inti(tex3);
 
 	if (PLayer2 == 0)
 		player2.inti(tex2);
 	else if (PLayer2 == 1)
 		player2.inti(tex1);
+	else if (PLayer2 == 2)
+		player2.inti(tex3);
 
 	view.view_insilization();
 
@@ -419,8 +424,8 @@ void Gameplay()
 		dt = clockk.restart().asSeconds();
 		collisions(player1);
 		collisions(player2);
-		/*=====================================calculate score and compo===================================*/
-		player1.score = player1.floor * 10;
+		//= ====================================calculate score and compo================================== = //
+			player1.score = player1.floor * 10;
 		player2.score = player2.floor * 10;
 
 		player1.score_txt.setString("Score: " + to_string(player1.score));
@@ -445,8 +450,8 @@ void Gameplay()
 		else {
 			player2.compo_cnt = 0;
 		}
-		/*=====================================calculate score and compo===================================*/
-		Set_ObjectsOnStairs();
+		//= ====================================calculate score and compo================================== = //
+			Set_ObjectsOnStairs();
 
 		if (GameMode == 3)
 		{
@@ -517,8 +522,8 @@ void Gameplay()
 			gameclock.star2.setScale(0, 0);
 			player2.compo.setCharacterSize(0);
 		}
-		/*====================================================DRAW=================================*/
-		window.clear();
+		//= ================================================== = DRAW================================ = //
+			window.clear();
 		window.setView(player1_View);
 		DRAW();
 		DRAW_View1();

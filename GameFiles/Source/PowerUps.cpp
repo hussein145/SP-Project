@@ -23,6 +23,7 @@ PowerUps* dropBag = new PowerUps[100];//stairsNum
 Clock addtimer;
 void PowerUps::setDrops()
 {
+	velocity_x = 20;
 	DropsTex[0].loadFromFile("Assets//Textures//heart.png");
 	DropsTex[1].loadFromFile("Assets//Textures//speed.png");
 	DropsTex[2].loadFromFile("Assets//Textures//superjump.png");
@@ -91,9 +92,7 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 				background.wallsLeft[i].move(velocity_x * dt, 0);
 				background.wallsRight[i].move(-velocity_x * dt, 0);
 			}
-
 			gameclock.clock.move(velocity_x * dt, 0);
-			//gameclock.cl2.move(velocity_x * dt, 0);
 		}
 		else if (elapsedTime.asSeconds() > 5 && elapsedTime.asSeconds() < 8)
 		{
@@ -101,6 +100,7 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 		}
 		else if (elapsedTime.asSeconds() >= 8)
 		{
+			cout << elapsedTime.asSeconds() << endl;
 			StartReturning = 1;
 			velocity_x = -20;
 			TimeOfMove.restart();
@@ -163,49 +163,48 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 }
 void PowerUps::resetPowerups()
 {
-	
-		if (player1.addspeed <= 0) {
-			player1.addspeed = 0;
-			player1.incspeed = 1;
-		}
-		else {
-			player1.addspeed -= 0.01;
-			if(player1.droptype == 1)
-				player1.droptype = -1;
-		}
-		if (player1.addsuperjump <= 0) {
-			player1.addsuperjump = 0;
-			player1.superjump = 1;
-		}
-		else {
-			player1.addsuperjump -= 0.005;
-			if(player1.droptype == 2)
-				player1.droptype = -1;
-		}
-		if (addmapspeed <= 0)
+	if (player1.addspeed <= 0) {
+		player1.addspeed = 0;
+		player1.incspeed = 1;
+	}
+	else {
+		player1.addspeed -= 0.01;
+		if (player1.droptype == 2)
+			player1.droptype = -1;
+	}
+
+	if (player1.addsuperjump <= 0) {
+		player1.addsuperjump = 0;
+		player1.superjump = 1;
+	}
+	else {
+		player1.addsuperjump -= 0.005;
+		if (player1.droptype == 1)
+			player1.droptype = -1;
+	}
+
+	if (addmapspeed <= 0)
+	{
+		mapspeed = 1;
+		addmapspeed = 0;
+	}
+	else
+	{
+		addmapspeed -= 0.01;
+		if (player1.droptype == 3)
+			player1.droptype = -1;
+	}
+	if (stopsmall < 0) {
+		stopsmall = 0;
+		for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
 		{
-			mapspeed = 1;
-			addmapspeed = 0;
+			if (currstair % 100 != 0 || currstair % 5 != 0)
+				Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() + Vector2f(50, 0));
 		}
-		else
-		{
-			addmapspeed -= 0.01;
-			if (player1.droptype == 3)
-				player1.droptype = -1;
-		}
-		if (stopsmall < 0) {
-			stopsmall = 0;
-			for (int currstair = 0; currstair < Stairs.stairsNum; currstair++)
-			{
-				if (currstair % 100 != 0 || currstair % 5 != 0)
-					Stairs.stairs[currstair].setSize(Stairs.stairs[currstair].getSize() + Vector2f(50, 0));
-			}
-		}
-		else {
-			if (stopsmall != 0)
-				stopsmall -= 0.01;
-			if (player1.droptype == 4)
-				player1.droptype = -1;
-		}
-	
+	}
+	else {
+		if (stopsmall != 0)
+			stopsmall -= 0.01;
+	}
+
 }

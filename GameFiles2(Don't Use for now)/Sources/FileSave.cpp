@@ -10,6 +10,7 @@ extern Players player1;
 
 extern menu_Bg_and_Face menu_UI;
 bool press = 0;
+extern user_data user[5];
 void FileSave::highscore_gameover(int score, int floor, int combo)
 {
 
@@ -160,6 +161,34 @@ void FileSave::TypeYourName()
 	playerNameText.setString(playername);
 }
 
+void FileSave::out_file() {
+	fstream file("user_data.txt", ios::in);
+	if (file.is_open())
+	{
+		// Check if file is empty
+		if (file.peek() == std::ifstream::traits_type::eof()) {
+			// File is empty; initialize with default values
+			for (int i = 0; i < 5; i++) {
+				user[i].user_name = "NONE";
+				user[i].highest_stair = 0;
+				user[i].st_lvl2_score = 0;
+				user[i].st_lvl3_score = 0;
+				user[i].st_lvl4_score = 0;
+				user[i].view_speed2 = 0;
+				user[i].view_speed3 = 0;
+				user[i].view_speed4 = 0;
+			}
+		}
+		else {
+			// File is not empty; read data
+			for (int i = 0; i < 5; i++) {
+				file >> user[i].user_name >> user[i].highest_stair >> user[i].st_lvl2_score >> user[i].st_lvl3_score >>
+					user[i].st_lvl4_score >> user[i].view_speed2 >> user[i].view_speed3 >> user[i].view_speed4 >> user[i].Index;
+			}
+		}
+		file.close();
+	}
+}
 void FileSave::EnterName() {
 	enternameTX.loadFromFile("Assets/Textures/entername.png");
 	enternameSP.setTexture(enternameTX);
@@ -172,6 +201,7 @@ void FileSave::EnterName() {
 	playerNameText.setFillColor(sf::Color::Black);
 	playerNameText.setPosition(570, 690);
 	filetopair();
+	out_file();
 
 
 }
@@ -219,6 +249,54 @@ void FileSave::pairtofile()
 bool comparePairs(const std::pair<int, Data>& a, const std::pair<int, Data>& b) {
 	return a.first > b.first; // Change > to < for ascending order
 }
+void FileSave::into_arr(string username, int stair, int score_lvl2, int score_lvl3, int score_lvl4,
+	float vx_lvl2, float vx_lvl3, float vx_lvl4) {
+
+	bool exist = 0;
+	int curr_index;
+	for (int i = 0; i < 5; i++) {
+		if (user[i].user_name == username) {
+			exist = 1;
+			curr_index = i;
+			if (user[i].highest_stair < stair) {
+				user[index].highest_stair = stair;
+			}
+			user[curr_index].st_lvl2_score = score_lvl2;
+			user[curr_index].st_lvl3_score = score_lvl3;
+			user[curr_index].st_lvl4_score = score_lvl4;
+			user[curr_index].view_speed2 = vx_lvl2;
+			user[curr_index].view_speed3 = vx_lvl3;
+			user[curr_index].view_speed4 = vx_lvl4;
+			user[curr_index].Index = curr_index;
+			break;
+		}
+		else if (user[i].st_lvl2_score == 0) {
+			curr_index = i;
+			user[curr_index].user_name = username;
+			user[curr_index].highest_stair = stair;
+			user[curr_index].st_lvl2_score = score_lvl2;
+			user[curr_index].st_lvl3_score = score_lvl3;
+			user[curr_index].st_lvl4_score = score_lvl4;
+			user[curr_index].view_speed2 = vx_lvl2;
+			user[curr_index].view_speed3 = vx_lvl3;
+			user[curr_index].view_speed4 = vx_lvl4;
+			user[curr_index].Index = curr_index;
+			break;
+		}
+	}
+
+
+}
+void FileSave::search(string username) {
+	for (int i = 0; i < 5; i++) {
+		if (user[i].user_name == username) {
+			index = i;
+			break;
+		}
+	}
+}
+
+
 void FileSave::intopair(int score)
 {
 	if (score > list[4].first)
@@ -229,4 +307,20 @@ void FileSave::intopair(int score)
 		list[4].first = score;
 	}
 	sort(std::begin(list), std::end(list), comparePairs);
+}
+void FileSave::in_file()
+{
+	ofstream file("user_data.txt", ios::out);
+	if (file.is_open())
+	{
+		for (int i = 0; i < 5; i++) {
+			file << user[i].user_name << " " << user[i].highest_stair << " " << user[i].st_lvl2_score << " " << user[i].st_lvl3_score << " " <<
+				user[i].st_lvl4_score << " " << user[i].view_speed2 << " " << user[i].view_speed3 << " " << user[i].view_speed4 << user[i].Index << endl;
+		}
+		file.close();
+	}
+	else
+	{
+		cout << "Error opening file for writing." << endl;
+	}
 }

@@ -8,6 +8,7 @@
 #include "PowerUps.h"
 #include "GameClock.h"
 #include "FileSave.h"
+#include "Messages.h"
 
 Menu menu;
 Walls_And_Background background;
@@ -17,6 +18,7 @@ Players player1; Players player2;
 FileSave File;
 PowerUps Power;
 GameClock gameclock;
+Messages Good;
 
 
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Close | Style::Fullscreen);
@@ -29,6 +31,7 @@ View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 // stage stars
 Sprite star1, star2;
 Texture starT1, starT2;
+bool noRep = 1;
 void starsIntiliztion() {
 	starT1.loadFromFile("Assets\\Textures\\newstage.png");
 	starT2.loadFromFile("Assets\\Textures\\newstage2.png");
@@ -41,7 +44,7 @@ void starsIntiliztion() {
 
 }
 void starsMove() {
-	if (player1.floor % 50 == 0 && player1.floor != 0) {
+	if (player1.floor % 50 <= 9 && player1.floor != 0 && noRep) {
 		star1.move(0, 4);
 		star2.move(0, 4);
 	}
@@ -244,6 +247,9 @@ void DRAW()
 	}
 
 }
+
+
+
 void DRAW_View1()
 {
 	if (GameMode == 2) {
@@ -281,9 +287,20 @@ void DRAW_View1()
 			window.draw(File.scoreText1);
 			window.draw(File.scoreText2);
 			window.draw(File.scoreText3);
-
-
 		}
+	}
+	if (Good.show) {
+		if (Good.appear <= 2) {
+			if (Good.Bounus == 2) {
+				window.draw(Good.message[0]);
+			}
+			else if (Good.Bounus >= 3)
+				window.draw(Good.message[1]);
+			//Good.Bounus = 0;
+			Good.appear += 0.0002;
+		}
+		if (Good.appear > 2)
+			Good.Bounus = 0;
 	}
 }
 void DRAW_View2()
@@ -308,6 +325,7 @@ float resize = 0, resize2 = 0;
 
 void Gameplay()
 {
+
 	Intilize_Numbers();
 	Stairs.stairs = new RectangleShape[Stairs.stairsNum];
 	Stairs.Strs10 = new RectangleShape[Stairs.stairsNum];
@@ -371,13 +389,13 @@ void Gameplay()
 	Map.view_velocity = 80.0f;
 
 	bool alive = true;
+
+	bool message = 0;
+	
+	Good.messages();
 	while (window.isOpen())
 	{
-		/*if (Mouse::isButtonPressed(Mouse::Left))
-		{
-			Vector2f pos = Vector2f(Mouse::getPosition(window));
-			cout << pos.x << " " << pos.y << endl;
-		}*/
+		cout << player1.compo_cnt << endl;
 		Event Play;
 		while (window.pollEvent(Play))
 		{
@@ -485,6 +503,14 @@ void Gameplay()
 		else {
 			player2.compo_cnt = 0;
 		}
+		/*=========================================bounus==================================================*/
+		Good.update_messages();
+
+
+
+
+
+
 		//= ====================================calculate score and compo================================== = //
 		Set_ObjectsOnStairs();
 

@@ -813,9 +813,9 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 			}
 		}
 		window.clear();
-		window.draw(game);
-		window.draw(photo2);
-		window.draw(pausemenu);
+		window.draw(game);//game 
+		window.draw(photo2); //tranparent
+		window.draw(pausemenu);//white paper
 		for (int i = 0; i < Pause1.choises; i++) {
 			window.draw(Pause1.mainmenu[i]);
 		}

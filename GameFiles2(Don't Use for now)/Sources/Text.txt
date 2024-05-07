@@ -1,5 +1,5 @@
-HUSSEIN    2910
-L    140
-HUSSEIN    60
-H    60
-HUSSEIN    40
+HU    640    64    8
+AHMED    530    53    6
+AHMED    450    45    7
+HH    410    41    2
+HUS    370    37    18

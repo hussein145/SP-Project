@@ -9,22 +9,23 @@ extern Sounds sound;
 extern Players player1;
 
 extern menu_Bg_and_Face menu_UI;
+extern int GameMode;
 bool press = 0;
 extern user_data user[5];
-void FileSave::highscore_gameover(int score, int floor, int combo)
+void FileSave::highscore_gameover(int score, int floor, int combo, int shift)
 {
-
+	//cout << shift << endl;
 	highscoreENDtx.loadFromFile("Assets/Textures/High_Score.png");
 	highscoreENDsp.setTexture(highscoreENDtx);
-	highscoreENDsp.setPosition(500, 350);
+	highscoreENDsp.setPosition(500 + shift, 350);
 	highscoreENDsp.setScale(2.5, 2.5);
 
 	gameovertx.loadFromFile("Assets/Textures/gameover.png");
 	gameoversp.setTexture(gameovertx);
-	gameoversp.setPosition(400, 180);
-	gameoversp.setScale(2, 2),
+	gameoversp.setPosition(470 + shift, 180);
+	gameoversp.setScale(1.5, 1.5),
 
-		font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
+	font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	scoreText1.setFont(font);
 	scoreText2.setFont(font);
 	scoreText3.setFont(font);
@@ -34,9 +35,9 @@ void FileSave::highscore_gameover(int score, int floor, int combo)
 	scoreText2.setString("FLOOR:   " + to_string(floor));
 	scoreText3.setString("BEST COMBO:   " + to_string(combo));
 	//scoreText3.setString()
-	scoreText1.setPosition(600, 600);
-	scoreText2.setPosition(600, 700);
-	scoreText3.setPosition(600, 800);
+	scoreText1.setPosition(600+shift, 600);
+	scoreText2.setPosition(600+shift, 700);
+	scoreText3.setPosition(600+shift, 800);
 
 	scoreText1.setCharacterSize(70);
 	scoreText2.setCharacterSize(70);

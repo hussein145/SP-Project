@@ -6,6 +6,7 @@ struct Players
 
 	Text score_txt;
 	int score;
+	
 
 	int floor = 0;
 	int compo_cnt = 0;

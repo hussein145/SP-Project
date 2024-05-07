@@ -1,6 +1,7 @@
 #pragma once
 #include "include.h"
 
+
 struct menu_Bg_and_Face
 {
 	Sprite face;

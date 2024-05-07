@@ -1,4 +1,6 @@
 #pragma once
+#include <utility>
+#include <map>
 #include <fstream>
 #include <SFML/Graphics.hpp>
 #include<iostream>

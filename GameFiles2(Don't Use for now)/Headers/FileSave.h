@@ -1,13 +1,21 @@
 #pragma once
 #include"include.h"
+#include <utility> // Include for std::pair
+#include <string> // Include for std::string
+struct Data {
+	string Name;
+	int floor ;
+	int max_compo ;
+};
+
 struct FileSave
 {
-	pair <int, string> list[6];
+	pair <int, Data> list[6];
 	Texture enternameTX;
 	Sprite enternameSP;
 	Font playernamefont;
 	Text playerNameText;
-	string playername;
+	std::string playername;
 	Texture highscoreENDtx;
 	Sprite highscoreENDsp;
 	Texture gameovertx;

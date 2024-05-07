@@ -27,6 +27,7 @@ FileSave File;
 user_data user[5];
 PowerUps Power;
 GameClock gameclock;
+Messages Good;
 
 
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Close | Style::Fullscreen);
@@ -39,6 +40,7 @@ View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 // stage stars
 Sprite star1, star2;
 Texture starT1, starT2;
+bool go = 0, go2 = 1;
 void starsIntiliztion() {
 	starT1.loadFromFile("Assets\\Textures\\newstage.png");
 	starT2.loadFromFile("Assets\\Textures\\newstage2.png");
@@ -48,16 +50,25 @@ void starsIntiliztion() {
 	star2.setTexture(starT2);
 	star2.setPosition(350, player1.character.getPosition().y - 700);
 	star2.setScale(0.4, 0.6);
-
+	go = 0;
+	go2 = 1;
 }
-void starsMove() {
-	if (player1.floor % 50 == 0 && player1.floor != 0) {
+void starsMove(Players player, View player_view) {
+	if ((player.floor % 50 >= 0 && player.floor % 50 <= 8 && player.floor > 40)) {
 		star1.move(0, 4);
 		star2.move(0, 4);
+		go = 1;
 	}
-	else if (player1.floor != 0) {
-		star1.setPosition(350, player1.character.getPosition().y - 700);
+	if (go && go2) {
+
+		star1.setPosition(350, player.character.getPosition().y - 700);
 		star2.setPosition(350, player1.character.getPosition().y - 700);
+		go2 = 0;
+	}
+
+	if (star1.getPosition().y > player_view.getCenter().y + 540 && !(player.floor % 50 >= 0 && player.floor % 50 <= 8)) {
+		go = 0;
+		go2 = 1;
 	}
 }
 
@@ -243,7 +254,7 @@ void DRAW()
 			window.draw(Power.dropBag[i].dropShape);
 		}
 	}
-	if (player1.floor % 50 == 0 && player1.floor != 0) {
+	if (go) {
 		window.draw(star1);
 		window.draw(star2);
 	}
@@ -294,6 +305,16 @@ void DRAW_View1()
 
 
 		}
+	}
+	if (Good.timer1 <= 2) {
+		window.draw(Good.message[0]);
+		Good.timer1 += 0.008;
+		Good.Bounus = 0;
+	}
+	else if (Good.timer2 <= 2) {
+		window.draw(Good.message[1]);
+		Good.timer2 += 0.008;
+		Good.Bounus = 0;
 	}
 }
 void DRAW_View2()
@@ -379,14 +400,14 @@ void Gameplay()
 	Map.Walls_velocity_y = 120.0f;
 	Map.Stairs_velocity_y = 50.0f;
 	Map.view_velocity = 80.0f;
-	int score_lvl2 , score_lvl3 , score_lvl4 ;
-	float vx_lvl2 , vx_lvl3 , vx_lvl4 = 0;
+	int score_lvl2 = 0, score_lvl3 = 0, score_lvl4 = 0;
+	float vx_lvl2 = 0, vx_lvl3 = 0, vx_lvl4 = 0;
 	bool alive = true;
 
-	if (1)
+	if (0)
 	{
 		//if (user[File.index].highest_stair >= 50 && user[File.index].highest_stair < 100) { //level2
-		if(1){
+		if (0) {
 			//cout << "hus" << endl;
 			//cout << user[0].view_speed2 << endl;
 			//cout  << user[0].st_lvl2_score << endl;
@@ -395,20 +416,22 @@ void Gameplay()
 			Stairs.Number_Of_Stair = 50;
 		}
 		//else if (user[File.index].highest_stair >= 100 && user[File.index].highest_stair < 200) {
-	else if(menu.level == 3){
+		else if (menu.level == 3) {
 			Map.view_velocity = user[File.index].view_speed3;
 			player1.score = user[File.index].st_lvl3_score;
 			Stairs.Number_Of_Stair = 100;
 		}
 		//else if (user[File.index].highest_stair >= 200 && user[File.index].highest_stair < 300) {
-	else if(menu.level == 4){
+		else if (menu.level == 4) {
 			Map.view_velocity = user[File.index].view_speed4;
 			player1.score = user[File.index].st_lvl4_score;
 			Stairs.Number_Of_Stair = 100;
 		}
 	}
 
+	bool message = 0;
 
+	Good.messages();
 	while (window.isOpen())
 	{
 		/*if (Mouse::isButtonPressed(Mouse::Left))
@@ -454,7 +477,8 @@ void Gameplay()
 		}
 
 		// new stage stars move
-		starsMove();
+		starsMove(player1, player1_View);
+		starsMove(player2, player2_View);
 
 		if (player1.compo_cnt > 0 && player1.compo_cnt != disapp)
 			resize = GameMode == 2 ? 103 : 203;
@@ -498,7 +522,7 @@ void Gameplay()
 		collisions(player1);
 		collisions(player2);
 		//= ====================================calculate score and compo================================== = //
-		player1.score = (player1.floor * 10)+user[0].st_lvl2_score;
+		player1.score = (player1.floor * 10) ;// + user[0].st_lvl2_score
 		player2.score = player2.floor * 10;
 
 		player1.score_txt.setString("Score: " + to_string(player1.score));
@@ -524,6 +548,8 @@ void Gameplay()
 			player2.compo_cnt = 0;
 		}
 		//= ====================================calculate score and compo================================== = //
+		Good.update_messages();
+		//////////////////////////////////////////////
 		Set_ObjectsOnStairs();
 
 		if (GameMode == 3)
@@ -595,8 +621,6 @@ void Gameplay()
 				}
 			}
 		}
-
-
 
 		//cout << dt << endl;
 		player1.Players_Motion(buff, Keyboard::A, Keyboard::D, Keyboard::Space);

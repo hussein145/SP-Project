@@ -4,6 +4,7 @@ using namespace sf;
 
 struct Menu
 {
+	int level = 0;
 	bool exit = 0;
 	int pageNumber = 1000;
 	int shift = 60;

@@ -3,7 +3,6 @@
 #include "Sounds.h"
 #include "FileSave.h"
 
-
 int P_M_Sound = 100;	//change option,effects(hurry up,.....);
 int P_M_Music = 100;	//background,game;
 int PLayer1 = 0;
@@ -177,6 +176,8 @@ void Menu::levels(RenderWindow& window) {
 	menu7.Hand_intilization();
 	menu7.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
 	menu7.choises = 4;
+	File.search(File.playername);
+	cout << File.index << endl;
 	x = 40;
 	for (int i = 0; i < menu7.choises; i++)
 	{
@@ -189,9 +190,9 @@ void Menu::levels(RenderWindow& window) {
 		menu7.mainmenu[i].setPosition(Vector2f(1250, menu7.height / 2 + x));
 		x += 60;
 	}
-	menu7.mainmenu[0].setString("Level 1");
-	menu7.mainmenu[1].setString("Level 2");
-	menu7.mainmenu[2].setString("Level 3");
+	menu7.mainmenu[0].setString("Level 2");
+	menu7.mainmenu[1].setString("Level 3");
+	menu7.mainmenu[2].setString("Level 4");
 	menu7.mainmenu[3].setString("Back");
 	while (window.isOpen())
 	{
@@ -219,8 +220,17 @@ void Menu::levels(RenderWindow& window) {
 				{
 					sound.select_option_Sound();
 					if (menu7.selected == 0) {
-
+						level = 2;
 					}
+					else if (menu7.selected == 1)
+						level = 3;
+					else if (menu7.selected == 2)
+						level = 4;
+					//cout << File.index << endl;
+					if (File.index != -1)
+						Gameplay();
+
+					level = 0;
 					if (menu7.selected == 3) {
 						pageNumber = 500;
 						pressed = 0;
@@ -813,9 +823,9 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 			}
 		}
 		window.clear();
-		window.draw(game);//game 
-		window.draw(photo2); //tranparent
-		window.draw(pausemenu);//white paper
+		window.draw(game);
+		window.draw(photo2);
+		window.draw(pausemenu);
 		for (int i = 0; i < Pause1.choises; i++) {
 			window.draw(Pause1.mainmenu[i]);
 		}

@@ -24,6 +24,7 @@ STAIRS Stairs;
 Sounds sound;
 Players player1; Players player2;
 FileSave File;
+user_data user[5];
 PowerUps Power;
 GameClock gameclock;
 
@@ -378,8 +379,36 @@ void Gameplay()
 	Map.Walls_velocity_y = 120.0f;
 	Map.Stairs_velocity_y = 50.0f;
 	Map.view_velocity = 80.0f;
-
+	int score_lvl2 , score_lvl3 , score_lvl4 ;
+	float vx_lvl2 , vx_lvl3 , vx_lvl4 = 0;
 	bool alive = true;
+
+	if (1)
+	{
+		//if (user[File.index].highest_stair >= 50 && user[File.index].highest_stair < 100) { //level2
+		if(1){
+			//cout << "hus" << endl;
+			//cout << user[0].view_speed2 << endl;
+			//cout  << user[0].st_lvl2_score << endl;
+			Map.view_velocity = user[0].view_speed2;
+			player1.score = user[0].st_lvl2_score;
+			Stairs.Number_Of_Stair = 50;
+		}
+		//else if (user[File.index].highest_stair >= 100 && user[File.index].highest_stair < 200) {
+	else if(menu.level == 3){
+			Map.view_velocity = user[File.index].view_speed3;
+			player1.score = user[File.index].st_lvl3_score;
+			Stairs.Number_Of_Stair = 100;
+		}
+		//else if (user[File.index].highest_stair >= 200 && user[File.index].highest_stair < 300) {
+	else if(menu.level == 4){
+			Map.view_velocity = user[File.index].view_speed4;
+			player1.score = user[File.index].st_lvl4_score;
+			Stairs.Number_Of_Stair = 100;
+		}
+	}
+
+
 	while (window.isOpen())
 	{
 		/*if (Mouse::isButtonPressed(Mouse::Left))
@@ -469,7 +498,7 @@ void Gameplay()
 		collisions(player1);
 		collisions(player2);
 		//= ====================================calculate score and compo================================== = //
-		player1.score = player1.floor * 10;
+		player1.score = (player1.floor * 10)+user[0].st_lvl2_score;
 		player2.score = player2.floor * 10;
 
 		player1.score_txt.setString("Score: " + to_string(player1.score));
@@ -516,6 +545,20 @@ void Gameplay()
 		}
 		Map.update();
 		view.SetView();
+		if (player1.floor == 50) {
+			score_lvl2 = player1.score;
+			vx_lvl2 = Map.view_velocity;
+
+		}
+		if (player1.floor == 100) {
+			score_lvl3 = player1.score;
+			vx_lvl3 = Map.view_velocity;
+		}
+
+		if (player1.floor == 150) {
+			score_lvl4 = player1.score;
+			vx_lvl4 = Map.view_velocity;
+		}
 
 		//map Motion
 		Map.Map_Motion();
@@ -537,6 +580,8 @@ void Gameplay()
 				File.intopair(player1.score);
 				File.pairtofile();
 				File.highscore_gameover(player1.score, player1.floor, player1.Max_Compo);
+				File.into_arr(File.playername, player1.floor, score_lvl2, score_lvl3, score_lvl4, vx_lvl2, vx_lvl3, vx_lvl4);
+				File.in_file();
 			}
 			Map.move = 0;
 			END = 0;

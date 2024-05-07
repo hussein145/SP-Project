@@ -28,6 +28,7 @@ struct FileSave
 	Text scoreText1, scoreText2, scoreText3;
 	Font font;
 
+	int shift = 0;
 	bool infile = 0;
 	bool boolenter = 0;
 	int index;
@@ -37,7 +38,7 @@ struct FileSave
 	void pairtofile();
 	void intopair(int score);
 	void  highscore(RenderWindow& window);
-	void highscore_gameover(int Score, int floor, int combo);
+	void highscore_gameover(int Score, int floor, int combo, int shift);
 	void out_file();
 	void in_file();
 	void into_arr(string username, int stair, int score_lvl2, int score_lvl3, int score_lvl4,

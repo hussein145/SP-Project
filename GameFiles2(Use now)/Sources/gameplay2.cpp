@@ -257,6 +257,7 @@ void DRAW()
 	}
 
 }
+int arr[4];
 void DRAW_View1()
 {
 	if (GameMode == 2) {
@@ -280,7 +281,7 @@ void DRAW_View1()
 	window.draw(player1.compo);
 	if (!END)
 	{
-
+		File.highscore_gameover(arr[0], arr[1], player1.Max_Compo, -File.shift);
 		if (player1.oveer)
 		{
 			window.draw(File.highscoreENDsp);
@@ -290,12 +291,16 @@ void DRAW_View1()
 		}
 		else
 		{
-			window.draw(File.gameoversp);
+			//cout << "hussein" << endl;
+			if (GameMode == 2) {
+
+			}
+			else {
+				window.draw(File.gameoversp);
+			}
 			window.draw(File.scoreText1);
 			window.draw(File.scoreText2);
 			window.draw(File.scoreText3);
-
-
 		}
 	}
 	if (Good.timer1 <= 2) {
@@ -325,6 +330,24 @@ void DRAW_View2()
 	player2.score_txt.setPosition(980, 990);
 	window.draw(player2.score_txt);
 	window.draw(player2.compo);
+	if (!END)
+	{
+		File.highscore_gameover(arr[2], arr[3], player2.Max_Compo, File.shift);
+		if (player1.oveer)
+		{
+			window.draw(File.highscoreENDsp);
+			window.draw(File.scoreText1);
+			window.draw(File.scoreText2);
+			window.draw(File.scoreText3);
+		}
+		else
+		{
+			//window.draw(File.gameoversp);
+			window.draw(File.scoreText1);
+			window.draw(File.scoreText2);
+			window.draw(File.scoreText3);
+		}
+	}
 }
 
 float resize = 0, resize2 = 0;
@@ -578,29 +601,39 @@ void Gameplay()
 			vx_lvl4 = Map.view_velocity;
 		}
 
+		//cout << player2_View.getCenter().x << endl;
 		//map Motion
 		Map.Map_Motion();
-		//freeze game
+		//=====================================================<<freeze game>>============================================================//
 		if ((player1.character.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540)) && check1)
 		{
+			check1 = 0;
 			if (GameMode == 1) {
-				if (player1.score > File.list[0].first)
-				{
+				if (player1.score > File.list[0].first) {
 					player1.oveer = 1;
 				}
-				else
-				{
+				else {
 					player1.oveer = 0;
 				}
-				check1 = 0;
-
 				File.intopair(player1.score);
 				File.pairtofile();
-				File.highscore_gameover(player1.score, player1.floor, player1.Max_Compo);
 				File.into_arr(File.playername, player1.floor, score_lvl2, score_lvl3, score_lvl4, vx_lvl2, vx_lvl3, vx_lvl4);
 				File.in_file();
 			}
+
+			if (GameMode == 2)
+			{
+				File.shift = 500;
+			}
+			else {
+				File.shift = 0;
+			}
+			arr[0] = player1.score;
+			arr[1] = player1.floor;
+			arr[2] = player2.score;
+			arr[3] = player2.floor;
+
 			Map.move = 0;
 			END = 0;
 

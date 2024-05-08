@@ -7,14 +7,15 @@ extern PowerUps Power;
 //void generateDrop(Vector2f stair_position, bool check);
 
 void STAIRS::strnum() {
-	if (Number_Of_Stair % 10 == 0) {
+	if (Number_Of_Stair % 10 == 0 && Number_Of_Stair != 0) {
 		Strs10[currstair].setPosition(stairs[currstair].getPosition().x, stairs[currstair].getPosition().y + 30);
 		Strs10[currstair].setSize(Vector2f(50, 50));
 		Strs10[currstair].setOrigin(Strs10[currstair].getSize().x / 2, 0);
 
 		strTxt[currstair].setFillColor(Color::White);
-		strTxt[currstair].setCharacterSize(20);
+		strTxt[currstair].setCharacterSize(25);
 		strTxt[currstair].setString(to_string(Number_Of_Stair));
+		strTxt[currstair].setOrigin((Strs10[currstair].getSize().x / 2) - 15, 0);
 		strTxt[currstair].setPosition(Strs10[currstair].getPosition().x, Strs10[currstair].getPosition().y + 15);
 	}
 }
@@ -66,7 +67,7 @@ void STAIRS::intiliztion1(int GameMode) {
 	}
 	stairs[0].setPosition(Vector2f(960, 955));
 	Block_texture.loadFromFile("Assets/Textures/strnum.png");
-	Gfont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
+	Gfont.loadFromFile("Assets/Fonts/Carre-JWja.ttf");
 	//stairs & floors
 	srand(static_cast<unsigned>(time(NULL)));
 	for (currstair = 0; currstair < stairsNum; currstair++)

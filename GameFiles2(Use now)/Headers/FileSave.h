@@ -24,6 +24,8 @@ struct FileSave
 	Texture highscoreENDtx;
 	Sprite highscoreENDsp;
 	Texture gameovertx;
+	Texture win, lose;
+	Sprite winner, losser;
 	Sprite gameoversp;
 	Text scoreText1, scoreText2, scoreText3;
 	Font font;
@@ -45,4 +47,3 @@ struct FileSave
 		float vx_lvl2, float vx_lvl3, float vx_lvl4);
 	void search(string username);
 };
-

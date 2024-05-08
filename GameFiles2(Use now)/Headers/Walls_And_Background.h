@@ -4,7 +4,7 @@ struct Walls_And_Background
 {
 	int x;
 	int bgNums;
-	sf::Texture backGround, wallTexture;
+	sf::Texture backGround[2], wallTexture;
 
 	sf::RectangleShape* bg;
 	sf::RectangleShape* wallsLeft;

@@ -29,6 +29,29 @@ float dt, dt2;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 
+// game time
+Font clockFont;
+Clock clockcnt;
+Text clockText;
+void clockCountIni() {
+	clockFont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
+	clockText.setFont(clockFont);
+	clockText.setString("");
+	clockText.setCharacterSize(50);
+	clockText.setPosition(245, 930);
+	clockText.setFillColor(Color::White);
+}
+void clockCount() {
+	Time elapsedTime = clockcnt.getElapsedTime();
+	int sec = (int)elapsedTime.asSeconds() % 60, min = ((int)elapsedTime.asSeconds() % 3600) / 60;
+	if (sec == 60)
+		sec = 0;
+	if (min == 60)
+		min = 0;
+	string timeString = "Time:  " + to_string(min) + ":" + to_string(sec);
+	clockText.setString(timeString);
+}
+
 // stage stars
 Sprite star1, star2;
 Texture starT1, starT2;
@@ -64,7 +87,6 @@ void starsMove(Players player, View player_view) {
 		go2 = 1;
 	}
 }
-
 
 void Intilize_Numbers()
 {
@@ -256,7 +278,6 @@ void DRAW()
 		window.draw(background.wallsLeft[i]);
 		window.draw(background.wallsRight[i]);
 	}
-
 }
 int arr[4];
 void DRAW_View1()
@@ -318,6 +339,9 @@ void DRAW_View1()
 		window.draw(Good.message[1]);
 		Good.timer += 0.008;
 	}
+
+	// game time
+	window.draw(clockText);
 }
 void DRAW_View2()
 {
@@ -395,6 +419,9 @@ void Gameplay()
 
 	// new stage starts intiliztion
 	starsIntiliztion();
+
+	// game time
+	clockCountIni();
 
 	//player
 	extern int PLayer1;
@@ -513,6 +540,9 @@ void Gameplay()
 				pressed = false;
 			}
 		}
+
+		// game time
+		clockCount();
 
 		// new stage stars move
 		starsMove(player1, player1_View);

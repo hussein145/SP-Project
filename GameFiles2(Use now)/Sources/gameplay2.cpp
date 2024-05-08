@@ -283,7 +283,7 @@ void DRAW_View1()
 	if (!END)
 	{
 		File.highscore_gameover(arr[0], arr[1], player1.Max_Compo, -File.shift);
-		if (player1.oveer && GameMode!=2)
+		if (player1.oveer && GameMode != 2)
 		{
 			window.draw(File.highscoreENDsp);
 			window.draw(File.scoreText1);
@@ -293,11 +293,11 @@ void DRAW_View1()
 		else
 		{
 			if (GameMode == 2 && whowin) {
-				File.winner.setPosition(100,400);
+				File.winner.setPosition(100, 400);
 				window.draw(File.winner);
 			}
 			else if (GameMode == 2 && !whowin) {
-				File.losser.setPosition(100,250);
+				File.losser.setPosition(100, 250);
 				window.draw(File.losser);
 			}
 			else {
@@ -308,15 +308,15 @@ void DRAW_View1()
 			window.draw(File.scoreText3);
 		}
 	}
-	if (Good.timer1 <= 2) {
+	if (Good.appear == 1 && Good.timer <= 2) {
 		window.draw(Good.message[0]);
-		Good.timer1 += 0.008;
-		Good.Bounus = 0;
+		Good.timer += 0.008;
+
 	}
-	else if (Good.timer2 <= 2) {
+	else if (Good.appear == 2 && Good.timer <= 2) {
+		//cout << " hussein" << endl;
 		window.draw(Good.message[1]);
-		Good.timer2 += 0.008;
-		Good.Bounus = 0;
+		Good.timer += 0.008;
 	}
 }
 void DRAW_View2()
@@ -413,9 +413,9 @@ void Gameplay()
 		player1.inti(tex[1]);
 	else if (PLayer1 == 2)
 		player1.inti(tex[2]);
-	else if(PLayer1 == 3)
+	else if (PLayer1 == 3)
 		player1.inti(tex[3]);
-	else if(PLayer1 == 4)
+	else if (PLayer1 == 4)
 		player1.inti(tex[4]);
 
 	if (PLayer2 == 0)
@@ -560,8 +560,8 @@ void Gameplay()
 		collisions(player1);
 		collisions(player2);
 		//= ====================================calculate score and compo================================== = //
-		player1.score = (player1.floor * 10);// + user[0].st_lvl2_score
-		player2.score = player2.floor * 10;
+		player1.score = (player1.floor * 10) + Good.bounus_points;// + user[0].st_lvl2_score
+		player2.score = player2.floor * 10 + Good.bounus_points;
 
 		player1.score_txt.setString("Score: " + to_string(player1.score));
 		player2.score_txt.setString("Score: " + to_string(player2.score));

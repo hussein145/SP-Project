@@ -170,11 +170,13 @@ void FileSave::TypeYourName()
 		{
 			if (!boolenter)
 			{
-
+                            if (playername.size()) 
+			    {
 				enternameSP.setPosition(-1000, -1000);
 				playerNameText.setPosition(-1000, -1000);
 				infile = 1;
 				boolenter = 1;
+                            }
 			}
 		}
 	}

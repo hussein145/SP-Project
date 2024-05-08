@@ -17,24 +17,36 @@ void Messages::messages()
 	message[0].setScale(3.5, 3.5);
 	message[1].setScale(3, 3);
 
-	Bounus = 0;
-	timer1 = timer2 =  10;
-	show = 0;
+	Bounus = show = cnt = bounus_points = 0;
+	timer = 10;
 }
 void Messages::update_messages()
 {
 	if (player1.compo_cnt > 1 && cnt != player1.compo_cnt) { //2
 		Bounus++; //1 2
 		cnt = player1.compo_cnt;
-
+		
 	}
-	if (player1.compo_cnt == 0 && Bounus > 0)
+	if (player1.compo_cnt == 0 && Bounus > 1)
 	{
-		if (Bounus == 2)
-			timer1 = 0;
-		else if (Bounus >= 3)
-			timer2 = 0;
+		//cout << Bounus << endl;
+		bounus_points += cnt*cnt;
+		cnt = 0;
+		if (Bounus == 2) {
+			appear = 1;
+			timer = 0;
+			Bounus = 0;
+			cnt = 0;
+		}
+		else if (Bounus >= 3){
+			appear = 2;
+			timer = 0;
+			Bounus = 0;
+			cnt = 0;
+		}
 	}
+	else if(player1.compo_cnt == 0)
+		Bounus = 0;
 
 
 }

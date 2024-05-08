@@ -292,13 +292,12 @@ void DRAW_View1()
 		}
 		else
 		{
-			//cout << "hussein" << endl;
 			if (GameMode == 2 && whowin) {
-				File.winner.setPosition(100,250);
+				File.winner.setPosition(100,400);
 				window.draw(File.winner);
 			}
 			else if (GameMode == 2 && !whowin) {
-				File.losser.setPosition(30,250);
+				File.losser.setPosition(100,250);
 				window.draw(File.losser);
 			}
 			else {
@@ -339,11 +338,11 @@ void DRAW_View2()
 	if (!END)
 	{
 		if (GameMode == 2 && whowin) {
-			File.losser.setPosition(1000, 250);
+			File.losser.setPosition(1100, 250);
 			window.draw(File.losser);
 		}
 		else if (GameMode == 2 && !whowin) {
-			File.winner.setPosition(1100, 250);
+			File.winner.setPosition(1100, 400);
 			window.draw(File.winner);
 		}
 		File.highscore_gameover(arr[2], arr[3], player2.Max_Compo, File.shift);

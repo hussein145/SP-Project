@@ -38,7 +38,10 @@ void clockCountIni() {
 	clockText.setFont(clockFont);
 	clockText.setString("");
 	clockText.setCharacterSize(50);
-	clockText.setPosition(245, 930);
+	if (GameMode == 2)
+		clockText.setPosition(30, 930);
+	else
+		clockText.setPosition(245, 930);
 	clockText.setFillColor(Color::White);
 }
 void clockCount() {
@@ -443,6 +446,9 @@ void Gameplay()
 
 	// new stage starts intiliztion
 	starsIntiliztion();
+
+	// game time
+	clockCountIni();
 
 	//player
 	extern int PLayer1;

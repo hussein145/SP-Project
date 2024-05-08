@@ -66,7 +66,7 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 	men1.choises = 7;
 	men1.mainmenu[0].setString("Play Game");
 	men1.mainmenu[1].setString("Instructions");
-	men1.mainmenu[2].setString("Profile");
+	men1.mainmenu[2].setString("Change Profile");
 	men1.mainmenu[3].setString("High Score");
 	men1.mainmenu[4].setString("Options");
 	men1.mainmenu[5].setString("Credits");
@@ -133,10 +133,11 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 								options_menu(window);
 							if (men1.selected == 1)
 								instructions(window);
+							if (men1.selected == 5)
+								credits(window);
 							if (men1.selected == 3)
 							{
 								File.highscore(window);
-
 							}
 						}
 						if (event.key.code == Keyboard::Escape) {
@@ -499,16 +500,12 @@ void  Menu::options_menu1(RenderWindow& window)
 	menu5.mainmenu[0].setString("Player1 \n Charchters <>");
 	menu5.mainmenu[1].setString("Player2 \n Charchters <>");
 	menu5.mainmenu[2].setString("Back");
+	const int players = 3;
 
-	Texture pl1;
-	pl1.loadFromFile("Assets/Textures/icytower1.png");
-
-	Texture pl2;
-	pl2.loadFromFile("Assets/Textures/icytower2.png");
-
-
-	Texture pl3;
-	pl3.loadFromFile("Assets/Textures/icy_demon1.png");
+	Texture pl[players];
+	pl[0].loadFromFile("Assets/Textures/icytower1.png");
+	pl[1].loadFromFile("Assets/Textures/icytower2.png");
+	pl[2].loadFromFile("Assets/Textures/icy_demon1.png");
 
 
 	Sprite player1;
@@ -558,11 +555,11 @@ void  Menu::options_menu1(RenderWindow& window)
 					if (PLayer1 > 0)
 						PLayer1--;
 					else
-						PLayer1 = 2;
+						PLayer1 = players - 1;
 				}
 				if (Keyboard::isKeyPressed(Keyboard::Right))
 				{
-					if (PLayer1 < 2)
+					if (PLayer1 < players - 1)
 						PLayer1++;
 					else
 						PLayer1 = 0;
@@ -575,11 +572,11 @@ void  Menu::options_menu1(RenderWindow& window)
 					if (PLayer2 > 0)
 						PLayer2--;
 					else
-						PLayer2 = 2;
+						PLayer2 = players - 1;
 				}
 				if (Keyboard::isKeyPressed(Keyboard::Right))
 				{
-					if (PLayer2 < 2)
+					if (PLayer2 < players - 1)
 						PLayer2++;
 					else
 						PLayer2 = 0;
@@ -588,29 +585,29 @@ void  Menu::options_menu1(RenderWindow& window)
 		}
 		if (PLayer1 == 0)
 		{
-			player1.setTexture(pl1);
+			player1.setTexture(pl[0]);
 		}
 		else if (PLayer1 == 1)
 		{
-			player1.setTexture(pl2);
+			player1.setTexture(pl[1]);
 		}
 
 		else if (PLayer1 == 2)
 		{
-			player1.setTexture(pl3);
+			player1.setTexture(pl[2]);
 		}
 
 		if (PLayer2 == 1)
 		{
-			player2.setTexture(pl1);
+			player2.setTexture(pl[0]);
 		}
 		else if (PLayer2 == 0)
 		{
-			player2.setTexture(pl2);
+			player2.setTexture(pl[1]);
 		}
 		else if (PLayer2 == 2)
 		{
-			player2.setTexture(pl3);
+			player2.setTexture(pl[2]);
 		}
 		player1.setTextureRect(IntRect(0, 0, 50, 60));
 		player1.setScale(2.4, 2.4);
@@ -705,6 +702,33 @@ void  Menu::options_menu(RenderWindow& window)
 		}
 		window.draw(menu_UI.face);
 		window.draw(menu4.hand);
+		window.display();
+	}
+}
+void  Menu::credits(RenderWindow& window)
+{
+	Texture cre;
+	cre.loadFromFile("Assets/Textures/credits7.png");
+	Sprite credits;
+	credits.setTexture(cre);
+	//credits.setPosition(200, 0);
+	while (window.isOpen())
+	{
+		Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == event.Closed)
+				window.close();
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			sound.select_option_Sound();
+			pageNumber = 1000;
+			pressed = true;
+			return;
+		}
+		window.clear();
+		window.draw(credits);
 		window.display();
 	}
 }

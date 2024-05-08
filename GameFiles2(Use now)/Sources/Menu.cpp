@@ -12,6 +12,7 @@ bool pressed = true;
 bool esc_button = true;
 extern Sounds sound;
 extern FileSave File;
+extern user_data user[5];
 
 
 menu_Bg_and_Face menu_UI;
@@ -178,7 +179,7 @@ void Menu::levels(RenderWindow& window) {
 	menu7.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
 	menu7.choises = 4;
 	File.search(File.playername);
-	cout << File.index << endl;
+	//cout << File.index << endl;
 	x = 40;
 	for (int i = 0; i < menu7.choises; i++)
 	{
@@ -220,18 +221,22 @@ void Menu::levels(RenderWindow& window) {
 				if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && menu7.selected == 3))
 				{
 					sound.select_option_Sound();
-					if (menu7.selected == 0) {
+					if (menu7.selected == 0 && user[File.index].highest_stair >= 50) {
 						level = 2;
+						Gameplay();
 					}
-					else if (menu7.selected == 1)
+					else if (menu7.selected == 1 && user[File.index].highest_stair >= 150) {
 						level = 3;
-					else if (menu7.selected == 2)
+						Gameplay();
+					}
+					else if (menu7.selected == 2 && user[File.index].highest_stair >= 200 ) {
 						level = 4;
+						Gameplay();
+					}
 					//cout << File.index << endl;
 					if (File.index != -1)
-						Gameplay();
+						level = 0;
 
-					level = 0;
 					if (menu7.selected == 3) {
 						pageNumber = 500;
 						pressed = 0;
@@ -620,11 +625,11 @@ void  Menu::options_menu1(RenderWindow& window)
 		}
 		else if (PLayer2 == 3)
 		{
-			player2.setTexture(pl[3]);
+			player1.setTexture(pl[3]);
 		}
 		else if (PLayer2 == 4)
 		{
-			player2.setTexture(pl[4]);
+			player1.setTexture(pl[4]);
 		}
 		player1.setTextureRect(IntRect(0, 0, 50, 60));
 		player1.setScale(2.4, 2.4);

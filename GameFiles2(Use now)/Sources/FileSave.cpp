@@ -1,3 +1,4 @@
+
 #include <utility>
 #include "menu_Bg_and_Face.h"
 #include "Sounds.h"
@@ -25,6 +26,14 @@ void FileSave::highscore_gameover(int score, int floor, int combo, int shift)
 	gameoversp.setPosition(470 + shift, 180);
 	gameoversp.setScale(1.5, 1.5),
 
+	win.loadFromFile("Assets/Textures/winner.png");
+	winner.setTexture(win);
+	winner.setScale(1.5, 1.5);
+
+	lose.loadFromFile("Assets/Textures/losser.png");
+		losser.setTexture(lose);
+		losser.setScale(1.5, 1.5);
+
 	font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	scoreText1.setFont(font);
 	scoreText2.setFont(font);
@@ -35,9 +44,9 @@ void FileSave::highscore_gameover(int score, int floor, int combo, int shift)
 	scoreText2.setString("FLOOR:   " + to_string(floor));
 	scoreText3.setString("BEST COMBO:   " + to_string(combo));
 	//scoreText3.setString()
-	scoreText1.setPosition(600+shift, 600);
-	scoreText2.setPosition(600+shift, 700);
-	scoreText3.setPosition(600+shift, 800);
+	scoreText1.setPosition(600 + shift, 600);
+	scoreText2.setPosition(600 + shift, 700);
+	scoreText3.setPosition(600 + shift, 800);
 
 	scoreText1.setCharacterSize(70);
 	scoreText2.setCharacterSize(70);
@@ -56,10 +65,10 @@ void  FileSave::highscore(RenderWindow& window)
 	profilesp.setTexture(&profiltex);
 	profilesp.setPosition(100, 0);
 	profilesp.setSize(Vector2f(1700, 1000));
-	Font hisfont,font2;
+	Font hisfont, font2;
 	hisfont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	font2.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
-	Text text[6], text2[6], text3[6], text4[6],bestscore,bestfloor;
+	Text text[6], text2[6], text3[6], text4[6], bestscore, bestfloor;
 
 	bestscore.setFont(font2);
 	bestfloor.setFont(font2);
@@ -73,8 +82,8 @@ void  FileSave::highscore(RenderWindow& window)
 	bestscore.setFillColor(Color::Black);
 	bestfloor.setFillColor(Color::Black);
 
-	bestscore.setString("BEST SCORES " );
-	bestfloor.setString("HIGHEST FLOORS " );
+	bestscore.setString("BEST SCORES ");
+	bestfloor.setString("HIGHEST FLOORS ");
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -100,7 +109,7 @@ void  FileSave::highscore(RenderWindow& window)
 		text[i].setString(scoreStr[i]);
 		text[i].setPosition(500, 200 + ((i + 1) * 60));
 		text2[i].setString(list[i].second.Name);
-		text2[i].setPosition(250, 200 + ((i + 1) *60));
+		text2[i].setPosition(250, 200 + ((i + 1) * 60));
 		string floorStr[5];
 		floorStr[i] = to_string(list[i].first / 10);
 		text3[i].setString(floorStr[i]);
@@ -170,13 +179,13 @@ void FileSave::TypeYourName()
 		{
 			if (!boolenter)
 			{
-                            if (playername.size()) 
-			    {
-				enternameSP.setPosition(-1000, -1000);
-				playerNameText.setPosition(-1000, -1000);
-				infile = 1;
-				boolenter = 1;
-                            }
+				if (playername.size())
+				{
+					enternameSP.setPosition(-1000, -1000);
+					playerNameText.setPosition(-1000, -1000);
+					infile = 1;
+					boolenter = 1;
+				}
 			}
 		}
 	}
@@ -259,7 +268,7 @@ void FileSave::pairtofile()
 	{
 		for (int i = 0; i < 5; i++)
 		{
-			file << list[i].second.Name << "      " << list[i].first << "      " << list[i].second.floor << "      " << list[i].second.max_compo << "\n"<< "\n";
+			file << list[i].second.Name << "      " << list[i].first << "      " << list[i].second.floor << "      " << list[i].second.max_compo << "\n" << "\n";
 		}
 		file.close();
 	}

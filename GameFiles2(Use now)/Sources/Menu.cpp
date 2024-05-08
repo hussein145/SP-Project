@@ -500,13 +500,14 @@ void  Menu::options_menu1(RenderWindow& window)
 	menu5.mainmenu[0].setString("Player1 \n Charchters <>");
 	menu5.mainmenu[1].setString("Player2 \n Charchters <>");
 	menu5.mainmenu[2].setString("Back");
-	const int players = 3;
+	const int players = 5;
 
 	Texture pl[players];
 	pl[0].loadFromFile("Assets/Textures/icytower1.png");
 	pl[1].loadFromFile("Assets/Textures/icytower2.png");
 	pl[2].loadFromFile("Assets/Textures/icy_demon1.png");
-
+	pl[3].loadFromFile("Assets/Textures/SpiderMan.png");
+	pl[4].loadFromFile("Assets/Textures/icy_demon1.png");
 
 	Sprite player1;
 	Sprite player2;
@@ -596,6 +597,14 @@ void  Menu::options_menu1(RenderWindow& window)
 		{
 			player1.setTexture(pl[2]);
 		}
+		else if (PLayer1 == 3)
+		{
+			player1.setTexture(pl[3]);
+		}
+		else if (PLayer1 == 4)
+		{
+			player1.setTexture(pl[4]);
+		}
 
 		if (PLayer2 == 1)
 		{
@@ -608,6 +617,14 @@ void  Menu::options_menu1(RenderWindow& window)
 		else if (PLayer2 == 2)
 		{
 			player2.setTexture(pl[2]);
+		}
+		else if (PLayer2 == 3)
+		{
+			player1.setTexture(pl[3]);
+		}
+		else if (PLayer2 == 4)
+		{
+			player1.setTexture(pl[4]);
 		}
 		player1.setTextureRect(IntRect(0, 0, 50, 60));
 		player1.setScale(2.4, 2.4);

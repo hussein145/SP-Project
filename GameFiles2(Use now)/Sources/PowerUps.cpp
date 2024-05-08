@@ -27,11 +27,11 @@ void PowerUps::setDrops()
 		Drops[i].setTexture(DropsTex[i]);
 		Drops[i].setOrigin(Drops[i].getScale().x / 2, Drops[i].getScale().y / 2);
 	}
-	Drops[0].setScale(0.15, 0.15);
-	Drops[1].setScale(0.15, 0.15);
-	Drops[2].setScale(0.15, 0.15);
-	Drops[3].setScale(0.15, 0.15);
-	Drops[4].setScale(0.15, 0.15);
+	Drops[0].setScale(0.1, 0.1);
+	Drops[1].setScale(0.1, 0.1);
+	Drops[2].setScale(0.1, 0.1);
+	Drops[3].setScale(0.1, 0.1);
+	Drops[4].setScale(0.1, 0.1);
 }
 void PowerUps::generateDrop(Vector2f stair_position, bool check)
 {

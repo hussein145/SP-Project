@@ -33,6 +33,7 @@ View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 Sprite star1, star2;
 Texture starT1, starT2;
 bool go = 0, go2 = 1;
+bool whowin;
 void starsIntiliztion() {
 	starT1.loadFromFile("Assets\\Textures\\newstage.png");
 	starT2.loadFromFile("Assets\\Textures\\newstage2.png");
@@ -282,7 +283,7 @@ void DRAW_View1()
 	if (!END)
 	{
 		File.highscore_gameover(arr[0], arr[1], player1.Max_Compo, -File.shift);
-		if (player1.oveer)
+		if (player1.oveer && GameMode!=2)
 		{
 			window.draw(File.highscoreENDsp);
 			window.draw(File.scoreText1);
@@ -292,8 +293,13 @@ void DRAW_View1()
 		else
 		{
 			//cout << "hussein" << endl;
-			if (GameMode == 2) {
-
+			if (GameMode == 2 && whowin) {
+				File.winner.setPosition(100,250);
+				window.draw(File.winner);
+			}
+			else if (GameMode == 2 && !whowin) {
+				File.losser.setPosition(30,250);
+				window.draw(File.losser);
 			}
 			else {
 				window.draw(File.gameoversp);
@@ -332,10 +338,18 @@ void DRAW_View2()
 	window.draw(player2.compo);
 	if (!END)
 	{
+		if (GameMode == 2 && whowin) {
+			File.losser.setPosition(1000, 250);
+			window.draw(File.losser);
+		}
+		else if (GameMode == 2 && !whowin) {
+			File.winner.setPosition(1100, 250);
+			window.draw(File.winner);
+		}
 		File.highscore_gameover(arr[2], arr[3], player2.Max_Compo, File.shift);
 		if (player1.oveer)
 		{
-			window.draw(File.highscoreENDsp);
+			//window.draw(File.highscoreENDsp);
 			window.draw(File.scoreText1);
 			window.draw(File.scoreText2);
 			window.draw(File.scoreText3);
@@ -386,25 +400,35 @@ void Gameplay()
 	//player
 	extern int PLayer1;
 	extern int PLayer2;
+	Texture tex[5];
 
-	Texture tex1, tex2, tex3;
-	tex1.loadFromFile("Assets/Textures/icytower1.png");
-	tex2.loadFromFile("Assets/Textures/icytower2.png");
-	tex3.loadFromFile("Assets/Textures/icy_demon1.png");
+	tex[0].loadFromFile("Assets/Textures/icytower1.png");
+	tex[1].loadFromFile("Assets/Textures/icytower2.png");
+	tex[2].loadFromFile("Assets/Textures/icy_demon1.png");
+	tex[3].loadFromFile("Assets/Textures/SpiderMan.png");
+	tex[4].loadFromFile("Assets/Textures/icy_demon1.png");
+
 	if (PLayer1 == 0)
-		player1.inti(tex1);
+		player1.inti(tex[0]);
 	else if (PLayer1 == 1)
-		player1.inti(tex2);
+		player1.inti(tex[1]);
 	else if (PLayer1 == 2)
-		player1.inti(tex3);
+		player1.inti(tex[2]);
+	else if(PLayer1 == 3)
+		player1.inti(tex[3]);
+	else if(PLayer1 == 4)
+		player1.inti(tex[4]);
 
 	if (PLayer2 == 0)
-		player2.inti(tex2);
+		player2.inti(tex[2]);
 	else if (PLayer2 == 1)
-		player2.inti(tex1);
+		player2.inti(tex[0]);
 	else if (PLayer2 == 2)
-		player2.inti(tex3);
-
+		player2.inti(tex[2]);
+	else if (PLayer2 == 3)
+		player1.inti(tex[3]);
+	else if (PLayer2 == 4)
+		player1.inti(tex[4]);
 	view.view_insilization();
 
 	bool StartMoving = 0;
@@ -537,7 +561,7 @@ void Gameplay()
 		collisions(player1);
 		collisions(player2);
 		//= ====================================calculate score and compo================================== = //
-		player1.score = (player1.floor * 10) ;// + user[0].st_lvl2_score
+		player1.score = (player1.floor * 10);// + user[0].st_lvl2_score
 		player2.score = player2.floor * 10;
 
 		player1.score_txt.setString("Score: " + to_string(player1.score));
@@ -608,6 +632,13 @@ void Gameplay()
 		if ((player1.character.getPosition().y > player1_View.getCenter().y + 550
 			|| (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540)) && check1)
 		{
+			if (GameMode == 2 && player1.character.getPosition().y > player1_View.getCenter().y + 550)
+			{
+				whowin = false;
+			}
+			else if (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540) {
+				whowin = true;
+			}
 			check1 = 0;
 			if (GameMode == 1) {
 				if (player1.score > File.list[0].first) {

@@ -56,22 +56,39 @@ void  FileSave::highscore(RenderWindow& window)
 	profilesp.setTexture(&profiltex);
 	profilesp.setPosition(100, 0);
 	profilesp.setSize(Vector2f(1700, 1000));
-	Font hisfont;
+	Font hisfont,font2;
 	hisfont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
-	Text text[6], text2[6], text3[6], text4[6];
+	font2.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
+	Text text[6], text2[6], text3[6], text4[6],bestscore,bestfloor;
+
+	bestscore.setFont(font2);
+	bestfloor.setFont(font2);
+
+	bestscore.setPosition(200, 150);
+	bestfloor.setPosition(200, 530);
+
+	bestscore.setCharacterSize(70);
+	bestfloor.setCharacterSize(70);
+
+	bestscore.setFillColor(Color::Black);
+	bestfloor.setFillColor(Color::Black);
+
+	bestscore.setString("BEST SCORES " );
+	bestfloor.setString("HIGHEST FLOORS " );
+
 	for (int i = 0; i < 5; i++)
 	{
 		text[i].setFont(hisfont);
-		text[i].setCharacterSize(30);
+		text[i].setCharacterSize(40);
 		text[i].setFillColor(Color::Black);
 		text2[i].setFont(hisfont);
-		text2[i].setCharacterSize(30);
+		text2[i].setCharacterSize(40);
 		text2[i].setFillColor(Color::Black);
 		text3[i].setFont(hisfont);
-		text3[i].setCharacterSize(30);
+		text3[i].setCharacterSize(40);
 		text3[i].setFillColor(Color::Black);
 		text4[i].setFont(hisfont);
-		text4[i].setCharacterSize(30);
+		text4[i].setCharacterSize(40);
 		text4[i].setFillColor(Color::Black);
 
 	}
@@ -81,15 +98,15 @@ void  FileSave::highscore(RenderWindow& window)
 		string scoreStr[5];
 		scoreStr[i] = to_string(list[i].first);
 		text[i].setString(scoreStr[i]);
-		text[i].setPosition(500, 200 + ((i + 1) * 35));
+		text[i].setPosition(500, 200 + ((i + 1) * 60));
 		text2[i].setString(list[i].second.Name);
-		text2[i].setPosition(250, 200 + ((i + 1) * 35));
+		text2[i].setPosition(250, 200 + ((i + 1) *60));
 		string floorStr[5];
 		floorStr[i] = to_string(list[i].first / 10);
 		text3[i].setString(floorStr[i]);
-		text3[i].setPosition(500, 550 + ((i + 1) * 35));
+		text3[i].setPosition(500, 550 + ((i + 1) * 60));
 		text4[i].setString(list[i].second.Name);
-		text4[i].setPosition(250, 550 + ((i + 1) * 35));
+		text4[i].setPosition(250, 550 + ((i + 1) * 60));
 
 	}
 
@@ -111,6 +128,8 @@ void  FileSave::highscore(RenderWindow& window)
 		window.clear();
 		window.draw(menu_UI.bg);
 		window.draw(profilesp);
+		window.draw(bestscore);
+		window.draw(bestfloor);
 		for (int i = 0; i < 5; i++)
 		{
 			window.draw(text[i]);
@@ -238,7 +257,7 @@ void FileSave::pairtofile()
 	{
 		for (int i = 0; i < 5; i++)
 		{
-			file << list[i].second.Name << "    " << list[i].first << "    " << list[i].second.floor << "    " << list[i].second.max_compo << "\n";
+			file << list[i].second.Name << "      " << list[i].first << "      " << list[i].second.floor << "      " << list[i].second.max_compo << "\n"<< "\n";
 		}
 		file.close();
 	}

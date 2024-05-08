@@ -9,7 +9,8 @@ struct PowerUps
 	int PowerUP_veolcity;
 	Texture DropsTex[5];
 	Sprite Drops[5]; // 0 walls inwards(heart)
-	float velocity_x = 20;
+	float velocity_x;
+	float directionOfVelocity;
 	bool skip = 0;
 	float stopsmall = 0;
 	float mapspeed = 1, addmapspeed = 0;

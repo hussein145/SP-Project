@@ -4,8 +4,6 @@
 #include "PowerUps.h"
 #include "GameClock.h"
 
-
-
 extern PowerUps Power;
 extern Players player1;
 extern STAIRS Stairs;
@@ -64,12 +62,17 @@ void PowerUps::dropcollision()
 			{
 				player1.droptype = dropBag[i].type;
 				dropBag[i].dropShape.setScale(0, 0);
+				if (player1.droptype == 0){
+					if (rand() % 2)  velocity_x = 20;
+					else  velocity_x = -20;
+					directionOfVelocity = velocity_x;
+				}
 			}
+
 		}
 }
 void PowerUps::checkdrop(bool& start, bool& StartReturning) {
-	if (player1.droptype == 0)
-	{
+	if (player1.droptype == 0){
 		Stairs.distanceOfMove = 100;
 		skip = 1;
 		start = 1;
@@ -91,13 +94,16 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 		}
 		else if (elapsedTime.asSeconds() > 5 && elapsedTime.asSeconds() < 8)
 		{
+			//cout << directionOfVelocity << endl;
+			//directionOfVelocity = velocity_x;
 			velocity_x = 0;
 		}
 		else if (elapsedTime.asSeconds() >= 8)
 		{
-			cout << elapsedTime.asSeconds() << endl;
+			//cout << elapsedTime.asSeconds() << endl;
 			StartReturning = 1;
-			velocity_x = -20;
+			//cout << directionOfVelocity << endl;
+			velocity_x = -directionOfVelocity;
 			TimeOfMove.restart();
 			elapsedTime = TimeOfMove.getElapsedTime();
 			pausedTime = TimeOfMove.getElapsedTime();

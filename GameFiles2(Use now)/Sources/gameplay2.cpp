@@ -413,15 +413,36 @@ void Gameplay()
 
 	// powerups
 	Power.setDrops();
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	bool message = 0;
+	bool respawn = 0;
 
+	Good.messages();
+	if (menu.level == 2) {
+		respawn = 1;
+		Map.view_velocity = user[File.index].view_speed2;
+		Good.bounus_points = user[File.index].st_lvl2_score;
+		Stairs.Number_Of_Stair = 50;
+
+	}
+	else if (menu.level == 3) {
+		respawn = 1;
+		Map.view_velocity = user[File.index].view_speed3;
+		Good.bounus_points = user[File.index].st_lvl3_score;
+		Stairs.Number_Of_Stair = 100;
+	}
+	else if (menu.level == 4) {
+		respawn = 1;
+		Map.view_velocity = user[File.index].view_speed4;
+		Good.bounus_points = user[File.index].st_lvl4_score;
+		Stairs.Number_Of_Stair = 100;
+	}
+	// ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	//map insilization
 	Map.intilization();
 
 	// new stage starts intiliztion
 	starsIntiliztion();
-
-	// game time
-	clockCountIni();
 
 	//player
 	extern int PLayer1;
@@ -464,39 +485,14 @@ void Gameplay()
 	Map.Backgrond_Velocity_y = 20.0f;
 	Map.Walls_velocity_y = 120.0f;
 	Map.Stairs_velocity_y = 50.0f;
-	Map.view_velocity = 80.0f;
+	if (respawn == 0) {
+		Map.view_velocity = 80.0f;
+	}
 	int score_lvl2 = 0, score_lvl3 = 0, score_lvl4 = 0;
 	float vx_lvl2 = 0, vx_lvl3 = 0, vx_lvl4 = 0;
 	bool alive = true;
 
-	if (0)
-	{
-		//if (user[File.index].highest_stair >= 50 && user[File.index].highest_stair < 100) { //level2
-		if (0) {
-			//cout << "hus" << endl;
-			//cout << user[0].view_speed2 << endl;
-			//cout  << user[0].st_lvl2_score << endl;
-			Map.view_velocity = user[0].view_speed2;
-			player1.score = user[0].st_lvl2_score;
-			Stairs.Number_Of_Stair = 50;
-		}
-		//else if (user[File.index].highest_stair >= 100 && user[File.index].highest_stair < 200) {
-		else if (menu.level == 3) {
-			Map.view_velocity = user[File.index].view_speed3;
-			player1.score = user[File.index].st_lvl3_score;
-			Stairs.Number_Of_Stair = 100;
-		}
-		//else if (user[File.index].highest_stair >= 200 && user[File.index].highest_stair < 300) {
-		else if (menu.level == 4) {
-			Map.view_velocity = user[File.index].view_speed4;
-			player1.score = user[File.index].st_lvl4_score;
-			Stairs.Number_Of_Stair = 100;
-		}
-	}
 
-	bool message = 0;
-
-	Good.messages();
 	while (window.isOpen())
 	{
 		/*if (Mouse::isButtonPressed(Mouse::Left))

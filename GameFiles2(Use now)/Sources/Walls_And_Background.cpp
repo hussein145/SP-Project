@@ -3,7 +3,9 @@
 
 void Walls_And_Background::intiliztion(int GameMode, View& player1_View, View& player2_View)
 {
-	backGround.loadFromFile("Assets/Textures/BackGround game1.png");
+	backGround[0].loadFromFile("Assets/Textures/BackGround game1.png");
+	backGround[1].loadFromFile("Assets/Textures/BackGround game2.png");
+
 	wallTexture.loadFromFile("Assets/Textures/wall1.png");
 	//background
 	if (GameMode == 2)
@@ -28,7 +30,10 @@ void Walls_And_Background::intiliztion(int GameMode, View& player1_View, View& p
 		wallsRight[Curr_walls].setScale(-1, 1);
 		wallsRight[Curr_walls].setPosition(RightWalls_Pos_x, -Difference_Between_bg);
 
-		bg[Curr_Background].setTexture(&backGround);
+		if(Curr_Background % (rand()%4+3) == 0 && Curr_Background!=0)
+			bg[Curr_Background].setTexture(&backGround[1]);
+		else
+			bg[Curr_Background].setTexture(&backGround[0]);
 		bg[Curr_Background].setSize(Vector2f(bg_width, 1080));
 		bg[Curr_Background].setPosition(LeftWall_Pos_x, -Difference_Between_bg);
 		Difference_Between_bg += 1080;

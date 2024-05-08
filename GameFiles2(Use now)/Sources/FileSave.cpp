@@ -1,4 +1,3 @@
-
 #include <utility>
 #include "menu_Bg_and_Face.h"
 #include "Sounds.h"
@@ -26,15 +25,7 @@ void FileSave::highscore_gameover(int score, int floor, int combo, int shift)
 	gameoversp.setPosition(470 + shift, 180);
 	gameoversp.setScale(1.5, 1.5),
 
-	win.loadFromFile("Assets/Textures/winner.png");
-	winner.setTexture(win);
-	winner.setScale(1.5, 1.5);
-
-	lose.loadFromFile("Assets/Textures/losser.png");
-		losser.setTexture(lose);
-		losser.setScale(1.5, 1.5);
-
-	font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
+		font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	scoreText1.setFont(font);
 	scoreText2.setFont(font);
 	scoreText3.setFont(font);
@@ -61,61 +52,44 @@ void  FileSave::highscore(RenderWindow& window)
 {
 	Texture profiltex;
 	profiltex.loadFromFile("Assets/Textures/Capture.png");
-	Sprite profilesp;
-	profilesp.setTexture(profiltex);
-	profilesp.setPosition(500, 0);
-	profilesp.setScale(2.5, 2.5);
+	RectangleShape profilesp;
+	profilesp.setTexture(&profiltex);
+	profilesp.setPosition(100, 0);
+	profilesp.setSize(Vector2f(1700, 1000));
 	Font hisfont, font2;
 	hisfont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	font2.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
-	Text SCOREtext[6], NAMEFORSCOREtext[6], FLOORtext[6], NAMEFORFLOORtext[6], NAMEFORCOMBOtext[6], COMBOtext[6], bestscore, bestfloor, bestcombo;
+	Text text[6], text2[6], text3[6], text4[6], bestscore, bestfloor;
 
 	bestscore.setFont(font2);
 	bestfloor.setFont(font2);
-	bestcombo.setFont(font2);
 
-	bestscore.setPosition(600, 150);
-	bestfloor.setPosition(600, 450);
-	bestcombo.setPosition(600, 750);
+	bestscore.setPosition(200, 150);
+	bestfloor.setPosition(200, 530);
 
-	bestscore.setCharacterSize(50);
-	bestfloor.setCharacterSize(50);
-	bestcombo.setCharacterSize(50);
+	bestscore.setCharacterSize(70);
+	bestfloor.setCharacterSize(70);
 
 	bestscore.setFillColor(Color::Black);
 	bestfloor.setFillColor(Color::Black);
-	bestcombo.setFillColor(Color::Black);
 
 	bestscore.setString("BEST SCORES ");
 	bestfloor.setString("HIGHEST FLOORS ");
-	bestcombo.setString("BEST COMBO  ");
 
 	for (int i = 0; i < 5; i++)
 	{
-		SCOREtext[i].setFont(hisfont);
-		SCOREtext[i].setCharacterSize(30);
-		SCOREtext[i].setFillColor(Color::Black);
-
-		NAMEFORSCOREtext[i].setFont(hisfont);
-		NAMEFORSCOREtext[i].setCharacterSize(30);
-		NAMEFORSCOREtext[i].setFillColor(Color::Black);
-
-		FLOORtext[i].setFont(hisfont);
-		FLOORtext[i].setCharacterSize(30);
-		FLOORtext[i].setFillColor(Color::Black);
-
-		NAMEFORFLOORtext[i].setFont(hisfont);
-		NAMEFORFLOORtext[i].setCharacterSize(30);
-		NAMEFORFLOORtext[i].setFillColor(Color::Black);
-
-		COMBOtext[i].setFont(hisfont);
-		COMBOtext[i].setCharacterSize(30);
-		COMBOtext[i].setFillColor(Color::Black);
-
-		NAMEFORCOMBOtext[i].setFont(hisfont);
-		NAMEFORCOMBOtext[i].setCharacterSize(30);
-		NAMEFORCOMBOtext[i].setFillColor(Color::Black);
-
+		text[i].setFont(hisfont);
+		text[i].setCharacterSize(40);
+		text[i].setFillColor(Color::Black);
+		text2[i].setFont(hisfont);
+		text2[i].setCharacterSize(40);
+		text2[i].setFillColor(Color::Black);
+		text3[i].setFont(hisfont);
+		text3[i].setCharacterSize(40);
+		text3[i].setFillColor(Color::Black);
+		text4[i].setFont(hisfont);
+		text4[i].setCharacterSize(40);
+		text4[i].setFillColor(Color::Black);
 
 	}
 	filetopair();
@@ -123,27 +97,17 @@ void  FileSave::highscore(RenderWindow& window)
 	{
 		string scoreStr[5];
 		scoreStr[i] = to_string(list[i].first);
-		SCOREtext[i].setString(scoreStr[i]);
-		SCOREtext[i].setPosition(900, 200 + ((i + 1) * 45));
-
-		NAMEFORSCOREtext[i].setString(list[i].second.Name);
-		NAMEFORSCOREtext[i].setPosition(600, 200 + ((i + 1) * 45));
-
+		text[i].setString(scoreStr[i]);
+		text[i].setPosition(500, 200 + ((i + 1) * 60));
+		text2[i].setString(list[i].second.Name);
+		text2[i].setPosition(250, 200 + ((i + 1) * 60));
 		string floorStr[5];
-		floorStr[i] = to_string(list[i].second.floor);
-		FLOORtext[i].setString(floorStr[i]);
-		FLOORtext[i].setPosition(900, 500 + ((i + 1) * 45));
+		floorStr[i] = to_string(list[i].first / 10);
+		text3[i].setString(floorStr[i]);
+		text3[i].setPosition(500, 550 + ((i + 1) * 60));
+		text4[i].setString(list[i].second.Name);
+		text4[i].setPosition(250, 550 + ((i + 1) * 60));
 
-		NAMEFORFLOORtext[i].setString(list[i].second.Name);
-		NAMEFORFLOORtext[i].setPosition(600, 500 + ((i + 1) * 45));
-
-		string COMBOStr[5];
-		COMBOStr[i] = to_string(list[i].second.max_compo);
-		COMBOtext[i].setString(COMBOStr[i]);
-		COMBOtext[i].setPosition(900, 800 + ((i + 1) * 45));
-
-		NAMEFORCOMBOtext[i].setString(list[i].second.Name);
-		NAMEFORCOMBOtext[i].setPosition(600, 800 + ((i + 1) * 45));
 	}
 
 	while (window.isOpen())
@@ -161,22 +125,17 @@ void  FileSave::highscore(RenderWindow& window)
 			return;
 		}
 
-		menu_UI.FaceMotion(window);
 		window.clear();
 		window.draw(menu_UI.bg);
-		window.draw(menu_UI.face);
 		window.draw(profilesp);
 		window.draw(bestscore);
 		window.draw(bestfloor);
-		window.draw(bestcombo);
 		for (int i = 0; i < 5; i++)
 		{
-			window.draw(SCOREtext[i]);
-			window.draw(NAMEFORSCOREtext[i]);
-			window.draw(FLOORtext[i]);
-			window.draw(NAMEFORFLOORtext[i]);
-			window.draw(COMBOtext[i]);
-			window.draw(NAMEFORCOMBOtext[i]);
+			window.draw(text[i]);
+			window.draw(text2[i]);
+			window.draw(text3[i]);
+			window.draw(text4[i]);
 		}
 		window.display();
 	}
@@ -246,7 +205,7 @@ void FileSave::out_file() {
 			// File is not empty; read data
 			for (int i = 0; i < 5; i++) {
 				file >> user[i].user_name >> user[i].highest_stair >> user[i].st_lvl2_score >> user[i].st_lvl3_score >>
-					user[i].st_lvl4_score >> user[i].view_speed2 >> user[i].view_speed3 >> user[i].view_speed4 >> user[i].Index;
+					user[i].st_lvl4_score >> user[i].view_speed2 >> user[i].view_speed3 >> user[i].view_speed4;
 			}
 		}
 		file.close();
@@ -265,7 +224,7 @@ void FileSave::EnterName() {
 	playerNameText.setPosition(570, 690);
 	filetopair();
 	out_file();
-
+	//search(playername);
 
 }
 void FileSave::filetopair() {
@@ -324,41 +283,32 @@ void FileSave::into_arr(string username, int stair, int score_lvl2, int score_lv
 			if (user[i].highest_stair < stair) {
 				user[index].highest_stair = stair;
 			}
-			user[curr_index].st_lvl2_score = score_lvl2;
-			user[curr_index].st_lvl3_score = score_lvl3;
-			user[curr_index].st_lvl4_score = score_lvl4;
-			user[curr_index].view_speed2 = vx_lvl2;
-			user[curr_index].view_speed3 = vx_lvl3;
-			user[curr_index].view_speed4 = vx_lvl4;
-			user[curr_index].Index = curr_index;
+			user[i].st_lvl2_score = score_lvl2;
+			user[i].st_lvl3_score = score_lvl3;
+			user[i].st_lvl4_score = score_lvl4;
+			user[i].view_speed2 = vx_lvl2;
+			user[i].view_speed3 = vx_lvl3;
+			user[i].view_speed4 = vx_lvl4;
+			//user[i].Index = curr_index;
 			break;
 		}
 		else if (user[i].st_lvl2_score == 0) {
 			curr_index = i;
-			user[curr_index].user_name = username;
-			user[curr_index].highest_stair = stair;
-			user[curr_index].st_lvl2_score = score_lvl2;
-			user[curr_index].st_lvl3_score = score_lvl3;
-			user[curr_index].st_lvl4_score = score_lvl4;
-			user[curr_index].view_speed2 = vx_lvl2;
-			user[curr_index].view_speed3 = vx_lvl3;
-			user[curr_index].view_speed4 = vx_lvl4;
-			user[curr_index].Index = curr_index;
+			user[i].user_name = username;
+			user[i].highest_stair = stair;
+			user[i].st_lvl2_score = score_lvl2;
+			user[i].st_lvl3_score = score_lvl3;
+			user[i].st_lvl4_score = score_lvl4;
+			user[i].view_speed2 = vx_lvl2;
+			user[i].view_speed3 = vx_lvl3;
+			user[i].view_speed4 = vx_lvl4;
+			//user[curr_index].Index = curr_index;
 			break;
 		}
 	}
 
 
 }
-void FileSave::search(string username) {
-	for (int i = 0; i < 5; i++) {
-		if (user[i].user_name == username) {
-			index = i;
-			break;
-		}
-	}
-}
-
 
 void FileSave::intopair(int score)
 {
@@ -378,7 +328,7 @@ void FileSave::in_file()
 	{
 		for (int i = 0; i < 5; i++) {
 			file << user[i].user_name << " " << user[i].highest_stair << " " << user[i].st_lvl2_score << " " << user[i].st_lvl3_score << " " <<
-				user[i].st_lvl4_score << " " << user[i].view_speed2 << " " << user[i].view_speed3 << " " << user[i].view_speed4 << user[i].Index << endl;
+				user[i].st_lvl4_score << " " << user[i].view_speed2 << " " << user[i].view_speed3 << " " << user[i].view_speed4 << endl;
 		}
 		file.close();
 	}
@@ -386,4 +336,15 @@ void FileSave::in_file()
 	{
 		cout << "Error opening file for writing." << endl;
 	}
+}
+void FileSave::search(string username) {
+	for (int i = 0; i < 5; i++) {
+		//cout << user[i].user_name << endl;
+		if (user[i].user_name == username) {
+			//cout << i;
+			index = i;
+			break;
+		}
+	}
+
 }

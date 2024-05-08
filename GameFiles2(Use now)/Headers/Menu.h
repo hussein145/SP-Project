@@ -26,6 +26,7 @@ struct Menu
 	void sound_options(RenderWindow& window);
 	void options_menu1(RenderWindow& window);
 	void options_menu(RenderWindow& window);
+	void  credits(RenderWindow& window);
 	void instructions(RenderWindow& window);
 	void Pause(RenderWindow& window, Texture gametexture);
 };

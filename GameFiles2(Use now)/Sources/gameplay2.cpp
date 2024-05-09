@@ -42,8 +42,8 @@ void clockCountIni() {
 	clockText.setPosition(245, 930);
 	clockText.setFillColor(Color::White);
 }
-void clockCount(Clock clockcnt) {
-	Time elapsedTime = clockcnt.getElapsedTime();
+void clockCount(Clock clockcnt, Time paused_time) {
+	Time elapsedTime = clockcnt.getElapsedTime() + paused_time;
 	int sec = (int)elapsedTime.asSeconds() % 60, min = ((int)elapsedTime.asSeconds() % 3600) / 60;
 	if (sec == 60)
 		sec = 0;
@@ -462,6 +462,7 @@ void Gameplay()
 	// game timer
 	clockCountIni();
 	Clock clockcnt;
+	Time paused_time;
 
 	//player
 	extern int PLayer1;
@@ -472,7 +473,7 @@ void Gameplay()
 	tex[1].loadFromFile("Assets/Textures/icytower2.png");
 	tex[2].loadFromFile("Assets/Textures/icy_demon1.png");
 	tex[3].loadFromFile("Assets/Textures/SpiderMan.png");
-	tex[4].loadFromFile("Assets/Textures/Hurry_Potter.png");
+	tex[4].loadFromFile("Assets/Textures/icy_demon1.png");
 
 	if (PLayer1 == 0)
 		player1.inti(tex[0]);
@@ -527,12 +528,14 @@ void Gameplay()
 			if (END ? (Play.key.code == Keyboard::Escape && !pressed) : (Play.type == Event::KeyPressed && !pressed))  //&& !menu.pressed
 			{
 				pressed = true;
-				stopTime = true;
 				GameTexture.create(1920, 1080);
 				GameTexture.update(window);
 				Power.pausedTime = Power.TimeOfMove.getElapsedTime();
+				paused_time += clockcnt.getElapsedTime();
 				menu.Pause(window, GameTexture);
+				clockcnt.restart();
 				clockk.restart();
+
 				Power.TimeOfMove.restart();
 				if (menu.exit)
 				{
@@ -557,8 +560,7 @@ void Gameplay()
 		}
 
 		// game time
-		if(!stopTime)
-			clockCount(clockcnt);
+		clockCount(clockcnt, paused_time);
 
 		// new stage stars move
 		starsMove(player1, player1_View);

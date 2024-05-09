@@ -486,7 +486,7 @@ void Gameplay()
 	tex[1].loadFromFile("Assets/Textures/icytower2.png");
 	tex[2].loadFromFile("Assets/Textures/icy_demon1.png");
 	tex[3].loadFromFile("Assets/Textures/SpiderMan.png");
-	tex[4].loadFromFile("Assets/Textures/Hurry_PotterHurry_Potter.png");
+	tex[4].loadFromFile("Assets/Textures/Hurry_Potter.png");
 
 	if (PLayer1 == 0)
 		player1.inti(tex[0]);
@@ -506,9 +506,9 @@ void Gameplay()
 	else if (PLayer2 == 2)
 		player2.inti(tex[2]);
 	else if (PLayer2 == 3)
-		player1.inti(tex[3]);
+		player2.inti(tex[3]);
 	else if (PLayer2 == 4)
-		player1.inti(tex[4]);
+		player2.inti(tex[4]);
 	view.view_insilization();
 
 	bool StartMoving = 0;
@@ -710,7 +710,7 @@ void Gameplay()
 				else {
 					player1.oveer = 0;
 				}
-				File.intopair(player1.score,mins, sec);
+				File.intopair(player1.score, mins, sec);
 				File.pairtofile();
 				File.into_arr(File.playername, player1.floor, score_lvl2, score_lvl3, score_lvl4, vx_lvl2, vx_lvl3, vx_lvl4);
 				File.in_file();

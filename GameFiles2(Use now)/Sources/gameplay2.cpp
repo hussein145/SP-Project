@@ -500,7 +500,7 @@ void Gameplay()
 		player1.inti(tex[4]);
 
 	if (PLayer2 == 0)
-		player2.inti(tex[2]);
+		player2.inti(tex[1]);
 	else if (PLayer2 == 1)
 		player2.inti(tex[0]);
 	else if (PLayer2 == 2)

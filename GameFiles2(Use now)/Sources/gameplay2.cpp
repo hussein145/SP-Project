@@ -473,7 +473,7 @@ void Gameplay()
 	tex[1].loadFromFile("Assets/Textures/icytower2.png");
 	tex[2].loadFromFile("Assets/Textures/icy_demon1.png");
 	tex[3].loadFromFile("Assets/Textures/SpiderMan.png");
-	tex[4].loadFromFile("Assets/Textures/icy_demon1.png");
+	tex[4].loadFromFile("Assets/Textures/Hurry_PotterHurry_Potter.png");
 
 	if (PLayer1 == 0)
 		player1.inti(tex[0]);

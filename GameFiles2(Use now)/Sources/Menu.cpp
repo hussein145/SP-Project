@@ -60,7 +60,7 @@ void Menu::MoveUp(int& selected, int choises)
 void  Menu::menu1(RenderWindow& window, int& GameMode)
 {
 	Menu men1;
-	sound.LoadMusic();
+	//sound.LoadMusic();
 	sound.music(0);
 	men1.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
 
@@ -233,7 +233,7 @@ void Menu::levels(RenderWindow& window) {
 						level = 3;
 						Gameplay();
 					}
-					else if (menu7.selected == 2 && user[File.index].highest_stair >= 200 ) {
+					else if (menu7.selected == 2 && user[File.index].highest_stair >= 200) {
 						level = 4;
 						Gameplay();
 					}

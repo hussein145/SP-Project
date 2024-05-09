@@ -41,7 +41,7 @@ struct FileSave
 	void EnterName();
 	void TypeYourName();
 	void pairtofile();
-	void intopair(int score);
+	void intopair(int score, int min, int sec);
 	void  highscore(RenderWindow& window);
 	void highscore_gameover(int Score, int floor, int combo, int shift, int min, int sec);
 	void out_file();

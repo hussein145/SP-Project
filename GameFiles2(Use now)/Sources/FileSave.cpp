@@ -25,6 +25,15 @@ void FileSave::highscore_gameover(int score, int floor, int combo, int shift, in
 	gameoversp.setPosition(470 + shift, 180);
 	gameoversp.setScale(1.5, 1.5),
 
+		win.loadFromFile("Assets/Textures/winner.png");
+	winner.setTexture(win);
+	winner.setScale(1.5, 1.5);
+
+
+	lose.loadFromFile("Assets/Textures/losser.png");
+	losser.setTexture(lose);
+	losser.setScale(1.5, 1.5);
+		
 	font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	scoreText1.setFont(font);
 	scoreText2.setFont(font);

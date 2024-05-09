@@ -33,7 +33,7 @@ void FileSave::highscore_gameover(int score, int floor, int combo, int shift, in
 	lose.loadFromFile("Assets/Textures/losser.png");
 	losser.setTexture(lose);
 	losser.setScale(1.5, 1.5);
-		
+
 	font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	scoreText1.setFont(font);
 	scoreText2.setFont(font);
@@ -391,7 +391,7 @@ void FileSave::into_arr(string username, int stair, int score_lvl2, int score_lv
 
 }
 
-void FileSave::intopair(int score)
+void FileSave::intopair(int score, int minute, int second)
 {
 	if (score > list[4].first)
 	{
@@ -399,8 +399,8 @@ void FileSave::intopair(int score)
 		list[4].second.floor = player1.floor;
 		list[4].second.max_compo = player1.Max_Compo;
 		list[4].first = score;
-		list[4].second.min = min;
-		list[4].second.sec = sec;
+		list[4].second.min = minute;
+		list[4].second.sec = second;
 	}
 	sort(std::begin(list), std::end(list), comparePairs);
 }

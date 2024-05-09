@@ -36,6 +36,7 @@ Font clockFont;
 Text clockText;
 Time elapsedTime;
 bool stopTime = false;
+int mins, sec;
 void clockCountIni() {
 	clockFont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	clockText.setFont(clockFont);
@@ -51,12 +52,13 @@ void clockCount(Clock clockcnt, Time paused_time) {
 	else {
 		elapsedTime = clockcnt.getElapsedTime() + paused_time;
 	}
-	int sec = (int)elapsedTime.asSeconds() % 60, min = ((int)elapsedTime.asSeconds() % 3600) / 60;
+	mins = ((int)elapsedTime.asSeconds() % 3600) / 60;
+	sec = (int)elapsedTime.asSeconds() % 60;
 	if (sec == 60)
 		sec = 0;
-	if (min == 60)
-		min = 0;
-	string timeString = "Time:  " + to_string(min) + ":" + to_string(sec);
+	if (mins == 60)
+		mins = 0;
+	string timeString = "Time:  " + to_string(mins) + ":" + to_string(sec);
 	clockText.setString(timeString);
 }
 
@@ -311,13 +313,15 @@ void DRAW_View1()
 	window.draw(player1.compo);
 	if (!END)
 	{
-		File.highscore_gameover(arr[0], arr[1], player1.Max_Compo, -File.shift, File.min, File.sec);
+		File.highscore_gameover(arr[0], arr[1], player1.Max_Compo, -File.shift, mins, sec);
 		if (player1.oveer && GameMode != 2)
 		{
 			window.draw(File.highscoreENDsp);
 			window.draw(File.scoreText1);
 			window.draw(File.scoreText2);
 			window.draw(File.scoreText3);
+			if (GameMode == 1)
+				window.draw(File.scoreText4);
 		}
 		else
 		{
@@ -335,7 +339,8 @@ void DRAW_View1()
 			window.draw(File.scoreText1);
 			window.draw(File.scoreText2);
 			window.draw(File.scoreText3);
-			window.draw(File.scoreText4);
+			if (GameMode == 1)
+				window.draw(File.scoreText4);
 		}
 	}
 	if (Good1.appear == 1 && Good1.timer <= 2) {
@@ -349,7 +354,8 @@ void DRAW_View1()
 	}
 
 	// game time
-	window.draw(clockText);
+	if (GameMode == 1)
+		window.draw(clockText);
 }
 void DRAW_View2()
 {
@@ -377,7 +383,7 @@ void DRAW_View2()
 			File.winner.setPosition(1100, 400);
 			window.draw(File.winner);
 		}
-		File.highscore_gameover(arr[2], arr[3], player2.Max_Compo, File.shift, File.min, File.sec);
+		File.highscore_gameover(arr[2], arr[3], player2.Max_Compo, File.shift, mins, sec);
 		if (player1.oveer)
 		{
 			//window.draw(File.highscoreENDsp);
@@ -480,7 +486,7 @@ void Gameplay()
 	tex[1].loadFromFile("Assets/Textures/icytower2.png");
 	tex[2].loadFromFile("Assets/Textures/icy_demon1.png");
 	tex[3].loadFromFile("Assets/Textures/SpiderMan.png");
-	tex[4].loadFromFile("Assets/Textures/Hurry_Potter.png");
+	tex[4].loadFromFile("Assets/Textures/Hurry_PotterHurry_Potter.png");
 
 	if (PLayer1 == 0)
 		player1.inti(tex[0]);
@@ -517,6 +523,7 @@ void Gameplay()
 	int score_lvl2 = 0, score_lvl3 = 0, score_lvl4 = 0;
 	float vx_lvl2 = 0, vx_lvl3 = 0, vx_lvl4 = 0;
 	bool alive = true;
+	check1 = 1;
 
 
 	while (window.isOpen())

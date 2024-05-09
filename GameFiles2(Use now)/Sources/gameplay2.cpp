@@ -29,14 +29,11 @@ Clock clockk, clockk2;
 float dt, dt2;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
-bool check1 = 1;
 
 // game time
 Font clockFont;
 Text clockText;
-Time elapsedTime;
 bool stopTime = false;
-int mins, sec;
 void clockCountIni() {
 	clockFont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	clockText.setFont(clockFont);
@@ -45,20 +42,14 @@ void clockCountIni() {
 	clockText.setPosition(245, 930);
 	clockText.setFillColor(Color::White);
 }
-void clockCount(Clock clockcnt, Time paused_time) {
-	if (check1 == 0) {
-		elapsedTime = paused_time;
-	}
-	else {
-		elapsedTime = clockcnt.getElapsedTime() + paused_time;
-	}
-	mins = ((int)elapsedTime.asSeconds() % 3600) / 60;
-	sec = (int)elapsedTime.asSeconds() % 60;
+void clockCount(Clock clockcnt) {
+	Time elapsedTime = clockcnt.getElapsedTime();
+	int sec = (int)elapsedTime.asSeconds() % 60, min = ((int)elapsedTime.asSeconds() % 3600) / 60;
 	if (sec == 60)
 		sec = 0;
-	if (mins == 60)
-		mins = 0;
-	string timeString = "Time:  " + to_string(mins) + ":" + to_string(sec);
+	if (min == 60)
+		min = 0;
+	string timeString = "Time:  " + to_string(min) + ":" + to_string(sec);
 	clockText.setString(timeString);
 }
 
@@ -313,15 +304,13 @@ void DRAW_View1()
 	window.draw(player1.compo);
 	if (!END)
 	{
-		File.highscore_gameover(arr[0], arr[1], player1.Max_Compo, -File.shift, mins, sec);
+		File.highscore_gameover(arr[0], arr[1], player1.Max_Compo, -File.shift, File.min, File.sec);
 		if (player1.oveer && GameMode != 2)
 		{
 			window.draw(File.highscoreENDsp);
 			window.draw(File.scoreText1);
 			window.draw(File.scoreText2);
 			window.draw(File.scoreText3);
-			if (GameMode == 1)
-				window.draw(File.scoreText4);
 		}
 		else
 		{
@@ -339,8 +328,7 @@ void DRAW_View1()
 			window.draw(File.scoreText1);
 			window.draw(File.scoreText2);
 			window.draw(File.scoreText3);
-			if (GameMode == 1)
-				window.draw(File.scoreText4);
+			window.draw(File.scoreText4);
 		}
 	}
 	if (Good1.appear == 1 && Good1.timer <= 2) {
@@ -354,8 +342,7 @@ void DRAW_View1()
 	}
 
 	// game time
-	if (GameMode == 1)
-		window.draw(clockText);
+	window.draw(clockText);
 }
 void DRAW_View2()
 {
@@ -383,7 +370,7 @@ void DRAW_View2()
 			File.winner.setPosition(1100, 400);
 			window.draw(File.winner);
 		}
-		File.highscore_gameover(arr[2], arr[3], player2.Max_Compo, File.shift, mins, sec);
+		File.highscore_gameover(arr[2], arr[3], player2.Max_Compo, File.shift, File.min, File.sec);
 		if (player1.oveer)
 		{
 			//window.draw(File.highscoreENDsp);
@@ -475,18 +462,18 @@ void Gameplay()
 	// game timer
 	clockCountIni();
 	Clock clockcnt;
-	Time paused_time;
 
 	//player
 	extern int PLayer1;
 	extern int PLayer2;
+
 	Texture tex[5];
 
 	tex[0].loadFromFile("Assets/Textures/icytower1.png");
 	tex[1].loadFromFile("Assets/Textures/icytower2.png");
 	tex[2].loadFromFile("Assets/Textures/icy_demon1.png");
 	tex[3].loadFromFile("Assets/Textures/SpiderMan.png");
-	tex[4].loadFromFile("Assets/Textures/Hurry_PotterHurry_Potter.png");
+	tex[4].loadFromFile("Assets/Textures/Hurry_Potter.png");
 
 	if (PLayer1 == 0)
 		player1.inti(tex[0]);
@@ -500,20 +487,23 @@ void Gameplay()
 		player1.inti(tex[4]);
 
 	if (PLayer2 == 0)
-		player2.inti(tex[2]);
+		player2.inti(tex[1]);
 	else if (PLayer2 == 1)
 		player2.inti(tex[0]);
 	else if (PLayer2 == 2)
 		player2.inti(tex[2]);
 	else if (PLayer2 == 3)
-		player1.inti(tex[3]);
+		player2.inti(tex[3]);
 	else if (PLayer2 == 4)
-		player1.inti(tex[4]);
+		player2.inti(tex[4]);
+
+
 	view.view_insilization();
 
 	bool StartMoving = 0;
 	bool StartReturning = 0;
 	int disapp = 0, disapp2;
+	bool check1 = 1;
 	Map.Backgrond_Velocity_y = 20.0f;
 	Map.Walls_velocity_y = 120.0f;
 	Map.Stairs_velocity_y = 50.0f;
@@ -523,7 +513,6 @@ void Gameplay()
 	int score_lvl2 = 0, score_lvl3 = 0, score_lvl4 = 0;
 	float vx_lvl2 = 0, vx_lvl3 = 0, vx_lvl4 = 0;
 	bool alive = true;
-	check1 = 1;
 
 
 	while (window.isOpen())
@@ -541,14 +530,12 @@ void Gameplay()
 			if (END ? (Play.key.code == Keyboard::Escape && !pressed) : (Play.type == Event::KeyPressed && !pressed))  //&& !menu.pressed
 			{
 				pressed = true;
+				stopTime = true;
 				GameTexture.create(1920, 1080);
 				GameTexture.update(window);
 				Power.pausedTime = Power.TimeOfMove.getElapsedTime();
-				paused_time += clockcnt.getElapsedTime();
 				menu.Pause(window, GameTexture);
-				clockcnt.restart();
 				clockk.restart();
-
 				Power.TimeOfMove.restart();
 				if (menu.exit)
 				{
@@ -573,7 +560,8 @@ void Gameplay()
 		}
 
 		// game time
-		clockCount(clockcnt, paused_time);
+		if (!stopTime)
+			clockCount(clockcnt);
 
 		// new stage stars move
 		starsMove(player1, player1_View);
@@ -738,7 +726,6 @@ void Gameplay()
 					alive = false;
 				}
 			}
-			paused_time += clockcnt.getElapsedTime();
 		}
 
 		//cout << dt << endl;

@@ -10,11 +10,9 @@ struct Messages
 	int bounus_points;
 	bool show = 0;
 	int cnt = 0;
-	bool cont1 = 0, cont2 = 0;
 	int appear = 0;
 
-	void messages();
-	void update_messages();
+	void messages(int shift);
+	void update_messages(int compo_cnt);
 
 };
-

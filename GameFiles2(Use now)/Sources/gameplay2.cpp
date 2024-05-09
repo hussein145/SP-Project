@@ -19,7 +19,8 @@ FileSave File;
 user_data user[5];
 PowerUps Power;
 GameClock gameclock;
-Messages Good;
+Messages Good1;
+Messages Good2;
 
 
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Close | Style::Fullscreen);
@@ -38,10 +39,7 @@ void clockCountIni() {
 	clockText.setFont(clockFont);
 	clockText.setString("");
 	clockText.setCharacterSize(50);
-	if (GameMode == 2)
-		clockText.setPosition(30, 930);
-	else
-		clockText.setPosition(245, 930);
+	clockText.setPosition(245, 930);
 	clockText.setFillColor(Color::White);
 }
 void clockCount() {
@@ -332,15 +330,14 @@ void DRAW_View1()
 			window.draw(File.scoreText3);
 		}
 	}
-	if (Good.appear == 1 && Good.timer <= 2) {
-		window.draw(Good.message[0]);
-		Good.timer += 0.008;
+	if (Good1.appear == 1 && Good1.timer <= 2) {
+		window.draw(Good1.message[0]);
+		Good1.timer += 0.008;
 
 	}
-	else if (Good.appear == 2 && Good.timer <= 2) {
-		//cout << " hussein" << endl;
-		window.draw(Good.message[1]);
-		Good.timer += 0.008;
+	else if (Good1.appear == 2 && Good1.timer <= 2) {
+		window.draw(Good1.message[1]);
+		Good1.timer += 0.008;
 	}
 
 	// game time
@@ -388,6 +385,15 @@ void DRAW_View2()
 			window.draw(File.scoreText3);
 		}
 	}
+	if (Good2.appear == 1 && Good2.timer <= 2) {
+		window.draw(Good2.message[0]);
+		Good2.timer += 0.008;
+
+	}
+	else if (Good2.appear == 2 && Good2.timer <= 2) {
+		window.draw(Good2.message[1]);
+		Good2.timer += 0.008;
+	}
 }
 
 float resize = 0, resize2 = 0;
@@ -419,25 +425,30 @@ void Gameplay()
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool message = 0;
 	bool respawn = 0;
-
-	Good.messages();
+	/////////////////////
+	if (GameMode == 2) {
+		Good1.messages(-500);
+		Good2.messages(500);
+	}
+	else  Good1.messages(0);
+	//////////////////////////
 	if (menu.level == 2) {
 		respawn = 1;
 		Map.view_velocity = user[File.index].view_speed2;
-		Good.bounus_points = user[File.index].st_lvl2_score;
+		Good1.bounus_points = user[File.index].st_lvl2_score;
 		Stairs.Number_Of_Stair = 50;
 
 	}
 	else if (menu.level == 3) {
 		respawn = 1;
 		Map.view_velocity = user[File.index].view_speed3;
-		Good.bounus_points = user[File.index].st_lvl3_score;
+		Good1.bounus_points = user[File.index].st_lvl3_score;
 		Stairs.Number_Of_Stair = 100;
 	}
 	else if (menu.level == 4) {
 		respawn = 1;
 		Map.view_velocity = user[File.index].view_speed4;
-		Good.bounus_points = user[File.index].st_lvl4_score;
+		Good1.bounus_points = user[File.index].st_lvl4_score;
 		Stairs.Number_Of_Stair = 100;
 	}
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -446,9 +457,6 @@ void Gameplay()
 
 	// new stage starts intiliztion
 	starsIntiliztion();
-
-	// game time
-	clockCountIni();
 
 	//player
 	extern int PLayer1;
@@ -592,8 +600,8 @@ void Gameplay()
 		collisions(player1);
 		collisions(player2);
 		//= ====================================calculate score and compo================================== = //
-		player1.score = (player1.floor * 10) + Good.bounus_points;// + user[0].st_lvl2_score
-		player2.score = player2.floor * 10 + Good.bounus_points;
+		player1.score = (player1.floor * 10) + Good1.bounus_points;// + user[0].st_lvl2_score
+		player2.score = player2.floor * 10 + Good2.bounus_points;
 
 		player1.score_txt.setString("Score: " + to_string(player1.score));
 		player2.score_txt.setString("Score: " + to_string(player2.score));
@@ -618,7 +626,9 @@ void Gameplay()
 			player2.compo_cnt = 0;
 		}
 		//= ====================================calculate score and compo================================== = //
-		Good.update_messages();
+		Good1.update_messages(player1.compo_cnt);
+		Good2.update_messages(player2.compo_cnt);
+
 		//////////////////////////////////////////////
 		Set_ObjectsOnStairs();
 

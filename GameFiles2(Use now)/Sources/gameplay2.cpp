@@ -328,6 +328,7 @@ void DRAW_View1()
 			window.draw(File.scoreText1);
 			window.draw(File.scoreText2);
 			window.draw(File.scoreText3);
+			window.draw(File.scoreText4);
 		}
 	}
 	if (Good1.appear == 1 && Good1.timer <= 2) {
@@ -531,7 +532,6 @@ void Gameplay()
 				GameTexture.update(window);
 				Power.pausedTime = Power.TimeOfMove.getElapsedTime();
 				menu.Pause(window, GameTexture);
-				//stopTime = false;
 				clockk.restart();
 				Power.TimeOfMove.restart();
 				if (menu.exit)

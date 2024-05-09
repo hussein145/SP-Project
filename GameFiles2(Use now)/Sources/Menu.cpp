@@ -512,7 +512,7 @@ void  Menu::options_menu1(RenderWindow& window)
 	pl[1].loadFromFile("Assets/Textures/icytower2.png");
 	pl[2].loadFromFile("Assets/Textures/icy_demon1.png");
 	pl[3].loadFromFile("Assets/Textures/SpiderMan.png");
-	pl[4].loadFromFile("Assets/Textures/icy_demon1.png");
+	pl[4].loadFromFile("Assets/Textures/Hurry_Potter.png");
 
 	Sprite player1;
 	Sprite player2;

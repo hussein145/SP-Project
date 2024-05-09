@@ -12,7 +12,7 @@ extern menu_Bg_and_Face menu_UI;
 extern int GameMode;
 bool press = 0;
 extern user_data user[5];
-void FileSave::highscore_gameover(int score, int floor, int combo, int shift)
+void FileSave::highscore_gameover(int score, int floor, int combo, int shift, int min, int sec)
 {
 	//cout << shift << endl;
 	highscoreENDtx.loadFromFile("Assets/Textures/High_Score.png");
@@ -25,28 +25,33 @@ void FileSave::highscore_gameover(int score, int floor, int combo, int shift)
 	gameoversp.setPosition(470 + shift, 180);
 	gameoversp.setScale(1.5, 1.5),
 
-		font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
+	font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	scoreText1.setFont(font);
 	scoreText2.setFont(font);
 	scoreText3.setFont(font);
+	scoreText4.setFont(font);
 
 
 	scoreText1.setString("SCORE:   " + to_string(score));
 	scoreText2.setString("FLOOR:   " + to_string(floor));
 	scoreText3.setString("BEST COMBO:   " + to_string(combo));
+	scoreText4.setString("TIME:   " + to_string(min) + " : " + to_string(sec));
+
 	//scoreText3.setString()
 	scoreText1.setPosition(600 + shift, 600);
 	scoreText2.setPosition(600 + shift, 700);
 	scoreText3.setPosition(600 + shift, 800);
+	scoreText4.setPosition(600 + shift, 900);
 
 	scoreText1.setCharacterSize(70);
 	scoreText2.setCharacterSize(70);
 	scoreText3.setCharacterSize(70);
+	scoreText4.setCharacterSize(70);
 
+	scoreText1.setFillColor(Color::White);
 	scoreText2.setFillColor(Color::White);
 	scoreText3.setFillColor(Color::White);
-	scoreText1.setFillColor(Color::White);
-
+	scoreText4.setFillColor(Color::White);
 }
 void  FileSave::highscore(RenderWindow& window)
 {
@@ -59,27 +64,32 @@ void  FileSave::highscore(RenderWindow& window)
 	Font hisfont, font2;
 	hisfont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	font2.loadFromFile("Assets/Fonts/Freedom-10eM.ttf");
-	Text SCOREtext[6], NAMEFORSCOREtext[6], FLOORtext[6], NAMEFORFLOORtext[6], NAMEFORCOMBOtext[6], COMBOtext[6], bestscore, bestfloor, bestcombo;
+	Text SCOREtext[6], NAMEFORSCOREtext[6], FLOORtext[6], NAMEFORFLOORtext[6], NAMEFORCOMBOtext[6], COMBOtext[6], mins[6], secs[6], timeText[6], bestscore, bestfloor, bestcombo, Time;
 
 	bestscore.setFont(font2);
 	bestfloor.setFont(font2);
 	bestcombo.setFont(font2);
+	Time.setFont(font2);
 
 	bestscore.setPosition(600, 150);
 	bestfloor.setPosition(600, 450);
 	bestcombo.setPosition(600, 750);
+	Time.setPosition(1070, 170);
 
 	bestscore.setCharacterSize(50);
 	bestfloor.setCharacterSize(50);
 	bestcombo.setCharacterSize(50);
+	Time.setCharacterSize(40);
 
 	bestscore.setFillColor(Color::Black);
 	bestfloor.setFillColor(Color::Black);
 	bestcombo.setFillColor(Color::Black);
+	Time.setFillColor(Color::Black);
 
 	bestscore.setString("BEST SCORES ");
 	bestfloor.setString("HIGHEST FLOORS ");
 	bestcombo.setString("BEST COMBO  ");
+	Time.setString("TIME ");
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -107,7 +117,17 @@ void  FileSave::highscore(RenderWindow& window)
 		NAMEFORCOMBOtext[i].setCharacterSize(30);
 		NAMEFORCOMBOtext[i].setFillColor(Color::Black);
 
+		mins[i].setFont(hisfont);
+		mins[i].setCharacterSize(30);
+		mins[i].setFillColor(Color::Black);
 
+		secs[i].setFont(hisfont);
+		secs[i].setCharacterSize(30);
+		secs[i].setFillColor(Color::Black);
+
+		timeText[i].setFont(hisfont);
+		timeText[i].setCharacterSize(30);
+		timeText[i].setFillColor(Color::Black);
 	}
 	filetopair();
 	for (size_t i = 0; i < 5; i++)
@@ -135,6 +155,19 @@ void  FileSave::highscore(RenderWindow& window)
 
 		NAMEFORCOMBOtext[i].setString(list[i].second.Name);
 		NAMEFORCOMBOtext[i].setPosition(600, 800 + ((i + 1) * 45));
+
+		string minStr[5];
+		minStr[i] = to_string(list[i].second.min);
+		mins[i].setString(minStr[i]);
+		mins[i].setPosition(1100, 200 + ((i + 1) * 45));
+
+		string secStr[5];
+		secStr[i] = to_string(list[i].second.sec);
+		secs[i].setString(secStr[i]);
+		secs[i].setPosition(1140, 200 + ((i + 1) * 45));
+
+		timeText[i].setString(":");
+		timeText[i].setPosition(1125, 200 + ((i + 1) * 45));
 	}
 
 	while (window.isOpen())
@@ -158,6 +191,7 @@ void  FileSave::highscore(RenderWindow& window)
 		window.draw(bestscore);
 		window.draw(bestfloor);
 		window.draw(bestcombo);
+		window.draw(Time);
 		for (int i = 0; i < 5; i++)
 		{
 			window.draw(SCOREtext[i]);
@@ -166,6 +200,9 @@ void  FileSave::highscore(RenderWindow& window)
 			window.draw(NAMEFORFLOORtext[i]);
 			window.draw(COMBOtext[i]);
 			window.draw(NAMEFORCOMBOtext[i]);
+			window.draw(mins[i]);
+			window.draw(secs[i]);
+			window.draw(timeText[i]);
 		}
 		window.display();
 	}
@@ -272,12 +309,14 @@ void FileSave::filetopair() {
 				list[i].second.Name = "NONE";
 				list[i].second.floor = 0;
 				list[i].second.max_compo = 0;
+				list[i].second.min = 0;
+				list[i].second.sec = 0;
 			}
 		}
 		else {
 			// File is not empty; read data
 			for (int i = 0; i < 5; i++) {
-				file >> list[i].second.Name >> list[i].first >> list[i].second.floor >> list[i].second.max_compo;
+				file >> list[i].second.Name >> list[i].first >> list[i].second.floor >> list[i].second.max_compo >> list[i].second.min >> list[i].second.sec;
 			}
 			//list[i].first
 		}
@@ -292,7 +331,7 @@ void FileSave::pairtofile()
 	{
 		for (int i = 0; i < 5; i++)
 		{
-			file << list[i].second.Name << "      " << list[i].first << "      " << list[i].second.floor << "      " << list[i].second.max_compo << "\n" << "\n";
+			file << list[i].second.Name << "      " << list[i].first << "      " << list[i].second.floor << "      " << list[i].second.max_compo << "      " << list[i].second.min << "      " << list[i].second.sec << "\n" << "\n";
 		}
 		file.close();
 	}
@@ -351,6 +390,8 @@ void FileSave::intopair(int score)
 		list[4].second.floor = player1.floor;
 		list[4].second.max_compo = player1.Max_Compo;
 		list[4].first = score;
+		list[4].second.min = min;
+		list[4].second.sec = sec;
 	}
 	sort(std::begin(list), std::end(list), comparePairs);
 }

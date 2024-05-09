@@ -29,10 +29,12 @@ Clock clockk, clockk2;
 float dt, dt2;
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
+bool check1 = 1;
 
 // game time
 Font clockFont;
 Text clockText;
+Time elapsedTime;
 bool stopTime = false;
 void clockCountIni() {
 	clockFont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
@@ -43,7 +45,12 @@ void clockCountIni() {
 	clockText.setFillColor(Color::White);
 }
 void clockCount(Clock clockcnt, Time paused_time) {
-	Time elapsedTime = clockcnt.getElapsedTime() + paused_time;
+	if (check1 == 0) {
+		elapsedTime = paused_time;
+	}
+	else {
+		elapsedTime = clockcnt.getElapsedTime() + paused_time;
+	}
 	int sec = (int)elapsedTime.asSeconds() % 60, min = ((int)elapsedTime.asSeconds() % 3600) / 60;
 	if (sec == 60)
 		sec = 0;
@@ -501,7 +508,6 @@ void Gameplay()
 	bool StartMoving = 0;
 	bool StartReturning = 0;
 	int disapp = 0, disapp2;
-	bool check1 = 1;
 	Map.Backgrond_Velocity_y = 20.0f;
 	Map.Walls_velocity_y = 120.0f;
 	Map.Stairs_velocity_y = 50.0f;
@@ -725,6 +731,7 @@ void Gameplay()
 					alive = false;
 				}
 			}
+			paused_time += clockcnt.getElapsedTime();
 		}
 
 		//cout << dt << endl;

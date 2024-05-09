@@ -32,8 +32,8 @@ View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 
 // game time
 Font clockFont;
-Clock clockcnt;
 Text clockText;
+bool stopTime = false;
 void clockCountIni() {
 	clockFont.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	clockText.setFont(clockFont);
@@ -42,7 +42,7 @@ void clockCountIni() {
 	clockText.setPosition(245, 930);
 	clockText.setFillColor(Color::White);
 }
-void clockCount() {
+void clockCount(Clock clockcnt) {
 	Time elapsedTime = clockcnt.getElapsedTime();
 	int sec = (int)elapsedTime.asSeconds() % 60, min = ((int)elapsedTime.asSeconds() % 3600) / 60;
 	if (sec == 60)
@@ -304,7 +304,7 @@ void DRAW_View1()
 	window.draw(player1.compo);
 	if (!END)
 	{
-		File.highscore_gameover(arr[0], arr[1], player1.Max_Compo, -File.shift);
+		File.highscore_gameover(arr[0], arr[1], player1.Max_Compo, -File.shift, File.min, File.sec);
 		if (player1.oveer && GameMode != 2)
 		{
 			window.draw(File.highscoreENDsp);
@@ -369,7 +369,7 @@ void DRAW_View2()
 			File.winner.setPosition(1100, 400);
 			window.draw(File.winner);
 		}
-		File.highscore_gameover(arr[2], arr[3], player2.Max_Compo, File.shift);
+		File.highscore_gameover(arr[2], arr[3], player2.Max_Compo, File.shift, File.min, File.sec);
 		if (player1.oveer)
 		{
 			//window.draw(File.highscoreENDsp);
@@ -458,6 +458,10 @@ void Gameplay()
 	// new stage starts intiliztion
 	starsIntiliztion();
 
+	// game timer
+	clockCountIni();
+	Clock clockcnt;
+
 	//player
 	extern int PLayer1;
 	extern int PLayer2;
@@ -521,12 +525,13 @@ void Gameplay()
 				window.close();
 			if (END ? (Play.key.code == Keyboard::Escape && !pressed) : (Play.type == Event::KeyPressed && !pressed))  //&& !menu.pressed
 			{
-
 				pressed = true;
+				stopTime = true;
 				GameTexture.create(1920, 1080);
 				GameTexture.update(window);
 				Power.pausedTime = Power.TimeOfMove.getElapsedTime();
 				menu.Pause(window, GameTexture);
+				//stopTime = false;
 				clockk.restart();
 				Power.TimeOfMove.restart();
 				if (menu.exit)
@@ -552,7 +557,8 @@ void Gameplay()
 		}
 
 		// game time
-		clockCount();
+		if(!stopTime)
+			clockCount(clockcnt);
 
 		// new stage stars move
 		starsMove(player1, player1_View);

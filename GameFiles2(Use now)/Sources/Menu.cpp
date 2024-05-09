@@ -130,6 +130,10 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 							{
 								Play_menu(window, GameMode);
 							}
+							if (men1.selected == 2)
+							{
+								File.EnterName();
+							}
 							if (men1.selected == 4)
 								options_menu(window);
 							if (men1.selected == 1)
@@ -625,11 +629,11 @@ void  Menu::options_menu1(RenderWindow& window)
 		}
 		else if (PLayer2 == 3)
 		{
-			player1.setTexture(pl[3]);
+			player2.setTexture(pl[3]);
 		}
 		else if (PLayer2 == 4)
 		{
-			player1.setTexture(pl[4]);
+			player2.setTexture(pl[4]);
 		}
 		player1.setTextureRect(IntRect(0, 0, 50, 60));
 		player1.setScale(2.4, 2.4);

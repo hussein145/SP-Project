@@ -2,6 +2,8 @@
 extern int PLayer1;
 extern int PLayer2;
 
+Sounds characters_Sound[5];
+
 void Sounds::LoadMusic(int n)
 {
 	if (n == 1)
@@ -10,12 +12,12 @@ void Sounds::LoadMusic(int n)
 		buf1.loadFromFile("Assets//Sounds//menu_choose.ogg");
 	if (n == 3)
 		buf1.loadFromFile("Assets//Sounds//falling_sound.ogg");
-
-	buf3.loadFromFile("Assets//Sounds//ring.ogg");
+	if (n == 4)
+		buf3.loadFromFile("Assets//Sounds//ring.ogg");
 	if (n == 5)
+		buf2.loadFromFile("Assets//Sounds//hurryup.ogg");
+	if (n == 6)
 		buf1.loadFromFile("Assets//Sounds//jump.ogg");
-
-	buf2.loadFromFile("Assets//Sounds//hurryup.ogg");
 	if (n == 7)
 		buf1.loadFromFile("Assets//Sounds//gonna_fall.ogg");
 	if (n == 8)
@@ -84,15 +86,14 @@ void Sounds::change_option_Sound() {
 	so.setBuffer(buf1);
 	so.play();
 }
-void Sounds::rotation_sound() {
-	if (PLayer1 == 0 || PLayer1 == 2)
+void Sounds::rotation_sound(int player) {
+	if (player == 0 || player == 2)
 		LoadMusic(18);
-	else if (PLayer1 == 1) {
+	else if (player == 1)
 		LoadMusic(19);
-	}
-	else if (PLayer1 == 3)
+	else if (player == 3)
 		LoadMusic(11);
-	else if (PLayer1 == 4)
+	else if (player == 4)
 		LoadMusic(12);
 
 	so9.setBuffer(buf1);
@@ -103,15 +104,15 @@ void Sounds::select_option_Sound() {
 	so2.setBuffer(buf1);
 	so2.play();
 }
-void Sounds::falling_sound() {
-	if (PLayer1 == 0 || PLayer1 == 2)
+void Sounds::falling_sound(int player) {
+	if (player == 0 || player == 2)
 		LoadMusic(3);
-	else if (PLayer1 == 1) {
+	else if (player == 1) {
 		LoadMusic(21);
 	}
-	else if (PLayer1 == 3)
+	else if (player == 3)
 		LoadMusic(15);
-	else if (PLayer1 == 4)
+	else if (player == 4)
 		LoadMusic(16);
 
 	so4.setBuffer(buf1);
@@ -133,24 +134,24 @@ void Sounds::gameover() {
 	so.setBuffer(buf1);
 	so.play();
 }
-void Sounds::gonna_fall() {
-	if (PLayer1 == 0 || PLayer1 == 2 || PLayer1 == 1)
+void Sounds::gonna_fall(int player) {
+	if (player == 0 || player == 2 || player == 1)
 		LoadMusic(7);
-	else if (PLayer1 == 3)
+	else if (player == 3)
 		LoadMusic(10);
-	else if (PLayer1 == 4)
+	else if (player == 4)
 		LoadMusic(27);
 	so7.setBuffer(buf1);
 	so7.play();
 }
-void Sounds::jump() {
-	if (PLayer1 == 0 || PLayer1 == 2)
-		LoadMusic(5);
-	else if (PLayer1 == 1)
+void Sounds::jump(int player) {
+	if (player == 0 || player == 2)
+		LoadMusic(6);
+	else if (player == 1)
 		LoadMusic(20);
-	else if (PLayer1 == 3)
+	else if (player == 3)
 		LoadMusic(8);
-	else if (PLayer1 == 4)
+	else if (player == 4)
 		LoadMusic(9);
 	so8.setBuffer(buf1);
 	so8.play();

@@ -1,5 +1,5 @@
 #include "menu_Bg_and_Face.h"
-
+extern Vector2f window_size;
 extern float dt;
 
 void menu_Bg_and_Face::back_ground(RenderWindow& window)

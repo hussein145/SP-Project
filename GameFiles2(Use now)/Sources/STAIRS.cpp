@@ -7,7 +7,7 @@ extern PowerUps Power;
 //void generateDrop(Vector2f stair_position, bool check);
 
 void STAIRS::strnum() {
-	if (Number_Of_Stair % 10 == 0 && Number_Of_Stair != 0) {
+	if (Number_Of_Stair % 10 == 0) {
 		Strs10[currstair].setPosition(stairs[currstair].getPosition().x, stairs[currstair].getPosition().y + 30);
 		Strs10[currstair].setSize(Vector2f(50, 50));
 		Strs10[currstair].setOrigin(Strs10[currstair].getSize().x / 2, 0);
@@ -54,6 +54,7 @@ void STAIRS::FloorTextures() {
 	}
 }
 void STAIRS::intiliztion1(int GameMode) {
+	//cout << Number_Of_Stair << endl;
 	Textures();
 	if (GameMode == 2)
 	{

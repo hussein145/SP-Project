@@ -12,9 +12,9 @@ extern STAIRS Stairs;
 extern int GameMode;
 extern int PLayer1;
 extern int PLayer2;
+//extern gameclo
 
 void Players::inti(Texture& texture) {
-
 	floor = compo_cnt = cnt = Max_Compo = curr_colission = 0;
 	j = velocity_x = velocity_y = 0;
 	droptype = -1;
@@ -33,14 +33,13 @@ void Players::inti(Texture& texture) {
 	score_txt.setCharacterSize(50);
 	score_txt.setPosition(240, 1000);
 	compo.setFont(font);
-	compo.setPosition(300, 580);
 
 	x = 0;
 	check_on_ground = 0;
 
 }
 
-void Players::update() {
+void Players::update(int player) {
 	if (GameMode == 2)
 		compo.setCharacterSize(30);
 	else
@@ -81,7 +80,7 @@ void Players::update() {
 		t += 0.02f;
 		if (sound.so7.getStatus() == Sound::Stopped)
 		{
-			sound.gonna_fall();
+			sound.gonna_fall(player);
 
 		}
 	}
@@ -91,7 +90,7 @@ void Players::update() {
 		t += 0.02f;
 		if (sound.so7.getStatus() == Sound::Stopped)
 		{
-			sound.gonna_fall();
+			sound.gonna_fall(player);
 
 		}
 	}
@@ -100,14 +99,14 @@ void Players::update() {
 		character.rotate(3.5);
 		if (sound.so9.getStatus() == Sound::Stopped)
 		{
-			sound.rotation_sound();
+			sound.rotation_sound(player);
 
 		}
 	}
-    if (velocity_y<=0.5 && velocity_y>=0) {
+	if (velocity_y <= 0.5 && velocity_y >= 0) {
 		catch_speed = 0;
 		character.setRotation(0);
-		
+
 	}
 	if (t >= 2)
 		t = 0;
@@ -115,7 +114,7 @@ void Players::update() {
 		x = 0;
 }
 
-void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump) {
+void Players::Players_Motion(Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump, int player) {
 	if (GameMode == 2)
 		Motion_Velocity = 12;
 	else
@@ -141,7 +140,7 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 			velocity_x = 0;
 
 	}
-	
+
 	validL = validR = 1;
 	/*================================================================*/
 	if (velocity_y > 0 || !check_on_ground) {
@@ -163,9 +162,9 @@ void Players::Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Ke
 		};
 		catch_speed = velocity_y;
 		check_on_ground = false;
-		sound.jump();
+		sound.jump(player);
 	}
-	
+
 	if (check_on_ground) {
 		velocity_y = 0;
 	}

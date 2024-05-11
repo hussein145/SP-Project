@@ -16,12 +16,13 @@ PowerUps* dropBag = new PowerUps[100];//stairsNum
 Clock addtimer;
 void PowerUps::setDrops()
 {
+	addtimer.restart();
 	velocity_x = 20;
-	DropsTex[0].loadFromFile("Assets//Textures//heart.png");
-	DropsTex[1].loadFromFile("Assets//Textures//speed.png");
-	DropsTex[2].loadFromFile("Assets//Textures//superjump.png");
+	DropsTex[0].loadFromFile("Assets//Textures//rand.png");
+	DropsTex[1].loadFromFile("Assets//Textures//superjump.png");
+	DropsTex[2].loadFromFile("Assets//Textures//speed.png");
 	DropsTex[3].loadFromFile("Assets//Textures//danger.png");
-	DropsTex[4].loadFromFile("Assets//Textures//rand.png");
+	DropsTex[4].loadFromFile("Assets//Textures//heart.png");
 	for (size_t i = 0; i < 5; i++)
 	{
 		Drops[i].setTexture(DropsTex[i]);
@@ -32,16 +33,21 @@ void PowerUps::setDrops()
 	Drops[2].setScale(0.1, 0.1);
 	Drops[3].setScale(0.1, 0.1);
 	Drops[4].setScale(0.1, 0.1);
+	srand(static_cast<unsigned>(time(NULL)));
 }
-void PowerUps::generateDrop(Vector2f stair_position, bool check)
-{
+void PowerUps::generateDrop(Vector2f stair_position, bool check){
 	float timee;
-	if (check)
+	int x = 0;
+	if (check) {
 		timee = addtimer.getElapsedTime().asMilliseconds();
-	else
-		timee = addtimer.getElapsedTime().asSeconds();
+		x = rand() % 6;
+	}
 
-	int x = rand() % 5 + 2;
+	else {
+		timee = addtimer.getElapsedTime().asSeconds();
+		x = rand() % 4 + 7;
+	}
+	//cout << timee << endl;
 	if (timee >= x)
 	{
 		int indexDrop = rand() % 5;
@@ -67,11 +73,13 @@ void PowerUps::dropcollision()
 					else  velocity_x = -20;
 					directionOfVelocity = velocity_x;
 				}
+				rando = rand() % 2;
 			}
 
 		}
 }
 void PowerUps::checkdrop(bool& start, bool& StartReturning) {
+	
 	if (player1.droptype == 0){
 		Stairs.distanceOfMove = 100;
 		skip = 1;
@@ -130,12 +138,11 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 	}
 	else if (player1.droptype == 3)
 	{
-		mapspeed = 2;
+		mapspeed = 100;
 		addmapspeed = 7;
 	}
 	else if (player1.droptype == 4)
 	{
-		rando = abs(rand() % 2);
 		if (rando)
 		{
 			stopsmall = 7;
@@ -159,6 +166,7 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 				changable_stair++;
 				changable_stair %= Stairs.stairsNum;
 			}
+			player1.droptype = -1;
 		}
 	}
 }
@@ -186,7 +194,7 @@ void PowerUps::resetPowerups()
 
 	if (addmapspeed <= 0)
 	{
-		mapspeed = 1;
+		mapspeed = 0;
 		addmapspeed = 0;
 	}
 	else

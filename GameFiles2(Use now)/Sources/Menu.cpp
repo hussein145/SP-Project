@@ -13,6 +13,7 @@ bool esc_button = true;
 extern Sounds sound;
 extern FileSave File;
 extern user_data user[5];
+extern Vector2f window_size;
 
 
 menu_Bg_and_Face menu_UI;
@@ -229,11 +230,11 @@ void Menu::levels(RenderWindow& window) {
 						level = 2;
 						Gameplay();
 					}
-					else if (menu7.selected == 1 && user[File.index].highest_stair >= 150) {
+					else if (menu7.selected == 1 && user[File.index].highest_stair >= 100) {
 						level = 3;
 						Gameplay();
 					}
-					else if (menu7.selected == 2 && user[File.index].highest_stair >= 200) {
+					else if (menu7.selected == 2 && user[File.index].highest_stair >= 150) {
 						level = 4;
 						Gameplay();
 					}

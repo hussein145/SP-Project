@@ -18,15 +18,17 @@ Players player1; Players player2;
 FileSave File;
 user_data user[5];
 PowerUps Power;
-GameClock gameclock;
+GameClock gameclock, gameclock2;
 Messages Good1;
 Messages Good2;
 
 
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Close | Style::Fullscreen);
+Vector2f window_size = Vector2f(window.getSize());
 int GameMode;
 Clock clockk;
 float dt, dt2;
+View window1(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player1_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 View player2_View(Vector2f(0.f, 0.f), Vector2f(1920, 1080));
 bool check1 = 1;
@@ -115,14 +117,13 @@ extern bool pressed;
 struct MAP
 {
 	float Walls_velocity_y, Backgrond_Velocity_y, Stairs_velocity_y, view_velocity;
-	//float Walls_velocity_x, Stairs_velocity_x;
 	bool move = 0;
 	bool enough = 1;
 	void intilization()
 	{
 		Stairs.intiliztion1(GameMode);
 		background.intiliztion(GameMode, player1_View, player2_View);
-		gameclock.setclock();
+		
 	}
 	void update()
 	{
@@ -150,8 +151,8 @@ struct MAP
 			{
 				Stairs.stairs[i].move(0, Stairs_velocity_y * dt);
 			}
+			player1_View.move(0, -(view_velocity + Power.mapspeed) * dt);
 			player2_View.move(0, -view_velocity * dt);
-			player1_View.move(0, -view_velocity * dt * Power.mapspeed);
 		}
 	}
 };
@@ -299,7 +300,6 @@ void DRAW_View1()
 	window.setView(window.getDefaultView());
 
 
-	gameclock.View1_SetClock();
 	window.draw(gameclock.clock);
 	window.draw(gameclock.Hour_hand);
 	window.draw(gameclock.power);
@@ -364,11 +364,10 @@ void DRAW_View2()
 
 	window.setView(window.getDefaultView());
 
-	gameclock.View2_SetClock();
-	window.draw(gameclock.clock);
-	window.draw(gameclock.Hour_hand);
-	window.draw(gameclock.power2);
-	window.draw(gameclock.star2);
+	window.draw(gameclock2.clock);
+	window.draw(gameclock2.Hour_hand);
+	window.draw(gameclock2.power);
+	window.draw(gameclock2.star);
 
 	player2.score_txt.setPosition(980, 990);
 	window.draw(player2.score_txt);
@@ -411,7 +410,8 @@ void DRAW_View2()
 }
 
 float resize = 0, resize2 = 0;
-
+extern int PLayer1;
+extern int PLayer2;
 void Gameplay()
 {
 	Intilize_Numbers();
@@ -424,9 +424,6 @@ void Gameplay()
 	background.wallsRight = new RectangleShape[background.bgNums];
 
 	Power.dropBag = new PowerUps[Stairs.stairsNum];
-
-	SoundBuffer buff;
-	buff.loadFromFile("Assets//Sounds//jump.ogg");
 
 	sound.music(1);
 	Texture GameTexture;
@@ -469,6 +466,9 @@ void Gameplay()
 	//map insilization
 	Map.intilization();
 
+	gameclock.Set_Textures();
+	gameclock2.Set_Textures();
+
 	// new stage starts intiliztion
 	starsIntiliztion();
 
@@ -477,11 +477,7 @@ void Gameplay()
 	Clock clockcnt;
 	Time paused_time;
 
-	//player
-	extern int PLayer1;
-	extern int PLayer2;
 	Texture tex[5];
-
 	tex[0].loadFromFile("Assets/Textures/icytower1.png");
 	tex[1].loadFromFile("Assets/Textures/icytower2.png");
 	tex[2].loadFromFile("Assets/Textures/icy_demon1.png");
@@ -500,7 +496,7 @@ void Gameplay()
 		player1.inti(tex[4]);
 
 	if (PLayer2 == 0)
-		player2.inti(tex[1]);
+		player2.inti(tex[2]);
 	else if (PLayer2 == 1)
 		player2.inti(tex[0]);
 	else if (PLayer2 == 2)
@@ -528,17 +524,12 @@ void Gameplay()
 
 	while (window.isOpen())
 	{
-		/*if (Mouse::isButtonPressed(Mouse::Left))
-		{
-			Vector2f pos = Vector2f(Mouse::getPosition(window));
-			cout << pos.x << " " << pos.y << endl;
-		}*/
 		Event Play;
 		while (window.pollEvent(Play))
 		{
 			if (Play.type == Event::Closed)
 				window.close();
-			if (END ? (Play.key.code == Keyboard::Escape && !pressed) : (Play.type == Event::KeyPressed && !pressed))  //&& !menu.pressed
+			if(Play.key.code == Keyboard::Escape && !pressed)
 			{
 				pressed = true;
 				GameTexture.create(1920, 1080);
@@ -571,7 +562,13 @@ void Gameplay()
 				pressed = false;
 			}
 		}
-
+		if (GameMode == 2) {
+			gameclock.setclock(0, 1.f, { 42,60 }, { 32,220 }, { 40,5 }, 230, player1);
+			gameclock2.setclock(960, 1.f, { 42,60 }, { 32,220 }, { 40,5 }, 230, player2);
+		}
+		else {
+			gameclock.setclock(230, 2.f, { 85,120 }, { 65,440 }, { 80,15 }, 450, player1);
+		}
 		// game time
 		clockCount(clockcnt, paused_time);
 
@@ -608,12 +605,12 @@ void Gameplay()
 
 		if (resize2 > 0)
 		{
-			gameclock.power2.setOrigin(0, gameclock.power2.getSize().y);
-			gameclock.power2.setSize({ 18.f, resize2 });
+			gameclock2.power.setOrigin(0, gameclock2.power.getSize().y);
+			gameclock2.power.setSize({ 18.f, resize2 });
 			resize2 -= .25;
 		}
 		else
-			gameclock.power2.setSize({ 0,0 });
+			gameclock2.power.setSize({ 0,0 });
 
 		disapp2 = player2.compo_cnt;
 
@@ -666,9 +663,7 @@ void Gameplay()
 			Power.elapsedTime = Power.TimeOfMove.getElapsedTime() + Power.pausedTime;
 
 			Power.checkdrop(StartMoving, StartReturning);
-
 			Power.resetPowerups();
-
 		}
 		Map.update();
 		view.SetView();
@@ -687,7 +682,6 @@ void Gameplay()
 			vx_lvl4 = Map.view_velocity;
 		}
 
-		//cout << player2_View.getCenter().x << endl;
 		//map Motion
 		Map.Map_Motion();
 		//=====================================================<<freeze game>>============================================================//
@@ -698,9 +692,35 @@ void Gameplay()
 			if (GameMode == 2 && player1.character.getPosition().y > player1_View.getCenter().y + 550)
 			{
 				whowin = false;
+				if (alive)
+				{
+					if (sound.so4.getStatus() == Sound::Stopped)
+					{
+						sound.falling_sound(PLayer1);
+						alive = false;
+					}
+				}
 			}
 			else if (GameMode == 2 && player2.character.getPosition().y > player2_View.getCenter().y + 540) {
 				whowin = true;
+				if (alive)
+				{
+					if (sound.so4.getStatus() == Sound::Stopped)
+					{
+						sound.falling_sound(PLayer2);
+						alive = false;
+					}
+				}
+			}
+			else {
+				if (alive)
+				{
+					if (sound.so4.getStatus() == Sound::Stopped)
+					{
+						sound.falling_sound(PLayer1);
+						alive = false;
+					}
+				}
 			}
 			check1 = 0;
 			if (GameMode == 1) {
@@ -731,32 +751,32 @@ void Gameplay()
 			Map.move = 0;
 			END = 0;
 
-			if (alive)
-			{
-				if (sound.so4.getStatus() == Sound::Stopped)
-				{
-					sound.falling_sound();
-					alive = false;
-				}
-			}
+			
 		}
-
-		//cout << dt << endl;
-		player1.Players_Motion(buff, Keyboard::A, Keyboard::D, Keyboard::Space);
-		player2.Players_Motion(buff, Keyboard::Left, Keyboard::Right, Keyboard::Numpad0);
-		player1.update();
-		player2.update();
+		player1.Players_Motion(Keyboard::A, Keyboard::D, Keyboard::Space, PLayer1);
+		player2.Players_Motion(Keyboard::Left, Keyboard::Right, Keyboard::Numpad0, PLayer2);
+		player1.update(PLayer1);
+		player2.update(PLayer2);
 		if (player1.compo_cnt == 0 || resize == 0)
 		{
 			gameclock.star.setScale(0, 0);
 			player1.compo.setCharacterSize(0);
 		}
+		else {
+			if(GameMode == 2)
+				gameclock.star.setScale(1, 1);
+			else
+				gameclock.star.setScale(2, 2);
+		}
+
 		if (player2.compo_cnt == 0 || resize2 == 0)
 		{
-			gameclock.star2.setScale(0, 0);
+			gameclock2.star.setScale(0, 0);
 			player2.compo.setCharacterSize(0);
 		}
-		//= ================================================== = DRAW================================ = //
+		else
+			gameclock2.star.setScale(1, 1);
+		//= ==================================================<< DRAW >>================================ = //
 		window.clear();
 		window.setView(player1_View);
 		DRAW();
@@ -777,5 +797,4 @@ int main()
 	window.setFramerateLimit(120);
 	//MainMenu
 	menu.menu1(window, GameMode);
-	//menu.Menues(window);
 }

@@ -10,13 +10,13 @@ struct Sounds
     void music(int n);
     void change_option_Sound();
     void select_option_Sound();
-    void falling_sound();
+    void falling_sound(int player);
     void clock_ring_sound();
     void hurry_up_sound();
-    void gonna_fall();
-    void jump();
+    void gonna_fall(int player);
+    void jump(int player);
     void gameover();
     void cheer();
-    void rotation_sound();
+    void rotation_sound(int player);
 
 };

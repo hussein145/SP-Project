@@ -1,12 +1,12 @@
 #pragma once
 #include"include.h"
+
 struct GameClock
 {
 	Texture clock_tex;
 	Sprite clock;
 	Texture Hour_hand_tex;
 	Sprite Hour_hand;
-	bool enter = 1;
 
 	float velocity_cl = 0;
 	float velocity_clo2 = 0;
@@ -15,17 +15,14 @@ struct GameClock
 	Texture herry;
 	Sprite herry2;
 	RectangleShape power;
-	RectangleShape power2;
 
 	Sprite star;
-	Sprite star2;
 	Texture star_tex;
 
 	bool f = 0;
-	void setclock();
-	//void setclock2();
-	float save_view_velocity;
+	void Set_Textures();
+	void setclock(int position, float sizeOfClock, Vector2f HourHand_pos, Vector2f Power_pos, Vector2f compo_pos, int star_pos, Players &player);
 	void update_clock(float& view_velocity, bool move);
-	void View1_SetClock();
-	void View2_SetClock();
+	//void View1_SetClock();
+	//void View2_SetClock();
 };

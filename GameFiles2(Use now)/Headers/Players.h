@@ -36,7 +36,7 @@ struct Players
 	Sound so4;
 	//Sound sound;
 	void inti(Texture& texture);
-	void update();
-	void Players_Motion(SoundBuffer& buff, Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump);
+	void update(int player);
+	void Players_Motion(Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump, int player);
 	bool ss = false;
 };

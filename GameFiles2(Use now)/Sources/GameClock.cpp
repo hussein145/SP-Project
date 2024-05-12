@@ -21,10 +21,10 @@ void GameClock::Set_Textures() {
 	Hour_hand.setTexture(Hour_hand_tex);
 	star.setTexture(star_tex);
 	clock.setPosition(230, 118);
+	herry2.setScale(0, 0);
 }
 void GameClock::setclock(int position, float sizeOfClock, Vector2f HourHand_pos, Vector2f Power_pos, Vector2f compo_pos, int star_pos, Players &player)
 {
-	herry2.setScale(0, 0);
 	Hour_hand.setOrigin(9.5, 30);
 	Hour_hand.setRotation(int(0));
 

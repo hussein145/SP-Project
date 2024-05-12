@@ -88,7 +88,7 @@ void starsMove(Players player, View player_view) {
 		go = 1;
 	}
 	if (go && go2) {
-
+		sound.cheer();
 		star1.setPosition(350, player.character.getPosition().y - 700);
 		star2.setPosition(350, player1.character.getPosition().y - 700);
 		go2 = 0;
@@ -299,7 +299,7 @@ void DRAW(View player_View)
 		window.draw(background.wallsRight[i]);
 	}
 }
-int arr[4];
+int arr[4];//Final scores & floores
 void DRAW_View1()
 {
 	if (GameMode == 2) {

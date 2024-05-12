@@ -51,13 +51,13 @@ void Sounds::LoadMusic(int n)
 	if (n == 22)
 		buf1.loadFromFile("Assets//Sounds//start chr0.ogg");
 	if (n == 23)
-		buf1.loadFromFile("Assets//Sounds//gameover.ogg");
+		buf2.loadFromFile("Assets//Sounds//gameover.ogg");
 	if (n == 24)
-		buf1.loadFromFile("Assets//Sounds//good.ogg");
+		buf2.loadFromFile("Assets//Sounds//good.ogg");
 	if (n == 25)
-		buf1.loadFromFile("Assets//Sounds//cheer.ogg");
+		buf2.loadFromFile("Assets//Sounds//cheer.ogg");
 	if (n == 26)
-		buf1.loadFromFile("Assets//Sounds//sweet.ogg");
+		buf2.loadFromFile("Assets//Sounds//sweet.ogg");
 	if (n == 27)
 		buf1.loadFromFile("Assets//Sounds//edge_p4.wav");
 }
@@ -120,7 +120,7 @@ void Sounds::falling_sound(int player) {
 }
 void Sounds::clock_ring_sound() {
 	LoadMusic(4);
-	so5.setBuffer(buf1);
+	so5.setBuffer(buf3);
 	so5.play();
 }
 void Sounds::hurry_up_sound() {
@@ -128,10 +128,20 @@ void Sounds::hurry_up_sound() {
 	so6.setBuffer(buf2);
 	so6.play();
 }
+void Sounds::Sweet_sound() {
+	LoadMusic(26);
+	so6.setBuffer(buf2);
+	so6.play();
+}
+void Sounds::Good_sound() {
+	LoadMusic(24);
+	so6.setBuffer(buf2);
+	so6.play();
+}
 
 void Sounds::gameover() {
 	LoadMusic(23);
-	so.setBuffer(buf1);
+	so.setBuffer(buf2);
 	so.play();
 }
 void Sounds::gonna_fall(int player) {
@@ -158,6 +168,6 @@ void Sounds::jump(int player) {
 }
 void Sounds::cheer() {
 	LoadMusic(25);
-	so13.setBuffer(buf1);
+	so13.setBuffer(buf2);
 	so13.play();
 }

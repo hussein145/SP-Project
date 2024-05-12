@@ -138,7 +138,7 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 	}
 	else if (player1.droptype == 3)
 	{
-		mapspeed = 100;
+		mapspeed += 100;
 		addmapspeed = 7;
 	}
 	else if (player1.droptype == 4)

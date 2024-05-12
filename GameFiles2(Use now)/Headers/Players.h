@@ -3,11 +3,9 @@
 struct Players
 {
 	Font font;
-
 	Text score_txt;
 	int score;
 	
-
 	int floor = 0;
 	int compo_cnt = 0;
 	int cnt = 0;
@@ -33,10 +31,8 @@ struct Players
 	int droptype = -1;
 	float incspeed = 1, addspeed = 0, superjump = 1, addsuperjump = 0;
 	float catch_speed = 0;
-	Sound so4;
-	//Sound sound;
+	
 	void inti(Texture& texture);
 	void update(int player);
 	void Players_Motion(Keyboard::Key left, Keyboard::Key right, Keyboard::Key jump, int player);
-	bool ss = false;
 };

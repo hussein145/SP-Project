@@ -449,7 +449,7 @@ void Gameplay()
 		Good2.messages(500);
 	}
 	else  Good1.messages(0);
-	//////////////////////////
+	/*===================================================<<LEVELS>>=============================================*/
 	if (menu.level == 2) {
 		respawn = 1;
 		Map.view_velocity = user[File.index].view_speed2;
@@ -467,9 +467,9 @@ void Gameplay()
 		respawn = 1;
 		Map.view_velocity = user[File.index].view_speed4;
 		Good1.bounus_points = user[File.index].st_lvl4_score;
-		Stairs.Number_Of_Stair = 100;
+		Stairs.Number_Of_Stair = 150;
 	}
-	// ///////////////////////////////////////////////////////////////////////////////////////////////////////
+	/*===================================================^^LEVELS^^================================================*/
 	//map insilization
 	Map.intilization();
 

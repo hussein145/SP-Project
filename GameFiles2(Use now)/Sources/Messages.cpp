@@ -1,7 +1,9 @@
 #include "Players.h"
 #include "Messages.h"
+#include "Sounds.h"
 
 extern Players player1;
+extern Sounds sound;
 void Messages::messages(int shift)
 {
 	messages_tex[0].loadFromFile("Assets//Textures//Good.png");
@@ -32,12 +34,14 @@ void Messages::update_messages(int compo_cnt)
 		bounus_points += cnt * cnt;
 		cnt = 0;
 		if (Bounus == 2) {
+			sound.Good_sound();
 			appear = 1;
 			timer = 0;
 			Bounus = 0;
 			cnt = 0;
 		}
 		else if (Bounus >= 3) {
+			sound.Sweet_sound();
 			appear = 2;
 			timer = 0;
 			Bounus = 0;

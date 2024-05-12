@@ -14,7 +14,7 @@ extern Sounds sound;
 extern FileSave File;
 extern user_data user[5];
 extern Vector2f window_size;
-
+extern int GameMode;
 
 menu_Bg_and_Face menu_UI;
 Event event;
@@ -226,6 +226,7 @@ void Menu::levels(RenderWindow& window) {
 				if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && menu7.selected == 3))
 				{
 					sound.select_option_Sound();
+					GameMode = 1;
 					if (menu7.selected == 0 && user[File.index].highest_stair >= 50) {
 						level = 2;
 						Gameplay();

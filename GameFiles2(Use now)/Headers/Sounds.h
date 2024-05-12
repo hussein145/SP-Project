@@ -13,6 +13,8 @@ struct Sounds
     void falling_sound(int player);
     void clock_ring_sound();
     void hurry_up_sound();
+    void Sweet_sound();
+    void Good_sound();
     void gonna_fall(int player);
     void jump(int player);
     void gameover();

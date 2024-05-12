@@ -529,7 +529,7 @@ void Gameplay()
 	bool alive = true;
 	check1 = 1;
 
-
+	float wait = 0;
 	while (window.isOpen())
 	{
 		Event Play;
@@ -763,8 +763,11 @@ void Gameplay()
 			Map.move = 0;
 			END = 0;
 		}
-		player1.Players_Motion(Keyboard::A, Keyboard::D, Keyboard::Space, PLayer1);
-		player2.Players_Motion(Keyboard::Left, Keyboard::Right, Keyboard::Numpad0, PLayer2);
+		wait += 0.05;
+		if (wait > 1) {
+			player1.Players_Motion(Keyboard::A, Keyboard::D, Keyboard::Space, PLayer1);
+			player2.Players_Motion(Keyboard::Left, Keyboard::Right, Keyboard::Numpad0, PLayer2);
+		}
 		player1.update(PLayer1);
 		player2.update(PLayer2);
 		if (player1.compo_cnt == 0 || resize == 0)

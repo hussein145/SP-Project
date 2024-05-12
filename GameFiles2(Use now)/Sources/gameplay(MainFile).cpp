@@ -736,9 +736,11 @@ void Gameplay()
 			if (GameMode == 1) {
 				if (player1.score > File.list[0].first) {
 					player1.oveer = 1;
+					sound.cheer();
 				}
 				else {
 					player1.oveer = 0;
+					sound.gameover();
 				}
 				File.intopair(player1.score, mins, sec);
 				File.pairtofile();

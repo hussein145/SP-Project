@@ -137,8 +137,13 @@ struct MAP
 			move = 1;
 			enough = 0;
 		}
-
-		gameclock.update_clock(view_velocity, move);
+		if (GameMode == 2) {
+			gameclock.update_clock(view_velocity, move, 130);
+			gameclock2.update_clock(view_velocity, move, 1130);
+		}
+		else {
+			gameclock.update_clock(view_velocity, move, 630);
+		}
 		if (move)
 		{
 			for (int i = 0; i < background.bgNums; i++)
@@ -263,13 +268,17 @@ void collisions(Players& player)
 		}
 	}
 }
-void DRAW()
+void DRAW(View player_View)
 {
+	window.setView(player_View);
 	for (int i = 0; i < background.bgNums; i++)
 	{
 		window.draw(background.bg[i]);
 	}
-	window.draw(gameclock.herry2);
+	window.setView(window.getDefaultView());
+	window.draw(gameclock.herry2); //hurry up meesage
+	window.draw(gameclock2.herry2); //hurry up meesage
+	window.setView(player_View);
 	for (int i = 0; i < Stairs.stairsNum; i++)
 	{
 		window.draw(Stairs.stairs[i]);
@@ -646,7 +655,6 @@ void Gameplay()
 		Good1.update_messages(player1.compo_cnt);
 		Good2.update_messages(player2.compo_cnt);
 
-		//////////////////////////////////////////////
 		Set_ObjectsOnStairs();
 
 		if (GameMode == 3)
@@ -750,8 +758,8 @@ void Gameplay()
 			arr[2] = player2.score;
 			arr[3] = player2.floor;
 
-			Map.move = 0;
-			END = 0;
+			//Map.move = 0;
+			//END = 0;
 
 			
 		}
@@ -780,14 +788,12 @@ void Gameplay()
 			gameclock2.star.setScale(1, 1);
 		//= ==================================================<< DRAW >>================================ = //
 		window.clear();
-		window.setView(player1_View);
-		DRAW();
+		DRAW(player1_View);
 		DRAW_View1();
 		//------------------------------------------------------
 		if (GameMode == 2)
 		{
-			window.setView(player2_View);
-			DRAW();
+			DRAW(player2_View);
 			DRAW_View2();
 		}
 		window.display();

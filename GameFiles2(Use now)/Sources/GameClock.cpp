@@ -39,7 +39,7 @@ void GameClock::setclock(int position, float sizeOfClock, Vector2f HourHand_pos,
 	star.setPosition(clock.getPosition().x, clock.getPosition().y + star_pos);
 	player.compo.setPosition(star.getPosition().x + compo_pos.x, star.getPosition().y + compo_pos.y);
 }
-void GameClock::update_clock(float& view_velocity, bool move)
+void GameClock::update_clock(float& view_velocity, bool move, int position_hurryUp)
 {
 	if (move) {
 		l += 0.07f;
@@ -52,7 +52,7 @@ void GameClock::update_clock(float& view_velocity, bool move)
 		f = true;
 	}
 	if (end % 360 == 0 && f == true) {
-		herry2.setPosition(650, player1_View.getCenter().y + 550);
+		herry2.setPosition(position_hurryUp, 1080);
 		herry2.setScale(2.5, 2.5);
 		view_velocity += 5;
 		sound.clock_ring_sound();

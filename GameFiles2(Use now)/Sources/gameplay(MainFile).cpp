@@ -758,10 +758,8 @@ void Gameplay()
 			arr[2] = player2.score;
 			arr[3] = player2.floor;
 
-			//Map.move = 0;
-			//END = 0;
-
-			
+			Map.move = 0;
+			END = 0;
 		}
 		player1.Players_Motion(Keyboard::A, Keyboard::D, Keyboard::Space, PLayer1);
 		player2.Players_Motion(Keyboard::Left, Keyboard::Right, Keyboard::Numpad0, PLayer2);

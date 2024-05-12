@@ -22,7 +22,7 @@ struct GameClock
 	bool f = 0;
 	void Set_Textures();
 	void setclock(int position, float sizeOfClock, Vector2f HourHand_pos, Vector2f Power_pos, Vector2f compo_pos, int star_pos, Players &player);
-	void update_clock(float& view_velocity, bool move);
+	void update_clock(float& view_velocity, bool move,int position_hurryUp);
 	//void View1_SetClock();
 	//void View2_SetClock();
 };

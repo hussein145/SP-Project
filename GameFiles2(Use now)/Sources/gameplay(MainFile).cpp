@@ -206,6 +206,7 @@ void reset()
 	Stairs.currstair = Stairs.updatestair = Stairs.Number_Of_Stair = 0;
 	gameclock.l = 0;
 	gameclock.f = 0;
+	player1.floor = player2.floor = 0;
 
 	background.Curr_Background = background.Curr_walls = background.update_Background = background.update_wall_index = background.Difference_Between_bg = 0;
 	END = background.player2_Out_of_Background = background.player2_Out_of_Walls = 1;
@@ -421,6 +422,8 @@ void DRAW_View2()
 float resize = 0, resize2 = 0;
 extern int PLayer1;
 extern int PLayer2;
+int score_lvl2 = 0, score_lvl3 = 0, score_lvl4 = 0;
+float vx_lvl2 = 0, vx_lvl3 = 0, vx_lvl4 = 0;
 void Gameplay()
 {
 	Intilize_Numbers();
@@ -449,29 +452,33 @@ void Gameplay()
 		Good2.messages(500);
 	}
 	else  Good1.messages(0);
+	bool Enter_lvl2 = 0, Enter_lvl3 = 0, Enter_lvl4 = 0;
 	/*===================================================<<LEVELS>>=============================================*/
 	if (menu.level == 2) {
 		respawn = 1;
 		Map.view_velocity = user[File.index].view_speed2;
-		Good1.bounus_points = user[File.index].st_lvl2_score;
+		Good1.bounus_points = user[File.index].st_lvl2_score - 50*10;
 		Stairs.Number_Of_Stair = 50;
-
+		player1.floor = 50;
 	}
 	else if (menu.level == 3) {
 		respawn = 1;
 		Map.view_velocity = user[File.index].view_speed3;
-		Good1.bounus_points = user[File.index].st_lvl3_score;
+		Good1.bounus_points = user[File.index].st_lvl3_score - 100*10;
 		Stairs.Number_Of_Stair = 100;
+		player1.floor = 100;
 	}
 	else if (menu.level == 4) {
 		respawn = 1;
 		Map.view_velocity = user[File.index].view_speed4;
-		Good1.bounus_points = user[File.index].st_lvl4_score;
+		Good1.bounus_points = user[File.index].st_lvl4_score - 150*10;
 		Stairs.Number_Of_Stair = 150;
+		player1.floor = 150;
 	}
 	/*===================================================^^LEVELS^^================================================*/
 	//map insilization
 	Map.intilization();
+	view.view_insilization();
 
 	gameclock.Set_Textures();
 	gameclock2.Set_Textures();
@@ -512,7 +519,7 @@ void Gameplay()
 		player2.inti(tex[3]);
 	else if (PLayer2 == 4)
 		player2.inti(tex[4]);
-	view.view_insilization();
+
 
 	bool StartMoving = 0;
 	bool StartReturning = 0;
@@ -523,15 +530,13 @@ void Gameplay()
 	if (respawn == 0) {
 		Map.view_velocity = 80.0f;
 	}
-	int score_lvl2 = 0, score_lvl3 = 0, score_lvl4 = 0;
-	float vx_lvl2 = 0, vx_lvl3 = 0, vx_lvl4 = 0;
-	bool Enter_lvl2 = 0, Enter_lvl3 = 0, Enter_lvl4 = 0;
 	bool alive = true;
 	check1 = 1;
 
 	float wait = 0;
 	while (window.isOpen())
 	{
+		//cout >
 		Event Play;
 		while (window.pollEvent(Play))
 		{
@@ -674,19 +679,19 @@ void Gameplay()
 		}
 		Map.update();
 		view.SetView();
-		if (player1.floor >= 50 && !Enter_lvl2) {
+		if ((player1.floor >= 50 && player1.floor <= 56) && score_lvl2 <= player1.score && !Enter_lvl2) {
 			score_lvl2 = player1.score;
 			vx_lvl2 = Map.view_velocity;
 			Enter_lvl2 = 1;
 
 		}
-		if (player1.floor >= 100 && !Enter_lvl3) {
+		if ((player1.floor >= 100 && player1.floor <= 106) && score_lvl3 <= player1.score && !Enter_lvl3) {
 			score_lvl3 = player1.score;
 			vx_lvl3 = Map.view_velocity;
 			Enter_lvl3 = 1;
 		}
 
-		if (player1.floor >= 150 && !Enter_lvl4) {
+		if ((player1.floor >= 150 && player1.floor <= 156) && score_lvl4 <= player1.score && !Enter_lvl4) {
 			score_lvl4 = player1.score;
 			vx_lvl4 = Map.view_velocity;
 			Enter_lvl4 = 1;

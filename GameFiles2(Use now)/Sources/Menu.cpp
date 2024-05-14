@@ -85,16 +85,15 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 		men1.mainmenu[i].setPosition(Vector2f(1250, men1.height / 2 + x));
 		x += 60;
 	}
-
 	menu_UI.back_ground(window);
 	men1.Hand_intilization();
 	File.EnterName();
 	pressed = false;
+	//File.into_arr(File.playername, 0, 0, 0, 0, 0, 0, 0);
 	while (window.isOpen())
 	{
 		if (pageNumber == 1000)
 		{
-
 			while (window.pollEvent(event))
 			{
 				if (event.type == Event::Closed)
@@ -240,7 +239,7 @@ void Menu::levels(RenderWindow& window) {
 						Gameplay();
 					}
 					//cout << File.index << endl;
-					if (File.index != -1)
+					if (File.index == -1)
 						level = 0;
 
 					if (menu7.selected == 3) {
@@ -268,6 +267,10 @@ void Menu::levels(RenderWindow& window) {
 		}
 		window.draw(menu_UI.face);
 		window.draw(menu7.hand);
+		if (play_again) {
+			Gameplay();
+			window.clear();
+		}
 		window.display();
 	}
 
@@ -299,6 +302,7 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 	pageNumber = 500;
 	while (window.isOpen())
 	{
+		level = 0;
 		Event event;
 		while (window.pollEvent(event))
 		{

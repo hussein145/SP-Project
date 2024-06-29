@@ -81,16 +81,16 @@ void starsIntiliztion() {
 	go = 0;
 	go2 = 1;
 }
-void starsMove(Players player, View player_view) {
+void starsMove(Players player, View player_view, int player_Num) {
 	if ((player.floor % 50 >= 0 && player.floor % 50 <= 8 && player.floor > 40)) {
 		star1.move(0, 4);
 		star2.move(0, 4);
-		go = 1;
+		go = player_Num;
 	}
 	if (go && go2) {
 		sound.cheer();
 		star1.setPosition(350, player.character.getPosition().y - 700);
-		star2.setPosition(350, player1.character.getPosition().y - 700);
+		star2.setPosition(350, player.character.getPosition().y - 700);
 		go2 = 0;
 	}
 
@@ -290,10 +290,7 @@ void DRAW(View player_View)
 			window.draw(Power.dropBag[i].dropShape);
 		}
 	}
-	if (go) {
-		window.draw(star1);
-		window.draw(star2);
-	}
+	
 	for (int i = 0; i < background.bgNums; i++)
 	{
 		window.draw(background.wallsLeft[i]);
@@ -307,6 +304,10 @@ void DRAW_View1()
 		window.draw(player2.character);
 	}
 	window.draw(player1.character);
+	if (go == 1) {
+		window.draw(star1);
+		window.draw(star2);
+	}
 	window.setView(window.getDefaultView());
 
 
@@ -356,11 +357,12 @@ void DRAW_View1()
 	if (Good1.appear == 1 && Good1.timer <= 2) {
 		window.draw(Good1.message[0]);
 		Good1.timer += 0.008;
-
+		Good1.Animation(0);
 	}
 	else if (Good1.appear == 2 && Good1.timer <= 2) {
 		window.draw(Good1.message[1]);
 		Good1.timer += 0.008;
+		Good1.Animation(1);
 	}
 
 	// game time
@@ -371,6 +373,11 @@ void DRAW_View2()
 {
 	window.draw(player1.character);
 	window.draw(player2.character);
+
+	if (go == 2) {
+		window.draw(star1);
+		window.draw(star2);
+	}
 
 	window.setView(window.getDefaultView());
 
@@ -586,8 +593,8 @@ void Gameplay()
 		clockCount(clockcnt, paused_time);
 
 		// new stage stars move
-		starsMove(player1, player1_View);
-		starsMove(player2, player2_View);
+		starsMove(player1, player1_View, 1);
+		starsMove(player2, player2_View, 2);
 
 		if (player1.compo_cnt > 0 && player1.compo_cnt != disapp)
 			resize = GameMode == 2 ? 103 : 203;

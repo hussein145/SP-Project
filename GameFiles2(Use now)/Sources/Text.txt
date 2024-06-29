@@ -1,10 +1,10 @@
-HUSSEIN      5550      120      28      1      5
+ELNEMR      8267      349      47      2      55
 
-HUSSEIN      3212      104      37      0      52
+HUSSEIN      6654      78      19      1      14
 
-AHMED      2072      102      18      0      51
+HUSSEIN      5420      100      62      0      44
 
-HUSSEIN      1749      104      14      0      56
+HUSSEIN      5248      108      19      1      0
 
-HUSSEIN      1672      103      15      0      56
+HUSSEIN      4510      142      46      1      12
 

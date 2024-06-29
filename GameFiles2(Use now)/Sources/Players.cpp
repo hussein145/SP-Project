@@ -12,14 +12,13 @@ extern STAIRS Stairs;
 extern int GameMode;
 extern int PLayer1;
 extern int PLayer2;
-//extern gameclo
 
 void Players::inti(Texture& texture) {
-	floor = compo_cnt = cnt = Max_Compo = curr_colission = 0;
+	compo_cnt = cnt = Max_Compo = curr_colission = 0;
 	j = velocity_x = velocity_y = 0;
 	droptype = -1;
 	incspeed = superjump = 1,
-		addspeed = addsuperjump = 0;
+	addspeed = addsuperjump = 0;
 
 	character.setTexture(texture);
 	character.setPosition(500, Stairs.stairs[0].getPosition().y - 30);

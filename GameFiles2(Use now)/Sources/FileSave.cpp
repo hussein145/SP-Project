@@ -14,7 +14,6 @@ bool press = 0;
 extern user_data user[5];
 void FileSave::highscore_gameover(int score, int floor, int combo, int shift, int min, int sec)
 {
-	//cout << shift << endl;
 	highscoreENDtx.loadFromFile("Assets/Textures/High_Score.png");
 	highscoreENDsp.setTexture(highscoreENDtx);
 	highscoreENDsp.setPosition(500 + shift, 350);
@@ -370,7 +369,6 @@ void FileSave::into_arr(string username, int stair, int score_lvl2, int score_lv
 			user[i].view_speed2 = vx_lvl2;
 			user[i].view_speed3 = vx_lvl3;
 			user[i].view_speed4 = vx_lvl4;
-			//user[i].Index = curr_index;
 			break;
 		}
 		else if (user[i].st_lvl2_score == 0) {
@@ -383,7 +381,6 @@ void FileSave::into_arr(string username, int stair, int score_lvl2, int score_lv
 			user[i].view_speed2 = vx_lvl2;
 			user[i].view_speed3 = vx_lvl3;
 			user[i].view_speed4 = vx_lvl4;
-			//user[curr_index].Index = curr_index;
 			break;
 		}
 	}

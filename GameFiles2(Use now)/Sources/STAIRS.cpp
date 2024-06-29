@@ -15,7 +15,7 @@ void STAIRS::strnum() {
 		strTxt[currstair].setFillColor(Color::White);
 		strTxt[currstair].setCharacterSize(25);
 		strTxt[currstair].setString(to_string(Number_Of_Stair));
-		strTxt[currstair].setOrigin((Strs10[currstair].getSize().x / 2) - 15, 0);
+		strTxt[currstair].setOrigin((strTxt[currstair].getCharacterSize() / 2), 0);
 		strTxt[currstair].setPosition(Strs10[currstair].getPosition().x, Strs10[currstair].getPosition().y + 15);
 	}
 }

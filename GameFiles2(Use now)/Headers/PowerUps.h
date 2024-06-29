@@ -19,6 +19,16 @@ struct PowerUps
 	Clock TimeOfMove;
 	Time elapsedTime;
 	Time pausedTime;
+	//---------------//
+	Clock countdownClock;
+	Time countdowntime = seconds(13);
+	Time fetchTime;
+	Text counter;
+	RectangleShape square;
+	Font counter_font;
+	int calculate;
+	//----------------//
+	//text
 
 	void setDrops();
 	void generateDrop(Vector2f stair_position, bool check);

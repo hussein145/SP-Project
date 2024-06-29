@@ -312,6 +312,8 @@ void DRAW_View1()
 
 
 	window.draw(gameclock.clock);
+	window.draw(Power.square);
+	window.draw(Power.counter);
 	window.draw(gameclock.Hour_hand);
 	window.draw(gameclock.power);
 	window.draw(gameclock.star);
@@ -543,9 +545,9 @@ void Gameplay()
 	check1 = 1;
 
 	float wait = 0;
+	//---------------------------------------------------INFINITY LOOP-----------------------------------------------------//
 	while (window.isOpen())
 	{
-		//cout >
 		Event Play;
 		while (window.pollEvent(Play))
 		{
@@ -563,6 +565,7 @@ void Gameplay()
 				clockk.restart();
 
 				Power.TimeOfMove.restart();
+				Power.countdownClock.restart();
 				if (menu.exit)
 				{
 					menu.exit = 0;

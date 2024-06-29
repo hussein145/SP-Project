@@ -418,11 +418,13 @@ void DRAW_View2()
 	if (Good2.appear == 1 && Good2.timer <= 2) {
 		window.draw(Good2.message[0]);
 		Good2.timer += 0.008;
+		Good2.Animation(0);
 
 	}
 	else if (Good2.appear == 2 && Good2.timer <= 2) {
 		window.draw(Good2.message[1]);
 		Good2.timer += 0.008;
+		Good2.Animation(1);
 	}
 }
 

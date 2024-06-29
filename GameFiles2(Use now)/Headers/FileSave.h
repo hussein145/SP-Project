@@ -16,7 +16,6 @@ struct user_data {
 };
 struct FileSave
 {
-
 	pair <int, Data> list[6];
 	Texture enternameTX;
 	Sprite enternameSP;

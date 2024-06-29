@@ -23,6 +23,7 @@ void PowerUps::setDrops()
 	DropsTex[2].loadFromFile("Assets//Textures//speed.png");
 	DropsTex[3].loadFromFile("Assets//Textures//danger.png");
 	DropsTex[4].loadFromFile("Assets//Textures//heart.png");
+	counter_font.loadFromFile("Assets/Fonts/BrownieStencil-8O8MJ.ttf");
 	for (size_t i = 0; i < 5; i++)
 	{
 		Drops[i].setTexture(DropsTex[i]);
@@ -72,10 +73,19 @@ void PowerUps::dropcollision()
 					if (rand() % 2)  velocity_x = 20;
 					else  velocity_x = -20;
 					directionOfVelocity = velocity_x;
+					counter.setFont(counter_font);
+					counter.setPosition(960, 50);
+					square.setFillColor(Color::Black);
+					square.setSize(Vector2f(80, 80));
+					square.setPosition(940, 55);
+					//counter.setCharacterSize(50);
+					counter.setScale(2, 2);
+					counter.setFillColor(Color::Red);
+					countdowntime = seconds(13);
+					countdownClock.restart();
 				}
 				rando = rand() % 2;
 			}
-
 		}
 }
 void PowerUps::checkdrop(bool& start, bool& StartReturning) {
@@ -102,15 +112,11 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 		}
 		else if (elapsedTime.asSeconds() > 5 && elapsedTime.asSeconds() < 8)
 		{
-			//cout << directionOfVelocity << endl;
-			//directionOfVelocity = velocity_x;
 			velocity_x = 0;
 		}
 		else if (elapsedTime.asSeconds() >= 8)
 		{
-			//cout << elapsedTime.asSeconds() << endl;
 			StartReturning = 1;
-			//cout << directionOfVelocity << endl;
 			velocity_x = -directionOfVelocity;
 			TimeOfMove.restart();
 			elapsedTime = TimeOfMove.getElapsedTime();
@@ -124,7 +130,13 @@ void PowerUps::checkdrop(bool& start, bool& StartReturning) {
 			velocity_x = 20;
 			skip = 0;
 			Stairs.distanceOfMove = 0;
+			counter.setScale(0,0);
+			square.setSize(Vector2f(0, 0));
 		}
+		counter.setString(to_string(calculate));
+		fetchTime = countdownClock.restart();
+		countdowntime -= fetchTime;
+		calculate = countdowntime.asSeconds();
 	}
 	else if (player1.droptype == 1)
 	{

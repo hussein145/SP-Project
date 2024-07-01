@@ -22,6 +22,13 @@ GameClock gameclock, gameclock2;
 Messages Good1;
 Messages Good2;
 
+Keyboard::Key moveLeftKey = Keyboard::A;
+Keyboard::Key moveRightKey = Keyboard::D;
+Keyboard::Key jumpKey = Keyboard::Space;
+
+Keyboard::Key moveLeftKey2 = Keyboard::Left;
+Keyboard::Key moveRightKey2 = Keyboard::Right;
+Keyboard::Key jumpKey2 = Keyboard::Numpad0;
 
 RenderWindow window(VideoMode(1920, 1080), "icyTower", Style::Close | Style::Fullscreen);
 Vector2f window_size = Vector2f(window.getSize());
@@ -123,7 +130,7 @@ struct MAP
 	{
 		Stairs.intiliztion1(GameMode);
 		background.intiliztion(GameMode, player1_View, player2_View);
-		
+
 	}
 	void update()
 	{
@@ -290,7 +297,7 @@ void DRAW(View player_View)
 			window.draw(Power.dropBag[i].dropShape);
 		}
 	}
-	
+
 	for (int i = 0; i < background.bgNums; i++)
 	{
 		window.draw(background.wallsLeft[i]);
@@ -468,21 +475,21 @@ void Gameplay()
 	if (menu.level == 2) {
 		respawn = 1;
 		Map.view_velocity = user[File.index].view_speed2;
-		Good1.bounus_points = user[File.index].st_lvl2_score - 50*10;
+		Good1.bounus_points = user[File.index].st_lvl2_score - 50 * 10;
 		Stairs.Number_Of_Stair = 50;
 		player1.floor = 50;
 	}
 	else if (menu.level == 3) {
 		respawn = 1;
 		Map.view_velocity = user[File.index].view_speed3;
-		Good1.bounus_points = user[File.index].st_lvl3_score - 100*10;
+		Good1.bounus_points = user[File.index].st_lvl3_score - 100 * 10;
 		Stairs.Number_Of_Stair = 100;
 		player1.floor = 100;
 	}
 	else if (menu.level == 4) {
 		respawn = 1;
 		Map.view_velocity = user[File.index].view_speed4;
-		Good1.bounus_points = user[File.index].st_lvl4_score - 150*10;
+		Good1.bounus_points = user[File.index].st_lvl4_score - 150 * 10;
 		Stairs.Number_Of_Stair = 150;
 		player1.floor = 150;
 	}
@@ -553,7 +560,7 @@ void Gameplay()
 		{
 			if (Play.type == Event::Closed)
 				window.close();
-			if(Play.key.code == Keyboard::Escape && !pressed)
+			if (Play.key.code == Keyboard::Escape && !pressed)
 			{
 				pressed = true;
 				GameTexture.create(1920, 1080);
@@ -779,10 +786,11 @@ void Gameplay()
 			Map.move = 0;
 			END = 0;
 		}
+
 		wait += 0.05;
 		if (wait > 1) {
-			player1.Players_Motion(Keyboard::A, Keyboard::D, Keyboard::Space, PLayer1);
-			player2.Players_Motion(Keyboard::Left, Keyboard::Right, Keyboard::Numpad0, PLayer2);
+			player1.Players_Motion(moveLeftKey, moveRightKey, jumpKey, PLayer1);
+			player2.Players_Motion(moveLeftKey2, moveRightKey2, jumpKey2, PLayer2);
 		}
 		player1.update(PLayer1);
 		player2.update(PLayer2);
@@ -792,7 +800,7 @@ void Gameplay()
 			player1.compo.setCharacterSize(0);
 		}
 		else {
-			if(GameMode == 2)
+			if (GameMode == 2)
 				gameclock.star.setScale(1, 1);
 			else
 				gameclock.star.setScale(2, 2);

@@ -15,10 +15,11 @@ struct Menu
 	int positionOfHand = 60;
 	bool play_again = 0;
 	int x = 40;
+	bool chenge_keyboard = 0;
 	Texture handTex;
 	RectangleShape hand;
-
 	float display = 0;
+	void changeKeyMapping(int& action, Keyboard::Key newKey, Keyboard::Key &moveLeftKey, Keyboard::Key &moveRightKey, Keyboard::Key &jumpKey);
 	void Hand_intilization();
 	void MoveDown(int& selected, int choises);
 	void MoveUp(int& selected, int choises);
@@ -27,6 +28,8 @@ struct Menu
 	void Play_menu(RenderWindow& window, int& GameMode);
 	void sound_options(RenderWindow& window);
 	void options_menu1(RenderWindow& window);
+	void player_controls(RenderWindow& window, Keyboard::Key& moveLeftKey, Keyboard::Key& moveRightKey, Keyboard::Key& jumpKey);
+	void control_menu(RenderWindow& window);
 	void options_menu(RenderWindow& window);
 	void  credits(RenderWindow& window);
 	void instructions(RenderWindow& window);

@@ -88,6 +88,8 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 	menu_UI.back_ground(window);
 	men1.Hand_intilization();
 	File.EnterName();
+
+	
 	pressed = false;
 	//File.into_arr(File.playername, 0, 0, 0, 0, 0, 0, 0);
 	while (window.isOpen())
@@ -132,6 +134,8 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 							}
 							if (men1.selected == 2)
 							{
+								File.erase = 1;
+								File.SaveName = File.playername;
 								File.EnterName();
 							}
 							if (men1.selected == 4)
@@ -174,6 +178,13 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 		window.draw(men1.hand);
 		window.draw(File.enternameSP);
 		window.draw(File.playerNameText);
+		if (File.boolenter && display < 4) {
+			window.draw(File.profile);
+			display += 0.02;
+		}
+		else if (!File.boolenter)
+			display = 0;
+		window.draw(File.welcome);
 		window.display();
 	}
 }
@@ -271,6 +282,7 @@ void Menu::levels(RenderWindow& window) {
 			Gameplay();
 			window.clear();
 		}
+		window.draw(File.welcome);
 		window.display();
 	}
 
@@ -367,6 +379,7 @@ void  Menu::Play_menu(RenderWindow& window, int& GameMode)
 			Gameplay();
 			window.clear();
 		}
+		window.draw(File.welcome);
 		window.display();
 	}
 }
@@ -491,6 +504,7 @@ void  Menu::sound_options(RenderWindow& window) {
 		}
 		window.draw(menu_UI.face);
 		window.draw(menu6.hand);
+		window.draw(File.welcome);
 		window.display();
 	}
 
@@ -658,6 +672,7 @@ void  Menu::options_menu1(RenderWindow& window)
 		window.draw(menu5.hand);
 		window.draw(player1);
 		window.draw(player2);
+		window.draw(File.welcome);
 		window.display();
 	}
 }
@@ -734,6 +749,7 @@ void  Menu::options_menu(RenderWindow& window)
 		}
 		window.draw(menu_UI.face);
 		window.draw(menu4.hand);
+		window.draw(File.welcome);
 		window.display();
 	}
 }
@@ -791,6 +807,8 @@ void  Menu::instructions(RenderWindow& window)
 		window.display();
 	}
 }
+
+//=================================================<<PAUSE MENU>>=========================================================//
 void Menu::Pause(RenderWindow& window, Texture gametexture)
 {
 	Menu Pause1;

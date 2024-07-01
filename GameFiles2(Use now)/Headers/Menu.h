@@ -17,6 +17,8 @@ struct Menu
 	int x = 40;
 	Texture handTex;
 	RectangleShape hand;
+
+	float display = 0;
 	void Hand_intilization();
 	void MoveDown(int& selected, int choises);
 	void MoveUp(int& selected, int choises);

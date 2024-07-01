@@ -21,7 +21,11 @@ struct FileSave
 	Sprite enternameSP;
 	Font playernamefont;
 	Text playerNameText;
-	std::string playername;
+	string playername;
+	string SaveName;
+	Text profile;
+	Text welcome;
+	bool erase = 1;
 	Texture highscoreENDtx;
 	Sprite highscoreENDsp;
 	Texture gameovertx;

@@ -3,10 +3,12 @@
 #include "Sounds.h"
 #include "Players.h"
 #include "FileSave.h"
+#include "Menu.h"
 
 extern Event event;
 extern Sounds sound;
 extern Players player1;
+extern Menu menu;
 
 extern menu_Bg_and_Face menu_UI;
 extern int GameMode;
@@ -220,6 +222,9 @@ void  FileSave::highscore(RenderWindow& window)
 }
 void FileSave::TypeYourName()
 {
+	if (erase)
+		playername = "";
+	erase = 0;
 	if (event.type == Event::KeyPressed) {
 		press = 1;
 		if (event.key.code >= Keyboard::A && event.key.code <= Keyboard::Z)
@@ -239,10 +244,17 @@ void FileSave::TypeYourName()
 	}
 	if (event.type == Event::KeyReleased && press) {
 		press = 0;
-
-
 		if (event.key.code == Keyboard::Enter)
 		{
+			welcome.setString("Welcome " + playername);
+			search(playername);
+			if (index != -1) {
+				profile.setString("Profile Is Already Exist");
+			}
+			else {
+				profile.setString("Profile Has Been Created");
+			}
+
 			if (!boolenter)
 			{
 				if (playername.size())
@@ -253,6 +265,14 @@ void FileSave::TypeYourName()
 					boolenter = 1;
 				}
 			}
+		}
+		else if (event.key.code == Keyboard::Escape)
+		{
+			playername = SaveName;
+			enternameSP.setPosition(-1000, -1000);
+			playerNameText.setPosition(-1000, -1000);
+			infile = 1;
+			boolenter = 1;
 		}
 	}
 	playerNameText.setString(playername);
@@ -297,12 +317,22 @@ void FileSave::EnterName() {
 	playerNameText.setCharacterSize(24);
 	playerNameText.setFillColor(sf::Color::Black);
 	playerNameText.setPosition(570, 690);
+
+	profile.setFont(playernamefont);
+	profile.setCharacterSize(70);
+	profile.setFillColor(sf::Color::White);
+	profile.setPosition(570, 20);
+
+	welcome.setFont(playernamefont);
+	welcome.setCharacterSize(50);
+	welcome.setFillColor(sf::Color::White);
+	welcome.setPosition(10, 20);
+
 	filetopair();
 	out_file();
 	boolenter = 0;
 	infile = 0;
 	press = 0;
-	//search(playername);
 
 }
 void FileSave::filetopair() {
@@ -425,6 +455,7 @@ void FileSave::search(string username) {
 			index = i;
 			break;
 		}
+		else index = -1;
 	}
 
 }

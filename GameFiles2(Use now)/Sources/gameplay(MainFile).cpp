@@ -764,7 +764,6 @@ void Gameplay()
 				File.into_arr(File.playername, player1.floor, score_lvl2, score_lvl3, score_lvl4, vx_lvl2, vx_lvl3, vx_lvl4);
 				File.in_file();
 			}
-
 			if (GameMode == 2)
 			{
 				File.shift = 500;

@@ -31,7 +31,7 @@ menu_Bg_and_Face menu_UI;
 Event event;
 void Gameplay();
 
-void Menu::changeKeyMapping(int& action, Keyboard::Key newKey, Keyboard::Key &moveLeftKey, Keyboard::Key &moveRightKey, Keyboard::Key &jumpKey) {
+void Menu::changeKeyMapping(int& action, Keyboard::Key newKey, Keyboard::Key &moveLeftKey, Keyboard::Key &moveRightKey, Keyboard::Key &jumpKey, Menu &menu9) {
 	if (action == 0) {
 		moveLeftKey = newKey;
 	}
@@ -40,8 +40,8 @@ void Menu::changeKeyMapping(int& action, Keyboard::Key newKey, Keyboard::Key &mo
 	}
 	else if (action == 2) {
 		jumpKey = newKey;
-		cout << jumpKey << endl;
 	}
+	//letter.setString(keyboardKeyToString(newKey));
 }
 
 void Menu::Hand_intilization()
@@ -116,7 +116,6 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 
 
 	pressed = false;
-	//File.into_arr(File.playername, 0, 0, 0, 0, 0, 0, 0);
 	while (window.isOpen())
 	{
 		if (pageNumber == 1000)
@@ -125,7 +124,6 @@ void  Menu::menu1(RenderWindow& window, int& GameMode)
 			{
 				if (event.type == Event::Closed)
 					window.close();
-
 				File.TypeYourName();
 				if (File.infile)
 				{
@@ -492,6 +490,12 @@ void  Menu::sound_options(RenderWindow& window) {
 					sound.so5.setVolume(P_M_Sound);
 					sound.so6.setVolume(P_M_Sound);
 					sound.so7.setVolume(P_M_Sound);
+					sound.so8.setVolume(P_M_Sound);
+					sound.so9.setVolume(P_M_Sound);
+					sound.so10.setVolume(P_M_Sound);
+					sound.so11.setVolume(P_M_Sound);
+					sound.so12.setVolume(P_M_Sound);
+					sound.so13.setVolume(P_M_Sound);
 				}
 				else if (menu6.selected == 1)
 				{
@@ -717,11 +721,11 @@ void  Menu::player_controls(RenderWindow& window, Keyboard::Key &moveLeftKey, Ke
 		menu9.mainmenu[i].setPosition(Vector2f(1250, menu9.height / 2 + x));
 		x += 60;
 	}
-	menu9.mainmenu[0].setString("Left : ");
-	menu9.mainmenu[1].setString("Right : ");
-	menu9.mainmenu[2].setString("Jump : ");
 	menu9.mainmenu[3].setString("Back");
-
+	letter.setFillColor(Color::Black);
+	letter.setFont(menu9.font);
+	letter.setCharacterSize(50);
+	letter.setPosition(Vector2f(840, 580));
 	bool draw = 0;
 
 	RectangleShape photo2;
@@ -751,16 +755,16 @@ void  Menu::player_controls(RenderWindow& window, Keyboard::Key &moveLeftKey, Ke
 			}
 			if (event.type == Event::KeyPressed)
 			{
-				if (event.key.code == Keyboard::Down) {
+				if (event.key.code == Keyboard::Down && !waitingForKey) {
 					sound.change_option_Sound();
 					menu9.MoveDown(menu9.selected, menu9.choises);
 				}
-				if (event.key.code == Keyboard::Up) {
+				if (event.key.code == Keyboard::Up && !waitingForKey) {
 					sound.change_option_Sound();
 					menu9.MoveUp(menu9.selected, menu9.choises);
 				}
 				/*========================================================================*/
-				if (event.key.code == Keyboard::Escape && !pressed && menu9.selected != 3){
+				if (event.key.code == Keyboard::Escape && !pressed && menu9.selected != 3 &&!waitingForKey){
 					sound.change_option_Sound();
 					menu9.mainmenu[menu9.selected].setFillColor(Color::Black);
 					menu9.selected = 3;
@@ -777,6 +781,7 @@ void  Menu::player_controls(RenderWindow& window, Keyboard::Key &moveLeftKey, Ke
 					}
 					if (event.key.code == Keyboard::Enter && !waitingForKey && !pressed)
 					{
+						//letter.setString("----");
 						pressed = 1;
 						sound.select_option_Sound();
 						if (menu9.selected != 3) {
@@ -795,22 +800,26 @@ void  Menu::player_controls(RenderWindow& window, Keyboard::Key &moveLeftKey, Ke
 					//----------------------------------------------
 					if (event.key.code != Keyboard::Enter && waitingForKey && menu9.selected == 0) {
 						actionToChange = menu9.selected;
-						menu9.changeKeyMapping(actionToChange, event.key.code, moveLeftKey, moveRightKey, jumpKey);
+						menu9.changeKeyMapping(actionToChange, event.key.code, moveLeftKey, moveRightKey, jumpKey, menu9);
 					}
 					if (event.key.code != Keyboard::Enter && waitingForKey && menu9.selected == 1)
 					{
 						actionToChange = menu9.selected;
-						menu9.changeKeyMapping(actionToChange, event.key.code, moveLeftKey, moveRightKey, jumpKey);
+						menu9.changeKeyMapping(actionToChange, event.key.code, moveLeftKey, moveRightKey, jumpKey, menu9);
 					}
 					if (event.key.code != Keyboard::Enter && waitingForKey && menu9.selected == 2)
 					{
 						actionToChange = menu9.selected;
-						menu9.changeKeyMapping(actionToChange, event.key.code, moveLeftKey, moveRightKey, jumpKey);
+						menu9.changeKeyMapping(actionToChange, event.key.code, moveLeftKey, moveRightKey, jumpKey, menu9);
 					}
+					letter.setString(keyboardKeyToString(event.key.code));
 					//---------------------------------------------
 				}
 			}
 		}
+		menu9.mainmenu[0].setString("Left : " + keyboardKeyToString(moveLeftKey));
+		menu9.mainmenu[1].setString("Right : " + keyboardKeyToString(moveRightKey));
+		menu9.mainmenu[2].setString("Jump : " + keyboardKeyToString(jumpKey));
 		menu_UI.FaceMotion(window);
 		window.clear();
 		window.draw(menu_UI.bg);
@@ -826,6 +835,7 @@ void  Menu::player_controls(RenderWindow& window, Keyboard::Key &moveLeftKey, Ke
 		{
 			window.draw(photo2);
 			window.draw(LRJ);
+			window.draw(letter);
 		}
 		window.display();
 	}
@@ -1044,23 +1054,40 @@ void  Menu::instructions(RenderWindow& window)
 //=================================================<<PAUSE MENU>>=========================================================//
 void Menu::Pause(RenderWindow& window, Texture gametexture)
 {
-	Menu Pause1;
-	Pause1.choises = END + 2;
+	Menu Pause1, option;
+	Pause1.choises = END + 3;
+	option.choises = 3;
+	option.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
 	Pause1.font.loadFromFile("Assets/Fonts/HalloweenSlimePersonalUse-4B80D.otf");
 	x = 200;
 	for (int i = 0; i < Pause1.choises; i++)
 	{
 		if (!i) Pause1.mainmenu[i].setFillColor(Color{ 255,204,0 });
-		else  Pause1.mainmenu[i].setFillColor(sf::Color::Black);
+		else  Pause1.mainmenu[i].setFillColor(Color::Black);
 		Pause1.mainmenu[i].setFont(Pause1.font);
 		Pause1.mainmenu[i].setCharacterSize(70);
 		Pause1.mainmenu[i].setPosition(670, x);
 		x += 100;
-
+	}
+	x = 200;
+	for (int i = 0; i < option.choises; i++)
+	{
+		if (!i) option.mainmenu[i].setFillColor(Color{ 255,204,0 });
+		else  option.mainmenu[i].setFillColor(Color::Black);
+		option.mainmenu[i].setFont(option.font);
+		option.mainmenu[i].setCharacterSize(70);
+		option.mainmenu[i].setPosition(670, x);
+		x += 100;
 	}
 	Pause1.mainmenu[0].setString("resume");
 	Pause1.mainmenu[0 + END].setString("Play Again");
-	Pause1.mainmenu[1 + END].setString("Exit");
+	Pause1.mainmenu[1 + END].setString("Sound Option");
+	Pause1.mainmenu[2 + END].setString("Exit");
+
+	option.mainmenu[0].setString("Sound - \t\t\t   +");
+	option.mainmenu[1].setString("Music  - \t\t\t   +");
+	option.mainmenu[2].setString("Back");
+
 
 	RectangleShape photo2;
 	photo2.setSize(Vector2f(1920, 1080));
@@ -1075,11 +1102,25 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 	Sprite pausemenu;
 	pausemenu.setTexture(txx);
 	pausemenu.setPosition(600, 150);
-	pausemenu.setScale(1.5, 1.8);
+	pausemenu.setScale(1.7, 2.2);
 	Pause1.Hand_intilization();
 	Pause1.hand.setPosition(560, 200);
 	Pause1.positionOfHand = 100;
 
+
+	option.Hand_intilization();
+	option.hand.setPosition(560, 200);
+	option.positionOfHand = 100;
+
+	RectangleShape Sound(Vector2f(P_M_Sound * 3, 40));
+	Sound.setFillColor({ 180,3,3 });
+	Sound.setPosition(885, 220);
+
+	RectangleShape Music(Vector2f(P_M_Music * 3, 40));
+	Music.setFillColor({ 180,3,3 });
+	Music.setPosition(885, 320);
+
+	bool op = false;
 	//pressed = true;
 	while (window.isOpen()) {
 		Event event;
@@ -1087,56 +1128,159 @@ void Menu::Pause(RenderWindow& window, Texture gametexture)
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (event.type == sf::Event::KeyReleased) {
-				if (event.key.code == sf::Keyboard::Up) {
-					sound.change_option_Sound();
-					Pause1.MoveUp(Pause1.selected, Pause1.choises);
-					//break;
+				if (!op) {
+					if (event.key.code == sf::Keyboard::Up) {
+						sound.change_option_Sound();
+						Pause1.MoveUp(Pause1.selected, Pause1.choises);
+						//break;
+					}
+					if (event.key.code == sf::Keyboard::Down) {
+						sound.change_option_Sound();
+						Pause1.MoveDown(Pause1.selected, Pause1.choises);
+						//break;
+					}
+					if (event.key.code == Keyboard::Escape && !pressed && Pause1.selected != 2 + END)
+					{
+						sound.change_option_Sound();
+						Pause1.mainmenu[Pause1.selected].setFillColor(Color::Black);
+						Pause1.selected = 2 + END;
+						Pause1.mainmenu[2 + END].setFillColor(Color{ 255,204,0 });
+						Pause1.hand.setPosition(560, END ? 500 : 400);
+						pressed = true;
+					}
+					if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && !pressed)) {
+						sound.select_option_Sound();
+						if (Pause1.selected == -1 + END) {
+							return;
+						}
+						if (Pause1.selected == 0 + END) {
+							play_again = 1;
+							exit = 1;
+							return;
+						}
+						if (Pause1.selected == 1 + END) {
+							op = true;
+						}
+						if (Pause1.selected == 2 + END) {
+							window.setView(window.getDefaultView());
+							play_again = 0;
+							exit = 1;
+							return;
+						}
+					}
+
+					if (!Keyboard::isKeyPressed(Keyboard::Escape))
+					{
+						pressed = false;
+					}
 				}
-				if (event.key.code == sf::Keyboard::Down) {
-					sound.change_option_Sound();
-					Pause1.MoveDown(Pause1.selected, Pause1.choises);
-					//break;
-				}
-				if (event.key.code == Keyboard::Escape && !pressed && Pause1.selected != 1 + END)
+				else if (op)
 				{
-					sound.change_option_Sound();
-					Pause1.mainmenu[Pause1.selected].setFillColor(Color::Black);
-					Pause1.selected = 1 + END;
-					Pause1.mainmenu[1 + END].setFillColor(Color{ 255,204,0 });
-					Pause1.hand.setPosition(560, END ? 400 : 300);
-					pressed = true;
-				}
-				if (event.key.code == sf::Keyboard::Enter || (event.key.code == Keyboard::Escape && !pressed)) {
-					sound.select_option_Sound();
-					if (Pause1.selected == -1 + END) {
-						return;
+					if (event.key.code == sf::Keyboard::Up) {
+						sound.change_option_Sound();
+						option.MoveUp(option.selected, option.choises);
+						//break;
 					}
-					if (Pause1.selected == 0 + END) {
-						play_again = 1;
-						exit = 1;
-						return;
+					if (event.key.code == sf::Keyboard::Down) {
+						sound.change_option_Sound();
+						option.MoveDown(option.selected, option.choises);
+						//break;
 					}
-					if (Pause1.selected == 1 + END) {
-						window.setView(window.getDefaultView());
-						play_again = 0;
-						exit = 1;
-						return;
+					if (event.key.code == Keyboard::Escape && !pressed && option.selected != 2)
+					{
+						sound.change_option_Sound();
+						option.mainmenu[option.selected].setFillColor(Color::Black);
+						option.selected = 2;
+						option.mainmenu[2].setFillColor(Color{ 255,204,0 });
+						option.hand.setPosition(560, 400);
+						pressed = true;
+					}
+					if (event.key.code == Keyboard::Enter || (event.key.code == Keyboard::Escape && !pressed))
+					{
+						sound.select_option_Sound();
+						if (option.selected == 2) {
+							pressed = true;
+							op = false;
+						}
+					}
+					if (option.selected == 0)
+					{
+						if (event.key.code == sf::Keyboard::Left)
+						{
+							if (P_M_Sound > 0)
+								P_M_Sound -= 10;
+							else
+								P_M_Sound = 0;
+						}
+						if (event.key.code == sf::Keyboard::Right)
+						{
+							if (P_M_Sound < 100)
+								P_M_Sound += 10;
+							else
+								P_M_Sound = 100;
+						}
+						Sound.setSize(Vector2f(P_M_Sound * 3, 40));
+						sound.so.setVolume(P_M_Sound);
+						sound.so2.setVolume(P_M_Sound);
+						sound.so4.setVolume(P_M_Sound);
+						sound.so5.setVolume(P_M_Sound);
+						sound.so6.setVolume(P_M_Sound);
+						sound.so7.setVolume(P_M_Sound);
+						sound.so8.setVolume(P_M_Sound);
+						sound.so9.setVolume(P_M_Sound);
+						sound.so10.setVolume(P_M_Sound);
+						sound.so11.setVolume(P_M_Sound);
+						sound.so12.setVolume(P_M_Sound);
+						sound.so13.setVolume(P_M_Sound);
+					}
+					else if (option.selected == 1)
+					{
+						if (event.key.code == Keyboard::Left)
+						{
+							if (P_M_Music > 0)
+								P_M_Music -= 10;
+							else
+								P_M_Music = 0;
+						}
+						if (event.key.code == Keyboard::Right)
+						{
+							if (P_M_Music < 100)
+								P_M_Music += 10;
+							else
+								P_M_Music = 100;
+						}
+					}
+					Music.setSize(Vector2f(P_M_Music * 3, 40));
+					sound.bgmusic.setVolume(P_M_Music);
+
+
+					if (!Keyboard::isKeyPressed(Keyboard::Escape))
+					{
+						pressed = false;
 					}
 				}
-				if (!Keyboard::isKeyPressed(Keyboard::Escape))
-				{
-					pressed = false;
-				}
+
 			}
 		}
 		window.clear();
 		window.draw(game);
 		window.draw(photo2);
 		window.draw(pausemenu);
-		for (int i = 0; i < Pause1.choises; i++) {
-			window.draw(Pause1.mainmenu[i]);
+		if (!op) {
+			for (int i = 0; i < Pause1.choises; i++) {
+				window.draw(Pause1.mainmenu[i]);
+			}
+			window.draw(Pause1.hand);
 		}
-		window.draw(Pause1.hand);
+		else
+		{
+			for (int i = 0; i < option.choises; i++) {
+				window.draw(option.mainmenu[i]);
+			}
+			window.draw(option.hand);
+			window.draw(Sound);
+			window.draw(Music);
+		}
 		window.display();
 	}
 }

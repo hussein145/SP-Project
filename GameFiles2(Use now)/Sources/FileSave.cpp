@@ -12,7 +12,6 @@ extern Menu menu;
 
 extern menu_Bg_and_Face menu_UI;
 extern int GameMode;
-bool press = 0;
 extern user_data user[5];
 void FileSave::highscore_gameover(int score, int floor, int combo, int shift, int min, int sec)
 {
@@ -216,9 +215,6 @@ void  FileSave::highscore(RenderWindow& window)
 		}
 		window.display();
 	}
-
-
-
 }
 void FileSave::TypeYourName()
 {

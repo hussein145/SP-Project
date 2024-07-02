@@ -19,7 +19,8 @@ struct Menu
 	Texture handTex;
 	RectangleShape hand;
 	float display = 0;
-	void changeKeyMapping(int& action, Keyboard::Key newKey, Keyboard::Key &moveLeftKey, Keyboard::Key &moveRightKey, Keyboard::Key &jumpKey);
+	Text letter;
+	void changeKeyMapping(int& action, Keyboard::Key newKey, Keyboard::Key &moveLeftKey, Keyboard::Key &moveRightKey, Keyboard::Key &jumpKey, Menu& menu9);
 	void Hand_intilization();
 	void MoveDown(int& selected, int choises);
 	void MoveUp(int& selected, int choises);
@@ -34,4 +35,5 @@ struct Menu
 	void  credits(RenderWindow& window);
 	void instructions(RenderWindow& window);
 	void Pause(RenderWindow& window, Texture gametexture);
+	string keyboardKeyToString(sf::Keyboard::Key key);
 };

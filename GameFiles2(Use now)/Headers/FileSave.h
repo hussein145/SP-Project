@@ -38,6 +38,7 @@ struct FileSave
 	int shift = 0;
 	bool infile = 0;
 	bool boolenter = 0;
+	bool press = 0;
 	int index;
 	int sec, min;
 	void filetopair();
